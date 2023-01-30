@@ -93,8 +93,7 @@ class StoreController extends Controller
         $store->slogan = $request->slogan;
         $store->discription = $request->description;
         $store->userID = $userID;
-        $store->planID = $planID;
-        $store->save();
+         $store->save();
 
         // Create the Contact details for a store
         $contact = new Contacts();
