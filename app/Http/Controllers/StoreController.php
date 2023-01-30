@@ -93,7 +93,7 @@ class StoreController extends Controller
         $store->slogan = $request->slogan;
         $store->discription = $request->description;
         $store->userID = $userID;
-         $store->save();
+        $store->save();
 
         // Create the Contact details for a store
         $contact = new Contacts();
@@ -109,7 +109,7 @@ class StoreController extends Controller
         $contact->userID = $userID;
         $contact->store = true;
         $contact->save();
- 
+
         return redirect()->to('/portal/stores')->with("success", "The store was created successfully!!!");
     }
 
