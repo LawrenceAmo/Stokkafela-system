@@ -30,14 +30,21 @@
         class="collapse d-lg-block sidebar shadow-2xl  collapse "
       >
         <div class="position-sticky ">
-          <div class="list-group list-group-flush mx-3 mt-3 pt-1">
+          <div class="list-group list-group-flush mx-3 mt-1 pt-1">
             <a
-              href="{{route('profile')}}"
+              href="{{route('portal')}}"
               class="list-group-item list-group-item-action py-2 ripple "
               aria-current="true"
             >
-              <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
+              <i class="fas fa-chart-bar fa-fw h6"></i><span>Dashboard</span>
             </a>
+            <a
+            href="{{route('profile')}}"
+            class="list-group-item list-group-item-action py-2 ripple "
+            aria-current="true"
+          >
+            <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
+          </a>
             <a
               href="{{ route("stores")}}"
               class="list-group-item list-group-item-action py-2 ripple"
@@ -117,18 +124,22 @@
           </button>
 
           <!-- Brand -->
-          <a class="navbar-brand pl-5" href="{{route('portal')}}">
+          <a class="navbar-brand pl-3" href="{{route('portal')}}">
             <img
               src="{{ asset('fadaeco.png') }}"
               height="35"
               alt="Fadaeco"
               loading="lazy"
             />
+            {{-- <p class="h3 font-weight-bold"> 
+              {{ "Stokkafela Tembisa"}} 
+             </p> --}}
           </a>
-
+      
           <!-- Right links -->
-          <ul class="navbar-nav ms-auto d-flex flex-row">
+          <ul class="navbar-nav ms-auto d-flex flex-row ">
             <!-- Icon -->
+            
 
             <!-- Icon -->
             <li class="nav-item me-3 me-lg-0">

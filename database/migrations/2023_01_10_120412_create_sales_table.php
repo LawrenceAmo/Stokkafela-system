@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->bigIncrements('salesID')->index();
             $table->string('barcode');
+            $table->string('descript')->nullable();  
             $table->string('department')->nullable();  
-
             // $table->boolean('status')->nullable();
             $table->string('mainitem')->nullable();
             $table->string('sales')->nullable();

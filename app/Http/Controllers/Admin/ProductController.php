@@ -20,11 +20,15 @@ class ProductController extends Controller
     {
         // $auth = new Api_authenticate();
         // $userID = $auth->api_getUID($request); 
-
         $products = DB::table('products')
                     ->leftJoin('stores','stores.storeID','=','products.storeID')
                     ->get();
         return $products;
+    }
+
+    public function get_top_products()
+    {
+        return $this->top_products();
     }
 
     public function index()

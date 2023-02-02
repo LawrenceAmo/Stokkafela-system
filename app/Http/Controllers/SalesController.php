@@ -14,7 +14,8 @@ class SalesController extends Controller
 {
     public function get_sales( )
     {
-    //    return DB::table('sales')->get();
+        $sales = DB::table('sales')->get();
+        return $sales->toArray();
     }
  
     public function index()
@@ -34,7 +35,6 @@ class SalesController extends Controller
         return true;
     }
 
- 
     public function save(Request $request)
     {
         $request->validate([

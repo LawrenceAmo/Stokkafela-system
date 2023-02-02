@@ -65,7 +65,8 @@
                 <td>R@{{toDecimal(product.avrgcost)}}</td>
                 <td>R@{{toDecimal(product.sellpinc1)}}</td>
                 <td>R@{{toDecimal(toDecimal(product.avrgcost) * toDecimal(product.onhand)) }}</td>
-                <td>@{{product.onhand}}</td>
+                <td v-if="product.onhand < 1 " class="text-danger font-weight-bold">@{{product.onhand}}</td>
+                <td v-else class="text-success font-weight-bold">@{{product.onhand}}</td>
                 <td>@{{ toDecimal((toDecimal(product.sellpinc1) / (toDecimal(product.sellpinc1) - toDecimal(product.avrgcost) ) ) * 100) }}</td>
                 <td>@{{product.name}}</td>
                 <td>@{{product.created_at}}</td>

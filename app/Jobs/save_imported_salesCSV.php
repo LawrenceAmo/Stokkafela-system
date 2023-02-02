@@ -41,7 +41,8 @@ class save_imported_salesCSV implements ShouldQueue
         if ($sale->isEmpty()) {
 
             $sales = new Sales();
-            $sales->barcode = $this->sales['code'] || 99;
+            $sales->barcode = $this->sales['code'];
+            $sales->descript = $this->sales['descript'];
             $sales->department = $this->sales['department'];
             $sales->mainitem = $this->sales['mainitem'];
             $sales->sales = $this->float($this->sales['sales']);

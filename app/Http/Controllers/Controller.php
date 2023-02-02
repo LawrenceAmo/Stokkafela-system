@@ -31,4 +31,26 @@ class Controller extends BaseController
         $stats = new Stats();
         return $stats->get_sales_stats();        
     }
+ 
+    // 
+    protected function top_products()
+    {
+        $stats = new Stats();
+        return $stats->top_products();
+    }
+
+    // get a store from stores
+    protected function get_store(Object $stores, int $storeID = 0):Object
+    {
+        // View::share('site_settings', app('site_settings'));
+
+        for ($i=0; $i < count($stores) ; $i++) {                 
+            if ($stores[$i]->storeID == $storeID) {
+                return $stores[$i];
+            }
+        }
+        return  $stores[0];
+    }
+
+
 }

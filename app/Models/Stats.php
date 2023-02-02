@@ -23,23 +23,30 @@ class Stats extends Model
 
     public function get_sales_stats( )
     { 
-        // Update the products stats via a queue/job
-        //  product_stats::dispatch(); 
-        $sales = DB::table('products')
-        ->get();
-
-        // $stockValue = 0;
-        // $total_stock = 0;
-        // $total_quantity = 0;
-        //  for ($i=0; $i < count($sales) ; $i++) { 
-
-        //    $stockValue += $sales[$i]->avrgcost * $sales[$i]->onhand;
-        //    $total_quantity += (int)$sales[$i]->onhand; // you need to change this
-        //    $total_stock += (int)$sales[$i]->onhand;
+        $sales = DB::table('products')->get();
  
-        // }
-
           return $sales;
     }
 
+    // get top peforming products
+    public function top_products(int $storeID = 17)
+        { 
+            // get all product codes that have more sales.
+           $sales = DB::select(
+                        "SELECT `barcode`, COUNT(`barcode`) AS `code` FROM `sales`
+                         WHERE `from` > ? AND `to` < ? AND `storeID` = ? GROUP BY `barcode` ORDER BY `code` DESC LIMIT 10", 
+                        [
+                            date_sub(now(),date_interval_create_from_date_string("31 days")),
+                            date_sub(now(),date_interval_create_from_date_string("1 days")),
+                            $storeID
+                        ]
+                    );
+
+            // Get only codes
+            $codes = array_column($sales, 'barcode'); 
+            $products = DB::table('products')->whereIn('barcode', $codes)->get();
+ 
+            return $products;
+        } 
 }
+ 

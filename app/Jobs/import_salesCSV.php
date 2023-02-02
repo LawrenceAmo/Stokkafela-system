@@ -26,12 +26,12 @@ class import_salesCSV implements ShouldQueue
     public function handle()
     {
         DB::table('sales')
-            ->where('from', 'LIKE', $this->form['date_from'].'%')
+            ->where([['from', 'LIKE', $this->form['date_from'].'%'], ['storeID', intval($this->form['store'])]])
             ->delete();
 
         for ($i=0; $i <count($this->data); $i++) {
                             
-            $sales = [  
+            $sales = [
                 'code' => $this->data[$i][$this->header['code']],
                 'descript' => $this->data[$i][$this->header['descript']],
                 'mainitem' => $this->data[$i][$this->header['mainitem']],

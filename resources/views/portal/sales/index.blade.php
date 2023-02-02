@@ -1,42 +1,8 @@
 <x-app-layout>
     <main class="m-0  px-4   w-100" id="app">
-        
-      <div class="  row bg-white shadow border rounded p-3 w-100">
-        <div class="col-md-3">
-             <div class="card p-3 border border-info">
-                <p class="font-weight-bold h5 text-center"> Total Stock <br> <span> {{$get_products_stats->total_stock}}</span></p>                 
-             </div>
-        </div>
-        <div class="col-md-3">
-             <div class="card p-3 border border-info">
-                <p class="font-weight-bold h5 text-center">Stock onHand <br> <span> {{$get_products_stats->stock_onhand}}</span></p>
-             </div>
-        </div>
-        <div class="col-md-3">
-             <div class="card p-3 border border-info">
-                <p class="font-weight-bold h5 text-center">  Stock Value <span>R{{number_format($get_products_stats->stock_value,2)}}</span></p>
-             </div>
-        </div>
-        <div class="col-md-3">
-             <div class="card p-3 border border-info">
-                <p class="font-weight-bold h5 text-center">Out of Stock <br> <span>{{$get_products_stats->out_of_stock_products}}</span></p>
-             </div>
-        </div> 
-    </div>
-    <hr> 
+         
     <div class="card border rounded p-3 w-100">
-
-      <div class="border rounded p-3 my-1">
-
-        <div class="">
-          <div class="form-group">
-            <label for="">Search</label>
-            <input type="text"
-              class="form-control" name="searchtext" id="searchtext" v-model="searchtext" v-on:keyup="seachFun($event)" placeholder="Type something" >
-           </div>
-        </div>
-      </div>
-
+ 
       <div class="  row rounded   w-100">
         <div class=" col">
             <div class="card p-1 border border-info">
@@ -69,7 +35,17 @@
       </div>
         </div>  
     </div>
+    <hr>
+    <div class="border rounded p-3 my-1">
 
+      <div class="">
+        <div class="form-group">
+          <label for="">Search</label>
+          <input type="text"
+            class="form-control" name="searchtext" id="searchtext" v-model="searchtext" v-on:keyup="seachFun($event)" placeholder="Type something" >
+         </div>
+      </div>
+    </div>
 
         <div class="row mx-0 animated fadeInDown">
             <div class="col-12 text-center p-0 m-0">
@@ -91,6 +67,7 @@
         <th>#</th>
             <th>Code</th>
             <th>mainitem</th>
+            <th>Description</th>
             <th>Department</th>
             <th>Sales</th>
             <th>Sales Cost</th>
@@ -107,13 +84,14 @@
                 <td scope="row">@{{i}}</td>
                 <td>@{{sale.barcode}}</td>
                 <td>@{{sale.mainitem}}</td>
+                <td>@{{sale.descript}}</td>
                 <td>@{{sale.department}}</td>
-                <td>@{{sale.sales}}</td>
-                <td>@{{sale.salesCost}}</td>
-                <td>@{{sale.reFunds}}</td>
-                <td>@{{sale.reFundsCost}}</td>
-                <td>@{{sale.nettSales}}</td>
-                <td>@{{sale.profit}}</td>
+                <td>@{{toDecimal(sale.sales)}}</td>
+                <td>@{{toDecimal(sale.salesCost)}}</td>
+                <td>@{{toDecimal(sale.reFunds)}}</td>
+                <td>@{{toDecimal(sale.reFundsCost)}}</td>
+                <td>@{{toDecimal(sale.nettSales)}}</td>
+                <td>@{{toDecimal(sale.profit)}}</td>
                 <td>@{{sale.from}}</td>
                 <td>@{{sale.created_at}}</td>
                   
@@ -213,28 +191,47 @@ const { createApp } = Vue;
 
             console.log(await data)
             for (let i = 0; i < data.length; i++) {
-               await this.salesnew.push(data[i]);
-             } 
-            //  let salef = 0;
-             
-             for (let x = 0; x < this.salesnew.length; x++) {
+                this.salesnew.push(data[i]);
 
-              this.sales += parseFloat(this.salesnew[x].sales);
-              this.salescost += parseFloat(this.salesnew[x].salesCost);
-              this.refunds += parseFloat(this.salesnew[x].reFunds);
-              this.refundscost += parseFloat(this.salesnew[x].reFundsCost);
-              this.nettsales += parseFloat(this.salesnew[x].nettSales);
-              this.profit += parseFloat(this.salesnew[x].profit);
-                            
-              // console.log(Number(this.salesnew[x].sales)  ); 
-              // salef += 1 +  parseFloat(this.salesnew[x].sales);
-              }
+                this.sales += this.toNumber(data[i].sales);
+                this.salescost += this.toNumber(data[i].salesCost);
+                this.refunds += this.toNumber(data[i].reFunds);
+                this.refundscost += this.toNumber(data[i].reFundsCost);
+                this.nettsales += this.toNumber(data[i].nettSales);
+                this.profit += this.toNumber(data[i].profit);
+ 
+             } 
+
+             this.salesdb = [ ...this.salesnew ]
+              
+            //  for (let x = 0; x < this.salesnew.length; x++) {
+
+            //   this.sales += this.toNumber(this.salesnew[x].sales);
+            //   this.salescost += this.toNumber(this.salesnew[x].salesCost);
+            //   this.refunds += this.toNumber(this.salesnew[x].reFunds);
+            //   this.refundscost += this.toNumber(this.salesnew[x].reFundsCost);
+            //   this.nettsales += this.toNumber(this.salesnew[x].nettSales);
+            //   this.profit += this.toNumber(this.salesnew[x].profit);
+                             
+            //   }
      
-              console.log(this.salesnew)
-              this.salesdb = [ ...this.salesnew ]
-           
+              // console.log(this.salesnew)
+              
         },
        methods:{
+
+        toDecimal(num) 
+            {
+                number = Number.parseFloat(num)
+                return number.toFixed(2);
+            },
+            toNumber(num) 
+            {
+                let number = num;
+                number = number.replace(/,/g, "");
+                number = parseFloat(number);
+              return number;
+            }, 
 
         seachFun(event) {          
             
@@ -255,12 +252,12 @@ const { createApp } = Vue;
 
                 for (let x = 0; x < this.salesdb.length; x++) {
 
-                    this.sales += parseFloat(this.salesdb[x].sales);
-                    this.salescost += parseFloat(this.salesdb[x].salesCost);
-                    this.refunds += parseFloat(this.salesdb[x].reFunds);
-                    this.refundscost += parseFloat(this.salesdb[x].reFundsCost);
-                    this.nettsales += parseFloat(this.salesdb[x].nettSales);
-                    this.profit += parseFloat(this.salesdb[x].profit);      
+                    this.sales += this.toNumber(this.salesdb[x].sales);
+                    this.salescost += this.toNumber(this.salesdb[x].salesCost);
+                    this.refunds += this.toNumber(this.salesdb[x].reFunds);
+                    this.refundscost += this.toNumber(this.salesdb[x].reFundsCost);
+                    this.nettsales += this.toNumber(this.salesdb[x].nettSales);
+                    this.profit += this.toNumber(this.salesdb[x].profit);      
                                   
                     // console.log(this.salesnew[x].profit); 
                     } 
@@ -283,12 +280,12 @@ const { createApp } = Vue;
 
                     for (let x = 0; x < mysales.length; x++) {
 
-                        this.sales += parseFloat(mysales[x].sales);
-                        this.salescost += parseFloat(mysales[x].salesCost);
-                        this.refunds += parseFloat(mysales[x].reFunds);
-                        this.refundscost += parseFloat(mysales[x].reFundsCost);
-                        this.nettsales += parseFloat(mysales[x].nettSales);
-                        this.profit += parseFloat(mysales[x].profit);      
+                        this.sales += this.toNumber(mysales[x].sales);
+                        this.salescost += this.toNumber(mysales[x].salesCost);
+                        this.refunds += this.toNumber(mysales[x].reFunds);
+                        this.refundscost += this.toNumber(mysales[x].reFundsCost);
+                        this.nettsales += this.toNumber(mysales[x].nettSales);
+                        this.profit += this.toNumber(mysales[x].profit);      
                                       
                     // console.log(this.salesnew[x].profit); 
                     }
@@ -303,12 +300,12 @@ const { createApp } = Vue;
 
                     for (let x = 0; x < mysales.length; x++) {
 
-                        this.sales += parseFloat(mysales[x].sales);
-                        this.salescost += parseFloat(mysales[x].salesCost);
-                        this.refunds += parseFloat(mysales[x].reFunds);
-                        this.refundscost += parseFloat(mysales[x].reFundsCost); 
-                        this.nettsales += parseFloat(mysales[x].nettSales);
-                        this.profit += parseFloat(mysales[x].profit);    
+                        this.sales += this.toNumber(mysales[x].sales);
+                        this.salescost += this.toNumber(mysales[x].salesCost);
+                        this.refunds += this.toNumber(mysales[x].reFunds);
+                        this.refundscost += this.toNumber(mysales[x].reFundsCost); 
+                        this.nettsales += this.toNumber(mysales[x].nettSales);
+                        this.profit += this.toNumber(mysales[x].profit);    
                     }
                    }
               } 

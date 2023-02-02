@@ -30,17 +30,19 @@ class product_stats implements ShouldQueue
         $total_stock = 0;
         $total_quantity = 0;
         $out_of_stock_products = 0;
-        for ($i=0; $i < count($products) ; $i++) { 
+        for ($i=0; $i < count($products); $i++) { 
 
-           $stockValue += floatval($products[$i]->avrgcost) *(int)$products[$i]->onhand;
-           $total_quantity += (int)$products[$i]->onhand; // you need to change this
-           $total_stock += (int)$products[$i]->onhand;
+            // if(number_format($products[$i]->onhand) > 0)
+                // {
+                    $stockValue += floatval($products[$i]->avrgcost) *(int)$products[$i]->onhand;
+                    $total_quantity += (int)$products[$i]->onhand; // you need to change this
+                    $total_stock += (int)$products[$i]->onhand;
+                // }
 
-           if($products[$i]->onhand < 1)
-            {
-                $out_of_stock_products += 1;
-            }
- 
+           if(number_format($products[$i]->onhand) < 0)
+                {
+                    $out_of_stock_products += 1;
+                } 
         }
  
         DB::table("products_stats")
