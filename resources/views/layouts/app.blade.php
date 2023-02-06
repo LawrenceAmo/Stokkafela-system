@@ -36,7 +36,7 @@
               class="list-group-item list-group-item-action py-2 ripple "
               aria-current="true"
             >
-              <i class="fas fa-chart-bar fa-fw h6"></i><span>Dashboard</span>
+              <i class="fa fa-tachometer-alt fa-fw h6"></i><span>Dashboard</span>
             </a>
             <a
             href="{{route('profile')}}"
@@ -49,20 +49,20 @@
               href="{{ route("stores")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
-              <i class="fas fa-building "></i>
+              <i class="fa fa-building"></i>
               <span>Stores</span>
             </a>     <a
               href="{{ route("products")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
-              <i class="fas fa-building "></i>
+              <i class="fa fa-shopping-basket "></i>
               <span>Products</span>
             </a>
             <a
               href="{{ route("sales")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
-              <i class="fas fa-building "></i>
+              <i class="fa fa-chart-bar"></i>
               <span>Sales</span>
             </a>
              <a
@@ -74,12 +74,12 @@
               href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
-              <i class="fas fa-building "></i><span>Departments</span>
+              <i class="fa fa-bars "></i><span>Departments</span>
             </a>
               <a
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
-           ><i class="fas fa-chart-bar fa-fw "></i><span>Jobs</span></a
+           ><i class="fa fa-graduation-cap fa-fw "></i><span>Jobs</span></a
           ><a
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
@@ -92,7 +92,7 @@
               ><i class="fas fa-info-circle "></i><span>Find Help</span></a
             >
             <form action="{{ route('logout') }}" method="POST"
-               class="list-group-item  btn-outline-dark rounded font-weight-bold list-group-item-action py-2 ripple"
+               class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple"
               >
               @csrf
               <label for="logout" class="c-pointer"><i class="fas fa-door-open "></i><span>Log out</span></label>

@@ -55,9 +55,9 @@
 <div class="font-weight-bold  h4 d-flex justify-content-between">
    <div class=" font-weight-bold  h4 "> All Sales  </div>
  <div class=" rounded">
-    <a href="{{ route('create_sales')}}" class="btn btn-success rounded btn-sm">add new product</a>
+    <a href="{{ route('create_sales')}}" class="btn btn-success rounded btn-sm">add new Sale</a>
     {{-- <a href="{{ route('create_product')}}" class="btn btn-info rounded btn-sm">import product</a> --}}
-    <a type="button"  data-toggle="modal" data-target="#import_sales" class="btn btn-info rounded btn-sm">import product</a>
+    <a type="button"  data-toggle="modal" data-target="#import_sales" class="btn btn-info rounded btn-sm">import Sales</a>
 </div>
 </div>
 <?php $i = 1 ?> 
@@ -324,15 +324,4 @@ const { createApp } = Vue;
  
 </script>
 </x-app-layout>
-
-
-{{-- 
-  tue 2pm - 3pm till june
-  --}}
-
-
-  {{-- 
-    add date to each data
-
-    
-    --}}
+ 

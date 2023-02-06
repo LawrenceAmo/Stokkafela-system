@@ -4,7 +4,7 @@
          
             <div class="col-md-3">
                  <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">Total Sites <span>{{$miniStats['stores']}}</span></p>
+                    <p class="font-weight-bold h5 text-center">Total Stores <span>{{$miniStats['stores']}}</span></p>
                     
                  </div>
             </div>
@@ -54,23 +54,22 @@
             {{-- {{dd($stores)}} --}}
             @foreach ($stores as $store)
              <tr>
-                <td scope="row">{{$i}}</td>
-                <td>{{$store->name}}</td>
-                <td>{{$store->trading_name}}</td> 
+                 <td scope="row">{{$i}}</td>
+                <td><a href="{{ route('store', [$store->storeID])}}">{{$store->name}}</a></td>
+                <td><a href="{{ route('store', [$store->storeID])}}">{{$store->trading_name}}</a></td> 
                 <td>{{$store->active}}</td> 
                 <td><?php
                 echo date_format($store->created_at, 'd-m-Y h:i:s');
                 // echo $date->format('l jS \o\f F Y h:i:s A'), "\n";
                 ?></td>
-                 <td class=" px-0">
-                    {{-- <a href="" class="px-1 text-info"><i class="fas fa-eye    "></i></a> | --}}
-                    <a href="{{ route('edit_store', [$store->storeID])}}" class="px-1 text-primary"><i class="fa fa-fas fa-pencil-alt    "></i></a>|
-                    <a href="{{ route('delete_store', [$store->storeID])}}" id="{{$store->storeID}}" class="px-1 text-danger"><i class="fas fa-trash-alt    "></i></a>
+                 <td class="text-center">
+                     <a href="{{ route('store', [$store->storeID])}}" title="Click to View Store Data" class="px-1 text-info"><i class="fa fa-fas fa-eye    "></i></a>
+                    {{-- <a href="{{ route('delete_store', [$store->storeID])}}" id="{{$store->storeID}}" class="px-1 text-danger"><i class="fas fa-trash-alt    "></i></a> --}}
                  </td>
-            </tr>
+             </tr>
              <?php $i++ ?>
-            @endforeach 
-            {{-- 
+            @endforeach
+            {{--
             "name" => "fada of ecommerce"
             "trading_name" => "fadaeco"
             "slogan" => "By creating a store you agree to our Terms & Conditions"

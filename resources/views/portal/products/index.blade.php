@@ -141,7 +141,7 @@
 const { createApp } = Vue;
       //  let
       createApp({
-        data() {
+        data() { 
           return {
             // 
             products: [], 

@@ -28,15 +28,7 @@ class StoreController extends Controller
      */
     public function index()
     {
-        // try {
-            $store = Store::get();
-            // return $store;
-        // } catch (\Throwable $th) {
-        //     return view('portal.store.create')->with('error', "You don't have store. Please create store now.");
-        // }
-        // $test = DB::table('test')->where('id','>',10)->limit(1000)->get();
-        // $contact = Contacts::where('storeID', '=', $store->storeID)->get();
-        // return $contact;
+        $store = Store::get();       
         return  view('portal.store.index', ['miniStats'=> $this->get_mini_stats()])->with('stores', $store);
     }
 
@@ -114,22 +106,52 @@ class StoreController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Show store data. Get that from ID or request
      */
-    public function show($id)
-    {
-        //
+    public function show(Request $request, $id = 0)
+    { 
+        $id == true ? $storeID = $id : $storeID = 0;
+
+        // Check user filter, if not set, set filter request values to default
+        if($request>isEmpty() || !$request->from || !$request->to || !$request->store){
+            $from = date_sub(now(), date_interval_create_from_date_string("30 days"));   // get last 30 days date
+            $from = date_format($from, 'Y-m-d');
+
+            $to = date_sub(now(), date_interval_create_from_date_string("1 days"));      // Go 1 day back, 
+            $to = date_format($to, 'Y-m-d');
+        }else{
+
+            // get values from request
+            $from = $request->from;
+            $to = $request->to;
+            $storeID = $request->store;
+        }
+
+            $stores = DB::table('stores')->get(); // remove limit to show all stores
+            $selected_store = $this->get_store($stores, $storeID); 
+            $storeID = $selected_store->storeID;
+ 
+            $salesdata = DB::table('sales')
+                            ->where( [['from', '>=', $from], ['to', '<=', $to],
+                                    ['storeID', '=', $storeID]])
+                            ->orderBy('from', 'asc')
+                            ->get();
+
+            $sales = array_sum( array_column($salesdata->toArray(), 'sales') );
+            $nettsales = array_sum( array_column($salesdata->toArray(), 'nettSales') );
+
+        return view('portal.store.store')
+                ->with('salesdata', $salesdata)
+                ->with('dates', [ 'from' => $from, 'to' => $to])
+                ->with('sales', $sales)
+                ->with('storeID', $storeID)
+                ->with('stores', $stores)
+                ->with('selected_store', $selected_store)
+                ->with('nettsales', $nettsales)
+                ->with('get_products_stats', $this->get_products_stats());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function edit($id)
     {
         $store = DB::table('stores')
