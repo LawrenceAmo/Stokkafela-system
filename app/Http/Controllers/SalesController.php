@@ -9,15 +9,15 @@ use App\Models\Sales;
 use Maatwebsite\Excel\Facades\Excel;
  use Illuminate\Support\Facades\Auth;
  use function PHPUnit\Framework\returnSelf;
-
+use PHPExcel;
 class SalesController extends Controller
 {
     public function get_sales( )
     {
-        $sales = DB::table('sales')->get();
+        $sales = DB::table('sales')->limit(100)->get();
         return $sales->toArray();
     }
- 
+  
     public function index()
     {
      
@@ -38,27 +38,26 @@ class SalesController extends Controller
     public function save(Request $request)
     {
         $request->validate([
-                'date_from' => 'required',
+                // 'date_from' => 'required',
                 // 'date_to' => 'required',
                 'store' => 'required',
                 'sales_file' => 'required',
             ]);
-        // if ($request->from) {
-        //     $request->date_to = $request->date_from;
+
+        // if ($request->isDailyTotals) {
+        //     $request->isDailyTotals;// = null;
         // } 
-        // if ($request->date_to < $request->date_from) {
-        //     return redirect()->back()->with('error', 'Your dates are incorrect!!! Date from cannot be greater than Date to.');
-        // }
-
+      
+// return $request;
         $data = Excel::toArray(new CSVImport, request()->file('sales_file'));       
-
+ 
         $userID =  Auth::id();
 
         $request['userID'] = $userID;
 
         $sales = new Sales();
         $import_sales = $sales->import_sales_csv($data, $request);
-        // return $import_sales;
+        return $import_sales;
 
         if (!$import_sales) {
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload saless file!!!');

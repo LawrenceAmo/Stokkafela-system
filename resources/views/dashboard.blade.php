@@ -17,9 +17,9 @@
                     <input type="date" class="form-control" name="to" value="{{$dates['to']}}" aria-describedby="emailHelpId" placeholder="">
                 </div>
                 &nbsp; &nbsp; &nbsp; &nbsp;
-                <div class="form-group "> 
+                {{-- <div class="form-group "> 
                     <select class="custom-select" name="store" id="">
-                        @foreach ($stores as $store)
+                        @foreach ($stores as $store) 
                         @if ($store->storeID == $selected_store->storeID)
                             <option class="font-weight-bold" value="{{$store->storeID}}" selected>{{$store->name}}</option>
                         @else
@@ -27,7 +27,7 @@
                         @endif
                         @endforeach
                      </select>
-                </div>
+                </div> --}}
                 &nbsp; &nbsp; &nbsp; &nbsp;
                 <div class="  ">
                     <button type="submit" class="btn btn-sm btn-outline-info"> Filter </button>
@@ -36,60 +36,44 @@
            
         </form>
       
-    <div class="row border rounded p-3 w-100">
+    <div class="row  border rounded p-3 w-100">
          
-        <div class="col-md-3 " title=" Click see detailed Stock Data">
-             <a href="{{ route('products') }}" class="card text-dark shadow px-2 py-1 border border-info">
-                <span class="font-weight-bold ">Out of stock  </span>
-                <span class="font-weight-bold h5 text-center text-danger"> {{$get_products_stats->out_of_stock_products}} </span>
-                <span class="small  text-center">Stock on hand {{$get_products_stats->stock_onhand}}</span>
+        <div class="col-md-6 " title=" Click see detailed Stock Data">
+             <a href="{{ route('products') }}" class="w-100 row  rounded text-dark shadow px-2 py-1 border border-danger">
+                <div class=" border-right col-md-6 d-flex flex-column">
+                    <span class="font-weight-bold ">Stokkafela Sales </span> 
+                    <span class="font-weight-bold h5"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
+                    <span class="small ">From 2023-01-09 - 2023-02-08</span>
+               </div>
+               <div class=" border-left col-md-6 d-flex flex-column">
+                    <span class="font-weight-bold ">Stokkafela Nett Sales </span> 
+                    <span class="font-weight-bold h5"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
+                    <span class="small ">From 2023-01-09 - 2023-02-08</span>
+               </div>
              </a>
         </div>
-        <div class="col-md-3 " title="Click see detailed Stock Data">
-            <a href="{{ route('products') }}" class="card text-dark shadow px-2 py-1 border border-info">
-                <span class="font-weight-bold ">Stock Value </span> 
-                <span class="font-weight-bold h5 text-center"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
-                <span class="small  text-center">Last stock count 22 Jan 23</span>
-             </a>
-        </div>
-        <div class="col-md-3 " title="Click see detailed Sales Data">
-             <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
-                <span class="font-weight-bold ">Sales  </span>
-                    <span class="font-weight-bold h5 text-center"> R
-                        {{-- {{number_format($sales, 2)}} --}}
-                        <span id="total_sales"> </span>
-                    </span>
-                <span class="small  text-center">From {{$dates['from']}} - {{$dates['to']}}</span>
-                {{-- <span class="small  text-center">+1.03% than last 30 days</span> --}}
-             </a>
-        </div>
-        <div class="col-md-3 " title=" Click see detailed Sales Data">
-            <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
-                <span class="font-weight-bold ">Nett Sales </span>
-                    <span class="font-weight-bold h5 text-center"> R
-                        {{-- {{number_format($nettsales, 2)}} --}}
-                        <span id="nettsales"></span>
-                    </span>
-                <span class="small  text-center">From {{$dates['from']}} - {{$dates['to']}}</span>
-                {{-- <span class="small  text-center">+13.03% than last 30 days</span> --}}
-             </a>
-            </div>
-
+        
+        <div class="col-md-6 " title=" Click see detailed Stock Data">
+            <a href="{{ route('products') }}" class="w-100 row  rounded text-dark shadow px-2 py-1 border border-info">
+               <div class=" border-right col-md-6 d-flex flex-column">
+                   <span class="font-weight-bold ">Mabebeza Sales </span> 
+                   <span class="font-weight-bold h5"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
+                   <span class="small ">From 2023-01-09 - 2023-02-08</span>
+              </div>
+              <div class=" border-left col-md-6 d-flex flex-column">
+                   <span class="font-weight-bold ">Mabebeza Nett Sales </span> 
+                   <span class="font-weight-bold h5"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
+                   <span class="small ">From 2023-01-09 - 2023-02-08</span>
+              </div>
+            </a>
+       </div>
         
     </div>
     <hr>
-    <div class="row border rounded p-3 w-100">
-        <div class="  bg-white rounded border-info col-md-12 p-0">
-            <canvas  id="myChart" class="m-0 border-danger" style="  height:100px"></canvas>
-        </div>
-        {{-- <div class="border bg-white rounded col-md-6 h-50 p-3">
-
-        </div> --}}
-    </div>
-    <hr>
+    
     <div class="ow border rounded p-3 w-100">
 <p class="font-weight-bold h4">
-   Top 10 perfoming Products
+   All Stores Data
 </p>
 <table class="table table-striped table-inverse table-responsive"  style="height: 500px;">
     <thead class="thead-inverse">
@@ -155,7 +139,9 @@
 
     //  Charts.js start    
     let salesdata = JSON.parse(document.getElementById("salesdata").value);
-  
+    console.log('salesdata')
+    console.log(salesdata)
+    console.log('salesdata')
     let xValues  = []; let yValues = [];  let sales = [];
     let total_sales = 0;
     let nettSales = 0;

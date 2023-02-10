@@ -29,12 +29,15 @@ class save_imported_salesCSV implements ShouldQueue
         // if (!is_numeric($num)) { $num = 0; }
         return number_format(floatval($num));
     }
+    // Sales	SalesQty
+
   
     public function handle() 
     {
         $sale = DB::table('sales')
         ->where( [['barcode', '=', $this->sales['code']],
                   ['from', '=', $this->form['date_from']],
+                  ['daily_total', '=', $this->form['isDailyTotals']],
                   ['storeID', '=', intval($this->form['store'])]] )
         ->get();
 
@@ -53,26 +56,28 @@ class save_imported_salesCSV implements ShouldQueue
             $sales->profit = $this->float($this->sales['profit']);
             $sales->from = $this->form['date_from'];
             $sales->to = $this->form['date_from'];
+            $sales->daily_total = $this->form['isDailyTotals'];
             $sales->storeID = intval($this->form['store']);
             $sales->userID  = $this->form['userID'];
             $sales->save();
 
             return true;
         }
-        
+
         // update the sale if it exist
         DB::table('sales')
         ->where( [['barcode', '=', $this->sales['code']],
-                  ['from', '=', $this->form['date_from']],
-                  ['storeID', '=', intval($this->form['store'])]] )
+                ['from', '=', $this->form['date_from']],
+                ['daily_total', '=', $this->form['isDailyTotals']],
+                ['storeID', '=', intval($this->form['store'])]] )
         ->update([
-            'sales' => $this->float($this->sales['sales']),
-            'salesCost' => $this->float($this->sales['salescost']),
-            'reFunds' => $this->float($this->sales['refund']),
-            'reFundsCost' => $this->float($this->sales['refundscost']),
-            'nettSales' => $this->float($this->sales['nettsales']),
-            'profit' => $this->float($this->sales['profit']), 
-            ]);
+                'sales' => $this->float($this->sales['sales']),
+                'salesCost' => $this->float($this->sales['salescost']),
+                'reFunds' => $this->float($this->sales['refund']),
+                'reFundsCost' => $this->float($this->sales['refundscost']),
+                'nettSales' => $this->float($this->sales['nettsales']),
+                'profit' => $this->float($this->sales['profit']), 
+                ]);
         return true;
     }
 }

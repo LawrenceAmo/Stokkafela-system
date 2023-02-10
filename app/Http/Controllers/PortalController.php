@@ -26,12 +26,18 @@ class PortalController extends Controller
             $selected_store = $this->get_store($stores, $storeID); 
             $storeID = $selected_store->storeID;
 
-            $salesdata = DB::table('sales')
-                            ->where( [['from', '>=', $from], ['to', '<=', $to],
-                                    ['storeID', '=', $storeID]])
-                            ->orderBy('from', 'asc')
+            $salesdata = DB::table('stores')
+                            ->join('products', 'stores.storeID', '=', 'products.storeID')
+                            ->join('sales', 'stores.storeID', '=', 'sales.storeID')
+            // ->where( [['from', '>=', $from], ['to', '<=', $to],
+                                    // ['storeID', '=', $storeID]
+                                    // ])
+                            //  ->orderBy('from', 'asc')
+                            ->limit(10000)
                             ->get();
 
+            // return $salesdata;
+ 
             $sales = array_sum( array_column($salesdata->toArray(), 'sales') );
             $nettsales = array_sum( array_column($salesdata->toArray(), 'nettSales') );
 

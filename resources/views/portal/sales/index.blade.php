@@ -106,7 +106,6 @@
 </table>
 {{-- <div class="text-center rounded p-2">{{ $products->onEachSide(5)->links() }}    </div> --}}
     </div>
-    </main>
  
 
     <!-- Modal -->
@@ -142,34 +141,47 @@
                         </div>
                         <hr>
                         <div class="d-grid b-3 ">
-                              
-                            <div class="form-group">
-                              <label for="">Sales Date</label>
-                              <input type="date" min="" name="date_from" id="date_from" class="form-control" placeholder="" aria-describedby="helpId">
-                              {{-- <small id="helpId" class="text-muted">Help text</small> --}}
+
+                          <div class="form-check   ">
+                            <div >Are these daily Totals</div>
+                            <label class="form-check-label pl-5">
+                              <input type="radio" class="form-check-input" name="isDailyTotals" @change="isDailyTotals(true)" value="1"  >
+                              Yes
+                            </label>
+                            <label class="form-check-label pl-5">
+                              <input type="radio" class="form-check-input" name="isDailyTotals" @change="isDailyTotals(false)" value="" >
+                                No
+                            </label>
+                          </div>
+                          <hr>
+                            <div class="d-none" id="date">
+                              <div class="form-group">
+                                <label for="">Sales Date</label>
+                                <input type="date" min="" name="date_from" id="date_from" class="form-control" placeholder="" aria-describedby="helpId">
+                                {{-- <small id="helpId" class="text-muted">Help text</small> --}}
+                              </div>
                             </div>
-
-                            {{-- <div class="form-group">
-                              <label for="">Date To</label>
-                              <input type="date" min="" name="date_to" id="date_to" class="form-control" placeholder="" aria-describedby="helpId">
-                             </div> --}}
-
+                    
+                            
                       </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="d-none" id="buttons">
+                  <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                    <button type="submit" class="btn btn-success btn-sm" :click="dailyTotals">Save</button>
+                </div>
                 </div>
             </form>
         </div>
     </div>
+  </main>
+
 {{-- ////////////////////////////////////////////////////////////////// --}} 
 <script>
  
 const { createApp } = Vue;
-      //  let
-      createApp({
+     createApp({
         data() {
           return {
             salesdb: [], 
@@ -180,6 +192,7 @@ const { createApp } = Vue;
             refundscost: 0,
             nettsales: 0,
             profit: 0, 
+            dailyTotals: [], 
             // 
             searchtext: "",
           }          
@@ -189,7 +202,7 @@ const { createApp } = Vue;
             let response = await  await axios.get("{{route('get_sales')}}");
             let data = await response.data;
 
-            console.log(await data)
+            // console.log(await data)
             for (let i = 0; i < data.length; i++) {
                 this.salesnew.push(data[i]);
 
@@ -224,6 +237,17 @@ const { createApp } = Vue;
             {
                 number = Number.parseFloat(num)
                 return number.toFixed(2);
+            },
+            isDailyTotals(val){
+              let date = document.getElementById("date")
+              let buttons = document.getElementById("buttons")
+
+              if (val) {
+                date.classList.add('d-none');
+              } else{
+                date.classList.remove('d-none');
+              }
+              buttons.classList.remove('d-none');
             },
             toNumber(num) 
             {
@@ -276,7 +300,7 @@ const { createApp } = Vue;
                       this.refunds = 0;
                       this.refundscost = 0;
                       this.nettsales = 0;
-                      this.profit = 0;    
+                      this.profit = 0;
 
                     for (let x = 0; x < mysales.length; x++) {
 

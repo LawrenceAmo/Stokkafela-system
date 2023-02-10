@@ -13,8 +13,8 @@ class Sales extends Model
     public function import_sales_csv($data, $request)
     {
         $data = $data[0];
-        $products = [];
- 
+        $products = []; 
+
         $header = ['CODE', 'Descript', 'DEPARTMENT', 'MAINITEM', 'Sales', 'SalesCost', 'Refunds', 'RefundsCost', 'NettSales', 'Profit'];
         array_push($products, $header); // push only the headers first
 
@@ -29,6 +29,7 @@ class Sales extends Model
         $RefundsCost = array_search('RefundsCost', $data[0]);
         $NettSales = array_search('NettSales', $data[0]);
         $Profit = array_search('Profit', $data[0]);
+        $date = array_search('Date', $data[0]);
          
         //  make the index for the sales
         $header = [
@@ -42,6 +43,7 @@ class Sales extends Model
                     'refundscost' => $RefundsCost,
                     'nettsales' => $NettSales,
                     'profit' => $Profit,
+                    'date' => $date,
                 ];
 
                 //  check if the headeres are correct or not
@@ -63,22 +65,28 @@ class Sales extends Model
                 // return $header;
          array_shift($data);  // remove the old headers 
 
+        //  if ($request->isDailyTotals) {
+        //     $date =  
+        //  }
+
+
          $form = [
                         'userID' => $request->userID,
                         'store' => $request->store,
                         'date_from' => $request->date_from,
                         'date_to' => $request->date_to,
+                        'isDailyTotals' => $request->isDailyTotals,
                     ];
-
+                    // \PHPExcel_Style_NumberFormat::toFormattedString($date, 'DD-MM-YYYY');
                     // temp
-                    $sales = 0;
-                    for ($x=0; $x < count($data); $x++) { 
-                        $sales += $data[$x][4];
-                    }
+                    // $sales = 0;
+                    // for ($x=0; $x < count($data); $x++) { 
+                    //     $sales += $data[$x][4];
+                    // }
   
-    // return $sales;
+    return $form;
 //  return $this->test($data, $header, $form ); 
-import_salesCSV::dispatch($data, $header, $form ); 
+// import_salesCSV::dispatch($data, $header, $form ); 
 // return only wanted fields from data in the excel file.
         return true;
     }

@@ -25,14 +25,26 @@ class import_salesCSV implements ShouldQueue
 
     public function handle()
     {
-        DB::table('sales')
-            ->where([['from', 'LIKE', $this->form['date_from'].'%'], ['storeID', intval($this->form['store'])]])
+        if (!$this->form['isDailyTotals']) {
+            DB::table('sales')
+            ->where([
+                    ['from', 'LIKE', $this->form['date_from'].'%'],
+                    ['storeID', intval($this->form['store'])],
+                    ['daily_total', '=', $this->form['isDailyTotals']],
+                    ])
             ->delete();
-
+        }
+ 
         for ($i=0; $i <count($this->data); $i++) {
-                            
+  
+            $code = $this->data[$i][$this->header['code']];
+
+            if (!$code) {
+                $code = 0;
+            }
+
             $sales = [
-                'code' => $this->data[$i][$this->header['code']],
+                'code' => $code,
                 'descript' => $this->data[$i][$this->header['descript']],
                 'mainitem' => $this->data[$i][$this->header['mainitem']],
                 'department' => $this->data[$i][$this->header['department']],
@@ -42,9 +54,9 @@ class import_salesCSV implements ShouldQueue
                 'refundscost' => $this->data[$i][$this->header['refundscost']],
                 'nettsales' => $this->data[$i][$this->header['nettsales']],
                 'profit' => $this->data[$i][$this->header['profit']],
+                'daily_total' => $this->form['isDailyTotals'], 
              ];
-            save_imported_salesCSV::dispatch($sales, $this->form);
- 
+            save_imported_salesCSV::dispatch($sales, $this->form); 
         }
     }
 }
