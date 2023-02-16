@@ -40,7 +40,7 @@ Route::get('/', function () {
     // Sales
     Route::get('sales',[SalesController::class, 'get_sales'])->name('get_sales');
 
-Route::get('/', [PortalController::class, 'index'])->name('portal');
+Route::get('/', [PortalController::class, 'get_all_stores_data'])->name('get_all_stores_data'); // test
 
 // });
 

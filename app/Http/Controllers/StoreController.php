@@ -107,7 +107,7 @@ class StoreController extends Controller
 
     /**
      * Show store data. Get that from ID or request
-     */
+     */ 
     public function show(Request $request, $id = 0)
     { 
         $id == true ? $storeID = $id : $storeID = 0;

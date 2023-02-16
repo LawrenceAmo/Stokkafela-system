@@ -30,13 +30,29 @@ class import_salesCSV implements ShouldQueue
             ->where([
                     ['from', 'LIKE', $this->form['date_from'].'%'],
                     ['storeID', intval($this->form['store'])],
-                    ['daily_total', '=', $this->form['isDailyTotals']],
+                    ['daily_total', '=', false],
                     ])
             ->delete();
         }
  
         for ($i=0; $i <count($this->data); $i++) {
-  
+
+            // if ($i > 5) {
+            //     break;
+            //     return false;    
+            // }  
+            // $this->form['isDailyTotals']
+
+            if ($this->form['isDailyTotals']) {
+                $date_from = date('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp( $this->data[$i][$this->header['date']]));
+                $date_to = date('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($this->data[$i][$this->header['date']]));
+                $isDailyTotals = true;
+            }else{
+                $date_from = $this->form['date_from'];
+                $date_to = $this->form['date_from'];    //need to be changed
+                $isDailyTotals = false;
+            }
+
             $code = $this->data[$i][$this->header['code']];
 
             if (!$code) {
@@ -54,7 +70,10 @@ class import_salesCSV implements ShouldQueue
                 'refundscost' => $this->data[$i][$this->header['refundscost']],
                 'nettsales' => $this->data[$i][$this->header['nettsales']],
                 'profit' => $this->data[$i][$this->header['profit']],
-                'daily_total' => $this->form['isDailyTotals'], 
+                'vat' => $this->data[$i][$this->header['vat']],
+                'isDailyTotals' => $isDailyTotals,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
              ];
             save_imported_salesCSV::dispatch($sales, $this->form); 
         }

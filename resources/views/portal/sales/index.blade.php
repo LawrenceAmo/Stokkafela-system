@@ -247,6 +247,7 @@ const { createApp } = Vue;
               } else{
                 date.classList.remove('d-none');
               }
+              // if
               buttons.classList.remove('d-none');
             },
             toNumber(num) 
@@ -338,9 +339,7 @@ const { createApp } = Vue;
              this.salesnew = [];
              this.salesnew = [ ...mysales ]; 
 
-             //  //////////////////////////////////
-            
-            
+             //  ////////////////////////////////// 
         },
 
        }

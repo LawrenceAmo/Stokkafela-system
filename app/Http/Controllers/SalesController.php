@@ -19,22 +19,14 @@ class SalesController extends Controller
     }
   
     public function index()
-    {
-     
-        $stores = DB::table('stores')->get(['storeID','name']); 
+    { 
+        $stores = DB::table('stores')->get(['storeID','name']);
 
         return view('portal.sales.index')
                 ->with('stores', $stores)
                 ->with('get_products_stats', $this->get_products_stats());
-
     }
-
  
-    public function create()
-    {
-        return true;
-    }
-
     public function save(Request $request)
     {
         $request->validate([
@@ -44,11 +36,7 @@ class SalesController extends Controller
                 'sales_file' => 'required',
             ]);
 
-        // if ($request->isDailyTotals) {
-        //     $request->isDailyTotals;// = null;
-        // } 
-      
-// return $request;
+ 
         $data = Excel::toArray(new CSVImport, request()->file('sales_file'));       
  
         $userID =  Auth::id();

@@ -32,12 +32,13 @@ class save_imported_salesCSV implements ShouldQueue
     // Sales	SalesQty
 
   
-    public function handle() 
+    public function handle()  
     {
         $sale = DB::table('sales')
         ->where( [['barcode', '=', $this->sales['code']],
-                  ['from', '=', $this->form['date_from']],
-                  ['daily_total', '=', $this->form['isDailyTotals']],
+        ['from', '=', $this->sales['date_from']],
+        ['to', '=', $this->sales['date_to']],
+        ['daily_total', '=', $this->form['isDailyTotals']],
                   ['storeID', '=', intval($this->form['store'])]] )
         ->get();
 
@@ -53,10 +54,11 @@ class save_imported_salesCSV implements ShouldQueue
             $sales->reFunds = $this->float($this->sales['refund']);
             $sales->reFundsCost = $this->float($this->sales['refundscost']);
             $sales->nettSales = $this->float($this->sales['nettsales']);
-            $sales->profit = $this->float($this->sales['profit']);
-            $sales->from = $this->form['date_from'];
-            $sales->to = $this->form['date_from'];
-            $sales->daily_total = $this->form['isDailyTotals'];
+            $sales->profit = $this->float($this->sales['profit']);            
+            $sales->vat = $this->float($this->sales['vat']);            
+            $sales->from = $this->sales['date_from'];
+            $sales->to = $this->sales['date_to'];
+            $sales->daily_total = $this->sales['isDailyTotals'];
             $sales->storeID = intval($this->form['store']);
             $sales->userID  = $this->form['userID'];
             $sales->save();
@@ -67,7 +69,8 @@ class save_imported_salesCSV implements ShouldQueue
         // update the sale if it exist
         DB::table('sales')
         ->where( [['barcode', '=', $this->sales['code']],
-                ['from', '=', $this->form['date_from']],
+                ['from', '=', $this->sales['date_from']],
+                ['to', '=', $this->sales['date_to']],
                 ['daily_total', '=', $this->form['isDailyTotals']],
                 ['storeID', '=', intval($this->form['store'])]] )
         ->update([
@@ -77,6 +80,7 @@ class save_imported_salesCSV implements ShouldQueue
                 'reFundsCost' => $this->float($this->sales['refundscost']),
                 'nettSales' => $this->float($this->sales['nettsales']),
                 'profit' => $this->float($this->sales['profit']), 
+                'vat' => $this->float($this->sales['vat']), 
                 ]);
         return true;
     }

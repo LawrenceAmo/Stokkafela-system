@@ -39,7 +39,7 @@ class product_stats implements ShouldQueue
                     $total_stock += (int)$products[$i]->onhand;
                 // }
 
-           if(number_format($products[$i]->onhand) < 0)
+           if(number_format($products[$i]->onhand) <= 0)
                 {
                     $out_of_stock_products += 1;
                 } 

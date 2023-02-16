@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('reFundsCost')->nullable();
             $table->string('nettSales')->nullable();
             $table->string('profit')->nullable();
+            $table->string('vat')->nullable();
             $table->boolean('daily_total')->default(false)->index();
             $table->dateTime('from', $precision = 0);
             $table->dateTime('to', $precision = 0);

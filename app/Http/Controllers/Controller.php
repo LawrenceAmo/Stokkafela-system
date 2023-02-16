@@ -40,7 +40,7 @@ class Controller extends BaseController
     }
 
     // get a store from stores
-    protected function get_store(Object $stores, int $storeID = 0):Object
+    protected function get_store(Object $stores, $storeID = 0):Object
     {
         // View::share('site_settings', app('site_settings'));
 

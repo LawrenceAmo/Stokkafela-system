@@ -29,8 +29,13 @@ class Sales extends Model
         $RefundsCost = array_search('RefundsCost', $data[0]);
         $NettSales = array_search('NettSales', $data[0]);
         $Profit = array_search('Profit', $data[0]);
+        $vat = array_search('VAT', $data[0]);
         $date = array_search('Date', $data[0]);
          
+        if (!$vat) {
+            return "aaaaaaaaa";
+        }
+        return $vat;
         //  make the index for the sales
         $header = [
                     'code' => $CODE,
@@ -43,6 +48,7 @@ class Sales extends Model
                     'refundscost' => $RefundsCost,
                     'nettsales' => $NettSales,
                     'profit' => $Profit,
+                    'vat' => $vat,
                     'date' => $date,
                 ];
 
@@ -62,14 +68,8 @@ class Sales extends Model
                 {
                     return false;
                 }
-                // return $header;
-         array_shift($data);  // remove the old headers 
-
-        //  if ($request->isDailyTotals) {
-        //     $date =  
-        //  }
-
-
+        //   array_shift($data);  // remove the old headers 
+ 
          $form = [
                         'userID' => $request->userID,
                         'store' => $request->store,
@@ -77,16 +77,13 @@ class Sales extends Model
                         'date_to' => $request->date_to,
                         'isDailyTotals' => $request->isDailyTotals,
                     ];
-                    // \PHPExcel_Style_NumberFormat::toFormattedString($date, 'DD-MM-YYYY');
-                    // temp
-                    // $sales = 0;
-                    // for ($x=0; $x < count($data); $x++) { 
-                    //     $sales += $data[$x][4];
-                    // }
-  
-    return $form;
+                    // \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])
+    //                 $date = $data[1][0];
+    //                 $date = date('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp( $date));
+    return $data[0][8];
+    
 //  return $this->test($data, $header, $form ); 
-// import_salesCSV::dispatch($data, $header, $form ); 
+import_salesCSV::dispatch($data, $header, $form ); 
 // return only wanted fields from data in the excel file.
         return true;
     }
@@ -109,6 +106,7 @@ class Sales extends Model
                     'refundscost' => $data[$i][$header['refundscost']],
                     'nettsales' => $data[$i][$header['nettsales']],
                     'profit' => $data[$i][$header['profit']],
+                    // 'vat' => $data[$i][$header['vat']],
                  ];
 
                  return $sales;
@@ -119,20 +117,4 @@ class Sales extends Model
             return $sales;
     }
 }
-
-
-
-
-// {"uuid":"b8ef2842-3623-49fd-8012-4eb24a3fc1bd",
-//     "displayName":"App\\Jobs\\save_imported_salesCSV",
-//     "job":"Illuminate\\Queue\\CallQueuedHandler@call",
-//     "maxTries":null,
-//     "maxExceptions":null,
-//     "failOnTimeout":false,
-//     "backoff":null,
-//     "timeout":null,
-//     "retryUntil":null,
-//     "data":{"commandName":"App\\Jobs\\save_imported_salesCSV",
-//         "command":"O:31:\"App\\Jobs\\save_imported_salesCSV\":2:{s:5:\"sales\";a:10:{s:4:\"code\";s:13:\"6009805070090\";s:8:\"descript\";s:23:\"PITSANA MAIZE MEAL 80KG\";s:8:\"mainitem\";N;s:10:\"department\";s:3:\"017\";s:5:\"sales\";i:1360;s:9:\"salescost\";i:1255;s:6:\"refund\";i:0;s:11:\"refundscost\";i:0;s:9:\"nettsales\";i:1360;s:6:\"profit\";i:105;}s:4:\"form\";a:4:{s:6:\"userID\";i:7;s:5:\"store\";s:2:\"17\";s:9:\"date_from\";s:10:\"2023-01-19\";s:7:\"date_to\";s:10:\"2023-01-19\";}}"}}
-
-
+ 

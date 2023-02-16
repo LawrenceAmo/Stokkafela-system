@@ -4,7 +4,7 @@
           text-decoration: none;
       }
   </style>
-  {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <main class="m-0  px-4 w-100" id="app">
 
       <form action="{{ route('store') }}" method="GET" class=" justify-content-between border shadow rounded px-3 py-0 pt-3 mb-3 w-100">
@@ -197,14 +197,14 @@ const { createApp } = Vue;
       // don't add negetive nettsales
     //   if ( nettsale > 0) {
           nettSales += nettsale;
-    //   }
+    //   } 
 
    }
    
 //    {{-- K 2021 384419 07 --}}
 
    total_sales =  Number(total_sales);
-   nettSales =  Number(nettSales);// + Number(nettSales * 0.15);  // add 15% VAT
+   nettSales =  Number(nettSales) ;//+ Number(nettSales * 0.15);  // add 15% VAT
 
    document.getElementById("total_sales").innerHTML = total_sales.toLocaleString('en-US');
    document.getElementById("nettsales").innerHTML = nettSales.toLocaleString('en-US');
