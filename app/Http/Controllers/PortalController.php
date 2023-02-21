@@ -26,7 +26,7 @@ class PortalController extends Controller
         $products_data = DB::table('stores')
                         ->join('products', 'stores.storeID', '=', 'products.storeID')
                         ->orderBy('stores.storeID')                          
-                        ->get();
+                        ->get(); 
 
         $sales_data = DB::table('sales')
                     ->where( [['from', '>=', $from], ['to', '<=', $to], ['daily_total', '=', true]])

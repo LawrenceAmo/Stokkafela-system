@@ -29,7 +29,7 @@ class StoreController extends Controller
     public function index()
     {
         $store = Store::get();       
-        return  view('portal.store.index', ['miniStats'=> $this->get_mini_stats()])->with('stores', $store);
+        return  view('portal.store.index')->with('stores', $store);
     }
 
     /**
@@ -132,13 +132,34 @@ class StoreController extends Controller
             $storeID = $selected_store->storeID;
  
             $salesdata = DB::table('sales')
-                            ->where( [['from', '>=', $from], ['to', '<=', $to],
+                            ->where( [['from', '>=', $from], ['to', '<=', $to], ['daily_total', '=', true],
                                     ['storeID', '=', $storeID]])
                             ->orderBy('from', 'asc')
                             ->get();
 
+            $products = DB::table('products')
+                            ->where( [['storeID', '=', $storeID]])
+                            ->orderBy('onhand', 'DESC')
+                            ->get();
+
             $sales = array_sum( array_column($salesdata->toArray(), 'sales') );
             $nettsales = array_sum( array_column($salesdata->toArray(), 'nettSales') );
+        // /////////////////////////////////////////
+        // get top selling products
+        $sales = DB::select(
+            "SELECT `barcode`, COUNT(`barcode`) AS `code` FROM `sales`
+             WHERE `from` > ? AND `to` < ? AND `storeID` = ? GROUP BY `barcode` ORDER BY `code` DESC LIMIT 10", 
+            [
+                date_sub(now(),date_interval_create_from_date_string("31 days")),
+                date_sub(now(),date_interval_create_from_date_string("1 days")),
+                $storeID
+            ]
+        );
+        
+        // Get only codes
+        $codes = array_column($sales, 'barcode'); 
+        $top_products = DB::table('products')->whereIn('barcode', $codes)->limit(10)->get();
+        // //////////////////////
 
         return view('portal.store.store')
                 ->with('salesdata', $salesdata)
@@ -148,7 +169,8 @@ class StoreController extends Controller
                 ->with('stores', $stores)
                 ->with('selected_store', $selected_store)
                 ->with('nettsales', $nettsales)
-                ->with('get_products_stats', $this->get_products_stats());
+                ->with('products', $products)
+                ->with('top_products', $top_products);
     }
 
    

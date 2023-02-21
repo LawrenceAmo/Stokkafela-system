@@ -32,13 +32,13 @@ class Sales extends Model
         $vat = array_search('VAT', $data[0]);
         $date = array_search('Date', $data[0]);
          
-        if (!$vat) {
-            return "aaaaaaaaa";
+        if (!$vat && $request->isDailyTotals) {
+            return false;
         }
-        return $vat;
+        // return 'request->isDailyTotals';
         //  make the index for the sales
         $header = [
-                    'code' => $CODE,
+                    'code' => $CODE, 
                     'descript' => $Descript,
                     'mainitem' => $MAINITEM,
                     'department' => $DEPARTMENT,
@@ -79,8 +79,12 @@ class Sales extends Model
                     ];
                     // \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])
     //                 $date = $data[1][0];
-    //                 $date = date('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp( $date));
-    return $data[0][8];
+    //                 $date = $data[17][$date];
+    //                 $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp( $date );
+    //                 $date = date('Y-m-d', $date );
+    //                 // 2023-02-16 18:53:20
+    // $date = (string)$date."%";
+    // return gettype($date);
     
 //  return $this->test($data, $header, $form ); 
 import_salesCSV::dispatch($data, $header, $form ); 
@@ -117,4 +121,4 @@ import_salesCSV::dispatch($data, $header, $form );
             return $sales;
     }
 }
- 
+  

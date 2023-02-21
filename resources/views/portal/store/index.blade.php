@@ -1,32 +1,6 @@
 <x-app-layout>
-    <main class="m-0  px-4   w-100">
-        <div class="  row bg-white shadow border rounded p-3 w-100">
-         
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">Total Stores <span>{{$miniStats['stores']}}</span></p>
-                    
-                 </div>
-            </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center"> Products  <span>{{$miniStats['products']}}</span></p>
-                 </div>
-            </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">  Total Stuff <span>{{$miniStats['staff']}}</span></p>
-                 </div>
-            </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">Available Jobs <span>{{$miniStats['jobs']}}</span></p>
-                 </div>
-            </div>
-    
-            
-        </div>
-    <hr>
+    <main class="m-0  px-4 py-5   w-100">
+      
    
     <div class="card border rounded p-3 w-100 table-responsive">
         <div class="row mx-0 animated fadeInDown">

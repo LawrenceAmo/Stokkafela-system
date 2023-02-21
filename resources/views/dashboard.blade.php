@@ -32,12 +32,12 @@
              <a href="{{ route('store') }}" class="w-100 row  rounded text-dark shadow px-2 py-1 border border-danger">
                 <div class=" border-right col-md-6 d-flex flex-column">
                     <span class="font-weight-bold ">@{{store.name.replace('Tembisa','')}} <span>Sales</span> </span> 
-                    <span class="font-weight-bold h5"> R@{{store.sales.toLocaleString('en-US')}} </span>
+                    <span class="font-weight-bold h5"> R@{{store.nett_sales.toLocaleString('en-US')}} </span>
                     <span class="small ">{{$dates['from']}} - {{$dates['to']}}</span>
                </div>
                <div class=" border-left col-md-6 d-flex flex-column">
-                    <span class="font-weight-bold ">@{{store.name.replace('Tembisa','')}} <span>NettSales</span> </span> 
-                    <span class="font-weight-bold h5"> R@{{store.nett_sales.toLocaleString('en-US')}} </span>
+                    <span class="font-weight-bold ">@{{store.name.replace('Tembisa','')}} <span>Sales + VAT</span> </span> 
+                    <span class="font-weight-bold h5"> R@{{(store.nett_sales + store.vat).toLocaleString('en-US')}} </span>
                     <span class="small ">{{$dates['from']}} - {{$dates['to']}}</span>
                </div> 
              </a>
@@ -55,16 +55,15 @@
         <tr>
  
             <th>#</th>
-            <th>Store</th>
+            <th>Store Name</th>
             <th>On Hand</th>
             <th>OOS</th>
-            <th>Stock</th>
+            <th>OOS Value</th>
             <th>Sock Value</th>
             <th>Sales</th>
             <th>Nett Sales</th>
             <th>VAT</th>
-
-             {{-- <th>Created At</th> --}}
+            <th>VAT Inclusive</th>
          </tr>
         </thead>
         <tbody> 
@@ -73,11 +72,12 @@
                 <td class="font-weight-bold" v-if="store[0] !== undefined"><a href='{{ route('store', ['store[0].storeID'])}}'> @{{store[0].name}}</td>          <td class="font-weight-bold" v-else>  N/A </td>
                 <td class="font-weight-bold" v-if="store[1] !== undefined">@{{store[1].soh}}</td>        <td class="font-weight-bold text-danger" v-else> N/A </td>
                 <td class="font-weight-bold" v-if="store[1] !== undefined">@{{store[1].oos}}</td>        <td class="font-weight-bold text-danger" v-else> N/A </td>
-                <td class="font-weight-bold" v-if="store[1] !== undefined">@{{store[1].stock}}</td>      <td class="font-weight-bold text-danger" v-else> N/A </td> 
+                <td class="font-weight-bold text-danger" v-if="store[1] !== undefined">R@{{store[1].oosv.toLocaleString('en-US')}}</td>      <td class="font-weight-bold text-danger" v-else> N/A </td> 
                 <td class="font-weight-bold" v-if="store[1] !== undefined">R @{{store[1].stock_value.toLocaleString('en-US')}}</td> <td class="font-weight-bold text-danger" v-else> N/A </td> 
                 <td class="font-weight-bold" v-if="store[0] !== undefined">R @{{store[0].sales.toLocaleString('en-US')}}</td>      <td class="font-weight-bold text-danger" v-else> N/A </td> 
-                <td class="font-weight-bold" v-if="store[0] !== undefined">R @{{store[0].nett_sales.toLocaleString('en-US')}}</td> <td class="font-weight-bold text-danger" v-else> N/A </td> 
+                <td class="font-weight-bold text-info" v-if="store[0] !== undefined">R @{{store[0].nett_sales.toLocaleString('en-US')}}</td> <td class="font-weight-bold text-danger" v-else> N/A </td> 
                 <td class="font-weight-bold" v-if="store[0] !== undefined">R @{{store[0].vat.toLocaleString('en-US')}}</td> <td class="font-weight-bold text-danger" v-else> N/A </td> 
+                <td class="font-weight-bold text-success" v-if="store[0] !== undefined">R @{{(store[0].nett_sales + store[0].vat).toLocaleString('en-US')}}</td> <td class="font-weight-bold text-danger" v-else> N/A </td> 
                          
             </tr>
          </tbody> 
@@ -119,7 +119,7 @@
                     stores[ storeID ]['storeID'] = storeID;
  
                     // add store name
-                    for (let x = 0; x < stores_only.length; x++) {
+                    for (let x = 0; x < stores_only.length; x++) { 
                            if (stores_only[x].storeID == storeID) {
                             stores[ storeID ]['name'] = stores_only[x].name
                          } 
@@ -143,21 +143,20 @@
                     storesIDs.push(id);
                     store_data[ id ]['stock_value'] = 0
                     store_data[ id ]['oos'] = 0
-                    store_data[ id ]['stock'] = 0
+                    store_data[ id ]['oosv'] = 0
+                    // store_data[ id ]['stock'] = 0
                     store_data[ id ]['soh'] = 0; 
                 }
                 store_data[ id ]['soh'] += parseInt(products_data[x].onhand);
                 store_data[ id ]['stock_value'] +=  parseInt( products_data[x].onhand) * this.toDecimal( products_data[x].avrgcost);
-                store_data[ id ]['stock'] += 1;
+                // store_data[ id ]['stock'] += 1;
                 let oos = parseInt( products_data[x].onhand) ;
                 if (oos <= 0) {
                     store_data[ id ]['oos'] += 1;
+                    store_data[ id ]['oosv'] += parseInt( products_data[x].onhand) * this.toDecimal( products_data[x].avrgcost);
                 }                             
              }
-
-            //  stores = stores.filter( Boolean )
-            //  store_data = store_data.filter( Boolean )
-
+ 
             let all_stores_data = []
              for (let y = 0; y < stores_only.length; y++) {
                 
@@ -185,91 +184,6 @@
             }
         }
    }).mount("#app");
-
-//    OnHandAvail 
-// active 
-// avrgcost 
-// barcode 
-// created_at 
-// department 
-// descript 
-// discription 
-// name
-// : 
-// "Stokkafela Tembisa"
-// onhand
-// : 
-// "0"
-// planID
-// : 
-// 1
-// productID
-// : 
-// 2935
-// sellpinc1
-// : 
-// "0"
-// sellprice1
-// : 
-// null
-// slogan
-// : 
-// null
-// storeID
-// : 
-// 17
-// trading_name
-// : 
-// "Stokkafela 01"
-// updated_at
-// : 
-// "2023-01-26 11:56:16"
-// userID
-// : 
-// 7
-
-    // //  Charts.js start    
-    // let salesdata = JSON.parse(document.getElementById("salesdata").value);
-    // console.log('salesdata')
-    // console.log(salesdata)
-    // console.log('salesdata')
-    // let xValues  = []; let yValues = [];  let sales = [];
-    // let total_sales = 0;
-    // let nettSales = 0;
-    // let stock_codes = [];
-    // let stock = [];
- 
-    // for (let i = 0; i < salesdata.length; i++) {
- 
-    //     let date = salesdata[i].from.substring(0, 10)
-    //     let barcode = salesdata[i].barcode
-    //     let sale = number(salesdata[i].sales);
-    //     let nettsale = number(salesdata[i].nettSales);
-
-    //     // add days if not exist
-    //     if (!xValues.includes(date)) {
-    //         sales[ date ] = 0;   // add array of sales for that day
-    //         xValues.push(date);
-    //     }
-
-    //     sales[ date ] += nettsale;  // add nettsales for each day;
-    //     total_sales += sale;    // add each sale
-
-    //     // don't add negetive nettsales 
-    //     if ( nettsale > 0) {
-    //         nettSales += nettsale;
-    //     }
-    //  }
-
-    //  total_sales =  Number(total_sales);
-    //  nettSales =  Number(nettSales) + Number(nettSales * 0.15);  // add 15% VAT
-
-    //  document.getElementById("total_sales").innerHTML = total_sales.toLocaleString('en-US');
-    //  document.getElementById("nettsales").innerHTML = nettSales.toLocaleString('en-US');
-
-    // yValues = Object.values(sales);
   
- 
- 
     </script>
 </x-app-layout>

@@ -24,28 +24,42 @@ class save_imported_salesCSV implements ShouldQueue
         $this->form = $form;
     }
     
-    public function float($num = 0)
+    public function float($number = 0)
     {
         // if (!is_numeric($num)) { $num = 0; }
-        return number_format(floatval($num));
+        return number_format(floatval($number));
     }
     // Sales	SalesQty
 
   
     public function handle()  
     {
-        $sale = DB::table('sales')
-        ->where( [['barcode', '=', $this->sales['code']],
-        ['from', '=', $this->sales['date_from']],
-        ['to', '=', $this->sales['date_to']],
-        ['daily_total', '=', $this->form['isDailyTotals']],
-                  ['storeID', '=', intval($this->form['store'])]] )
-        ->get();
+        $date_from = date( 'Y-m-d' ,strtotime($this->sales['date_from']));
+        $date_to = date( 'Y-m-d' ,strtotime($this->sales['date_to']));
+        $date_from = '%'.$date_from.'%';
+        $date_to = '%'.$date_to.'%';
 
-        if ($sale->isEmpty()) {
+        $isDailyTotals = $this->form['isDailyTotals'];
+        
+        if ($isDailyTotals) {
+            $isDailyTotals = true;
+        } else {
+            $isDailyTotals = false;
+        }
+
+        
+        $sale = DB::table('sales')
+                ->where( [['barcode', '=', $this->sales['code']],
+                    ['from', 'LIKE', $date_from],
+                    ['to', 'LIKE', $date_to],
+                    ['daily_total', '=', $isDailyTotals],
+                    ['storeID', '=', intval($this->form['store'])]] )
+                ->delete();
+
+        // if ($sale->isEmpty()) {
 
             $sales = new Sales();
-            $sales->barcode = $this->sales['code'];
+            $sales->barcode = $this->sales['code']; 
             $sales->descript = $this->sales['descript'];
             $sales->department = $this->sales['department'];
             $sales->mainitem = $this->sales['mainitem'];
@@ -64,26 +78,26 @@ class save_imported_salesCSV implements ShouldQueue
             $sales->save();
 
             return true;
-        }
+        // }
 
         // update the sale if it exist
-        DB::table('sales')
-        ->where( [['barcode', '=', $this->sales['code']],
-                ['from', '=', $this->sales['date_from']],
-                ['to', '=', $this->sales['date_to']],
-                ['daily_total', '=', $this->form['isDailyTotals']],
-                ['storeID', '=', intval($this->form['store'])]] )
-        ->update([
-                'sales' => $this->float($this->sales['sales']),
-                'salesCost' => $this->float($this->sales['salescost']),
-                'reFunds' => $this->float($this->sales['refund']),
-                'reFundsCost' => $this->float($this->sales['refundscost']),
-                'nettSales' => $this->float($this->sales['nettsales']),
-                'profit' => $this->float($this->sales['profit']), 
-                'vat' => $this->float($this->sales['vat']), 
-                ]);
+        // DB::table('sales')
+        // ->where( [['barcode', '=', $this->sales['code']],
+        //         ['from', 'LIKE', $date_from],
+        //         ['to', 'LIKE', $date_to],
+        //         ['daily_total', '=', $this->form['isDailyTotals']],
+        //         ['storeID', '=', intval($this->form['store'])]] )
+        // ->update([
+        //         'sales' => $this->float($this->sales['sales']),
+        //         'salesCost' => $this->float($this->sales['salescost']),
+        //         'reFunds' => $this->float($this->sales['refund']),
+        //         'reFundsCost' => $this->float($this->sales['refundscost']),
+        //         'nettSales' => $this->float($this->sales['nettsales']),
+        //         'profit' => $this->float($this->sales['profit']), 
+        //         'vat' => $this->float($this->sales['vat']), 
+        //         ]);
+                
         return true;
     }
 }
 
- 

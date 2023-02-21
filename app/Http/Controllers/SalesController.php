@@ -48,7 +48,7 @@ class SalesController extends Controller
         return $import_sales;
 
         if (!$import_sales) {
-            return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload saless file!!!');
+            return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload sales file!!!');
         }
         return redirect()->back()->with('success', 'Uploading saless... Please refresh to see updates!!!'); 
      }

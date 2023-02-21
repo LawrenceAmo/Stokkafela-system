@@ -40,32 +40,22 @@
        
       <div class="col-md-3 " title=" Click see detailed Stock Data">
            <a href="{{ route('products') }}" class="card text-dark shadow px-2 py-1 border border-info">
-              <span class="font-weight-bold ">Out of stock  </span>
-              <span class="font-weight-bold h5 text-center text-danger"> {{$get_products_stats->out_of_stock_products}} </span>
-              <span class="small  text-center">Stock on hand {{$get_products_stats->stock_onhand}}</span>
+              <span class="font-weight-bold ">Out of stock Value  </span>
+              <span class="font-weight-bold h5 text-center text-danger"> R<span id="oosv"></span> </span>
+              <span class="small  text-center">Stock on hand  </span>
            </a>
       </div>
       <div class="col-md-3 " title="Click see detailed Stock Data">
           <a href="{{ route('products') }}" class="card text-dark shadow px-2 py-1 border border-info">
               <span class="font-weight-bold ">Stock Value </span> 
-              <span class="font-weight-bold h5 text-center"> R{{number_format($get_products_stats->stock_value, 2)}} </span>
+              <span class="font-weight-bold h5 text-center"> R <span id="stock_value"></span> </span>
               <span class="small  text-center">Last stock count 22 Jan 23</span>
            </a>
       </div>
-      <div class="col-md-3 " title="Click see detailed Sales Data">
-           <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
-              <span class="font-weight-bold ">Sales  </span>
-                  <span class="font-weight-bold h5 text-center"> R
-                      {{-- {{number_format($sales, 2)}} --}}
-                      <span id="total_sales"> </span>
-                  </span>
-              <span class="small  text-center">From {{$dates['from']}} - {{$dates['to']}}</span>
-              {{-- <span class="small  text-center">+1.03% than last 30 days</span> --}}
-           </a>
-      </div>
+      
       <div class="col-md-3 " title=" Click see detailed Sales Data">
           <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
-              <span class="font-weight-bold ">Nett Sales </span>
+              <span class="font-weight-bold "> Sales </span>
                   <span class="font-weight-bold h5 text-center"> R
                       {{-- {{number_format($nettsales, 2)}} --}}
                       <span id="nettsales"></span>
@@ -74,6 +64,17 @@
               {{-- <span class="small  text-center">+13.03% than last 30 days</span> --}}
            </a>
           </div>
+          <div class="col-md-3 " title="Click see detailed Sales Data">
+            <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
+               <span class="font-weight-bold ">Sales + VAT </span>
+                   <span class="font-weight-bold h5 text-center"> R
+                       {{-- {{number_format($sales, 2)}} --}}
+                       <span id="total_sales"> </span>
+                   </span>
+               <span class="small  text-center">From {{$dates['from']}} - {{$dates['to']}}</span>
+               {{-- <span class="small  text-center">+1.03% than last 30 days</span> --}}
+            </a>
+       </div>
 
       
   </div>
@@ -130,6 +131,8 @@
 </table>
   </div>
   </main>
+  <input type="hidden" name="" id="products" value="{{$products}}">
+  <input type="hidden" name="" id="top_products" value="{{$top_products}}">
   <input type="hidden" name="" id="salesdata" value="{{$salesdata}}">
   <input type="hidden" name="" id="selected_store" value="{{$selected_store->storeID}}">
   <script>
@@ -143,8 +146,8 @@ const { createApp } = Vue;
       },
      async created() {
           let selected_store = document.getElementById("selected_store").value;
-          let response = await  await axios.get("{{route('get_top_products')}}");
-          let data = await response.data;
+        //   let response = await  await axios.get("{{route('get_top_products')}}");
+          let data =  JSON.parse(document.getElementById("top_products").value);
           console.log(data)
           for (let i = 0; i < data.length; i++) {
               this.top_products.push(data[i]);
@@ -163,15 +166,18 @@ const { createApp } = Vue;
 
   //  Charts.js start    
   let salesdata = JSON.parse(document.getElementById("salesdata").value);
+  let products = JSON.parse(document.getElementById("products").value);
 
   let xValues  = []; let yValues = [];  let sales = [];
   let total_sales = 0;
   let nettSales = 0;
+  let total_vat = 0;
+  let vat = 0;
   let stock_codes = [];
   let stock = [];
 
   // get float number from string
-  function number(num) {
+  function tonumber(num) {
       let number = num;
           number = number.replace(/,/g, "");
           number = parseFloat(number);
@@ -182,32 +188,52 @@ const { createApp } = Vue;
 
       let date = salesdata[i].from.substring(0, 10)
       let barcode = salesdata[i].barcode
-      let sale = number(salesdata[i].sales);
-      let nettsale = number(salesdata[i].nettSales);
+      let sale = tonumber(salesdata[i].sales);
+    //   console.log(salesdata[i].nettSales)
+    let nettsale = tonumber(salesdata[i].nettSales);
+    let vat = tonumber(salesdata[i].vat);
 
       // add days if not exist
       if (!xValues.includes(date)) {
-          sales[ date ] = 0;   // add array of sales for that day
+          sales[ date ] = 0;   // add array of sales for that day 
           xValues.push(date);
       }
-
-      sales[ date ] += nettsale;  // add nettsales for each day;
+      sales[ date ] += nettsale + vat ;  // add nettsales for each day;
       total_sales += sale;    // add each sale
 
       // don't add negetive nettsales
     //   if ( nettsale > 0) {
-          nettSales += nettsale;
+        nettSales += nettsale;
+        total_vat += vat;
     //   } 
 
    }
-   
+   let oosv = 0;
+   let stock_value = 0;
+   for (let x = 0; x < products.length; x++) {
+        // oosv 
+        if (products[x].onhand >= 1) {
+            stock_value += tonumber(products[x].onhand) * tonumber(products[x].avrgcost)
+        }
+        if (products[x].onhand <= 0) {
+            oosv +=  tonumber(products[x].onhand) * tonumber(products[x].avrgcost)
+        }
+    // console.log(products[x].avrgcost, products[x].onhand );    
+   }
+   oosv = Number(oosv).toFixed(2)
+   stock_value = Number(stock_value).toFixed(2)
+   document.getElementById('oosv').innerHTML = Number(oosv).toLocaleString('en-US');
+   document.getElementById('stock_value').innerHTML = Number(stock_value).toLocaleString('en-US');
+ 
 //    {{-- K 2021 384419 07 --}}
 
    total_sales =  Number(total_sales);
+   total_vat =  Number(total_vat) ;//+ Number(nettSales * 0.15);  // add 15% VAT
+   total_sales =  nettSales + total_vat ;//+ Number(nettSales * 0.15);  // add 15% VAT
    nettSales =  Number(nettSales) ;//+ Number(nettSales * 0.15);  // add 15% VAT
-
-   document.getElementById("total_sales").innerHTML = total_sales.toLocaleString('en-US');
-   document.getElementById("nettsales").innerHTML = nettSales.toLocaleString('en-US');
+// console.log(total_vat)
+   document.getElementById("total_sales").innerHTML = Number(total_sales).toLocaleString('en-US');
+   document.getElementById("nettsales").innerHTML = Number(nettSales).toLocaleString('en-US');
 
   yValues = Object.values(sales);
 
