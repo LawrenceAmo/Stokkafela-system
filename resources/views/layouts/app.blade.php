@@ -76,7 +76,7 @@
             >
               <i class="fa fa-bars "></i><span>Departments</span>
             </a>
-              <a
+              {{-- <a
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
            ><i class="fa fa-graduation-cap fa-fw "></i><span>Jobs</span></a
@@ -90,7 +90,7 @@
               href="get_help.html"
               class="list-group-item list-group-item-action py-2 ripple"
               ><i class="fas fa-info-circle "></i><span>Find Help</span></a
-            >
+            > --}}
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple"
               >
