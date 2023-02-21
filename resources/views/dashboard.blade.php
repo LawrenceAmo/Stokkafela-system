@@ -6,8 +6,9 @@
      
     </style>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
-    <main class="m-0  px-4 w-100" id="app" v-cloak>
-
+    <main class="m-0  px-4 w-100" id="app" >
+        <section v-cloak>
+            
         <form action="{{ route('portal') }}" method="GET" class=" justify-content-between border shadow rounded px-3 py-0 pt-3 mb-3 w-100">
             <div class="d-flex   w-100 ">
                 <div class=" form-group  ">
@@ -83,6 +84,7 @@
          </tbody> 
 </table>
     </div>
+        </section>
     </main>
     <input type="hidden" name="" id="products_data" value="{{$products_data}}">
     <input type="hidden" name="" id="sales_data" value="{{$sales_data}}">
