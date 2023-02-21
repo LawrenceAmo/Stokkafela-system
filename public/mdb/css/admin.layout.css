@@ -1,6 +1,7 @@
 body {
   background-color: #fbfbfb;
 }
+[v-cloak] { display: none; }
 @media (min-width: 991.98px) {
   main {
     padding-left: 240px;

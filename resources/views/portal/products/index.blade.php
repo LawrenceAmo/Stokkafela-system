@@ -1,6 +1,6 @@
 <x-app-layout>
     
-    <main class="m-0  px-4   w-100" id="app">
+    <main class="m-0  px-4   w-100" id="app" v-cloak>
         
         <div class="  row bg-white shadow border rounded p-3 w-100">
             <div class="col-md-3">
