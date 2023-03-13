@@ -63,18 +63,7 @@ class ProductController extends Controller
             'products_file' => 'required',                  
          ]);
  
-        // $path = $request->file('products_file')->store('public/imports');
-        // // get a file to be uploaded
-        //  $file=storage_path('app').'/'.$path;
-
-        //  return [trim($path, 'imports/'),$path, $request->file('products_file')->getClientOriginalName()];
-        //  getClientOriginalName
-
-        // $excel = request()->file('products_file');
-
-        // $tempName = str_replace('imports/', '', $path ); 
-        // $amo  = (new ProductsImport)->import($path , null, \Maatwebsite\Excel\Excel::XLSX);
-         $data = Excel::toArray(new CSVImport, request()->file('products_file'));       
+        $data = Excel::toArray(new CSVImport, request()->file('products_file'));       
 
         $userID =  Auth::id();
 
@@ -87,14 +76,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload products file!!!');
         }
         return redirect()->back()->with('success', 'Uploading products... Please refresh to see updates!!!');
-    }
-
-  
-    public function show($id)
-    {
-        //
-    }
-
+    } 
    
     public function edit($id)
     {

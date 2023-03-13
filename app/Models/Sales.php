@@ -19,7 +19,7 @@ class Sales extends Model
         array_push($products, $header); // push only the headers first
 
         // get index of wanted data/field
-        $CODE = array_search('CODE', $data[0]);
+        $CODE = array_search('CODE', $data[0]); 
         $Descript = array_search('Descript', $data[0]);
         $MAINITEM = array_search('MAINITEM', $data[0]);
         $DEPARTMENT = array_search('DEPARTMENT', $data[0]);

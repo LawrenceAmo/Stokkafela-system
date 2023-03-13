@@ -171,6 +171,7 @@ class StoreController extends Controller
                 ->with('nettsales', $nettsales)
                 ->with('products', $products)
                 ->with('top_products', $top_products);
+                
     }
 
    
@@ -235,7 +236,7 @@ class StoreController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function destroy($id)
     {
         // return $id;

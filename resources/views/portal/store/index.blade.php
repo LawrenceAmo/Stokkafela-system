@@ -53,12 +53,12 @@
             "updated_at" => "2022-08-11 13:45:17" --}}
                       
         </tbody>
-</table>
-@if (count($stores) <= 0)
-<i class="font-weight-bold grey-text h3 text-center">
-    No Data Available...
-</i>
-@endif
+    </table>
+    @if (count($stores) <= 0)
+        <i class="font-weight-bold grey-text h3 text-center">
+            No Data Available...
+        </i>
+    @endif
  
     </div>
     </main>

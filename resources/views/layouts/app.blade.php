@@ -65,6 +65,13 @@
               <i class="fa fa-chart-bar"></i>
               <span>Sales</span>
             </a>
+            <a
+              href="{{ route("maintanance")}}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa fa-chart-bar"></i>
+              <span>Maintanance</span>
+            </a>
              <a
               href="{{ route("staff")}}"
               class="list-group-item list-group-item-action py-2 ripple"
@@ -85,7 +92,7 @@
            class="list-group-item list-group-item-action py-2 ripple"
            ><i class="fas fa-globe fa-fw "></i 
           ><span>International</span></a
-          >  
+          > 
             <a
               href="get_help.html"
               class="list-group-item list-group-item-action py-2 ripple"
@@ -165,10 +172,12 @@
                 {{ $slot }}
             </main>
         </div>
-        <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
+
         <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
     </body>
 </html>
+ 

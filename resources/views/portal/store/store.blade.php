@@ -7,8 +7,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <main class="m-0  px-4 w-100" id="app" v-cloak>
 
-      <form action="{{ route('store') }}" method="GET" class=" justify-content-between border shadow rounded px-3 py-0 pt-3 mb-3 w-100">
-          <div class="d-flex   w-100 ">
+      <form action="{{ route('store') }}" method="GET" class="d-flex justify-content-between shadow rounded   py-0 pt-3 mb-3 w-100">
+          <div class="d-flex       ">
               <div class=" form-group  ">
                   <input type="date" class="form-control" name="from" value="{{$dates['from']}}" aria-describedby="emailHelpId" placeholder="">
               </div>
@@ -32,6 +32,9 @@
               <div class="  ">
                   <button type="submit" class="btn btn-sm btn-outline-info"> Filter </button>
               </div>
+          </div>
+          <div class="">
+            <a href="{{ route('stock_analysis', [$selected_store->storeID] ) }}" class="btn btn-sm btn-outline-success ">Stock Analysis</a>
           </div>
          
       </form>

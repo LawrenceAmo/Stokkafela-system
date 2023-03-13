@@ -45,7 +45,7 @@ class SalesController extends Controller
 
         $sales = new Sales();
         $import_sales = $sales->import_sales_csv($data, $request);
-        return $import_sales;
+        // return $import_sales;
 
         if (!$import_sales) {
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload sales file!!!');

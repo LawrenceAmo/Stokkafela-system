@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\MaintananceController;
 use Illuminate\Support\Facades\DB; 
 
 /*
@@ -36,7 +38,11 @@ Route::get('/', function () {
 Route::prefix('portal/' )->middleware(['auth'])->group(function ()
 {
 
-Route::get('/', [PortalController::class, 'index'])->name('portal');
+    Route::get('/', [PortalController::class, 'index'])->name('portal');
+
+// Maintance
+Route::get('/maintanance', [MaintananceController::class, 'index'])->name('maintanance');
+Route::post('/maintanance/stock-analysis/save', [MaintananceController::class, 'stock_analysis'])->name('save_stock_analysis');
 
 //  profile
 Route::get('/profile', [UsersController::class, 'index'])->name('profile');
@@ -74,6 +80,8 @@ Route::get('/product/create', [ProductController::class, 'create'])->name('creat
 Route::POST('/product/save', [ProductController::class, 'save'])->name('save_product');
 // Route::get('/product', [StoreController::class, 'index'])->name('save_store');
 
+// Stock Analysis / Reports
+Route::get('/analysis/stock/{id}', [ReportsController::class, 'stock_analysis'])->name('stock_analysis');
 
 //  Sales
 Route::get('/sales', [SalesController::class, 'index'])->name('sales');

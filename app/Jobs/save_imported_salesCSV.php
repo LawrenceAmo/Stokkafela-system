@@ -29,9 +29,7 @@ class save_imported_salesCSV implements ShouldQueue
         // if (!is_numeric($num)) { $num = 0; }
         return number_format(floatval($number));
     }
-    // Sales	SalesQty
-
-  
+   
     public function handle()  
     {
         $date_from = date( 'Y-m-d' ,strtotime($this->sales['date_from']));

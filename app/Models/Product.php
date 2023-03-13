@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use function PHPUnit\Framework\isEmpty;
 
 class Product extends Model
-{
+{ 
     use HasFactory;
 
     public function import_products_csv($data, $ids)

@@ -238,7 +238,7 @@ const { createApp } = Vue;
                 number = Number.parseFloat(num)
                 return number.toFixed(2);
             },
-            isDailyTotals(val){
+        isDailyTotals(val){
               let date = document.getElementById("date")
               let buttons = document.getElementById("buttons")
 
