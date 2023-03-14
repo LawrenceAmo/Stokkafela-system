@@ -8,14 +8,13 @@
         color: aliceblue  !important;
         font-size: 900px !important;
       }
-/* 
-      .tableFixHead          { overflow: auto; height: 100px; }
-      .tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
 
-      /* Just common table stuff. Really. */
-      /* table  { border-collapse: collapse; width: 100%; }
+      .tableFixHead          { overflow: auto !important;    }
+      .tableFixHead thead th { position: sticky !important; top: 0 !important; z-index: 1 !important;background-color: rgb(37, 37, 37)  !important; }
+
+       table  { border-collapse: collapse; width: 100% !important; }
       th, td { padding: 8px 16px; }
-      th     { background:#eee; } */ */
+      /* th     { background:#eee; }  */
 
   </style>
   {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
@@ -49,7 +48,8 @@
 <p class="font-weight-bold h4">
     {{$selected_store->name}} &nbsp; &nbsp; Stock Analysis
 </p> 
-<table class="table table-striped table-inverse table-responsive"  style="height: 500px;">
+<div class="tableFixHead">
+  <table class="table table-striped table-inverse table-responsive "  style="height: 500px;">
   <thead class="thead-inverse">
       <tr class="bg-dark text-light rounded font-weight-bold">
           <th>#</th>
@@ -108,6 +108,7 @@
           
        </tbody> 
 </table>
+</div>
   </div>
   </main>
   <input type="hidden" name="" id="products" value="{{$products}}">
