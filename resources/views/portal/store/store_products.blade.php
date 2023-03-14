@@ -3,6 +3,20 @@
       a:hover {
           text-decoration: none;
       }
+      .categories{
+        background-color: rgb(59, 59, 59)  !important;
+        color: aliceblue  !important;
+        font-size: 900px !important;
+      }
+/* 
+      .tableFixHead          { overflow: auto; height: 100px; }
+      .tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
+
+      /* Just common table stuff. Really. */
+      /* table  { border-collapse: collapse; width: 100%; }
+      th, td { padding: 8px 16px; }
+      th     { background:#eee; } */ */
+
   </style>
   {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
   <main class="m-0  px-4 py-5 w-100" id="app" v-cloak>
@@ -44,7 +58,7 @@
           <th>AVR Cost</th>
           <th>Sell Price</th>
           <th>Stock Value</th>
-          {{-- <th>OnHand Value</th> --}}
+          <th>Nett Sales</th>
           <th>AVR RR</th>
           <th>DOH</th>
           <th>Margin</th>
@@ -52,17 +66,34 @@
        </tr>
       </thead>
       <tbody>
-            <tr v-for="product,i in products" if="product.days_onhand" >
-
-              <td scope="row">@{{i + 1}}</td>
-              <td> @{{product.barcode}}</td>
-              <td>@{{product.descript}}</td>
-              <td>R@{{toDecimal(product.avrgcost).toFixed(2)}}</td>
-              <td>R@{{toDecimal(product.sellpinc1).toFixed(2)}}</td>
-              <td>R@{{toDecimal(product.stock_value.toFixed(2))}}</td>
-              <td>R@{{toDecimal(product.avr_rr.toFixed(2))}}</td>
-              <td>@{{product.days_onhand.toFixed(0) }} days</td>
-              <td class="text-success">@{{ toDecimal( 100 - (toDecimal(product.avrgcost ) / toDecimal(product.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
+            <template  v-for="product,i in products" :key="i">
+              {{--  v-if="keyExists(product, product.barcode)" --}}
+              
+              <tr class="text-uppercase categories">
+                  <td></td>
+                  <td></td>
+                  <td scope="row" class="bg-black   category-row" ><b class="">@{{product.category}}</b></td>
+                  <td></td>
+                  <td></td>
+                  <td scope="row">R@{{product.tot_SV.toFixed(2)}}</td>
+                  <td scope="row">R@{{product.nett_sales.toFixed(2) }}</td>
+                  <td scope="row">R@{{(product.avr_rr).toFixed(2)}}</td>
+                  <td scope="row">@{{product.DOH.toFixed(0) }} Days</td>
+                  <td></td>
+              </tr>
+              <tr v-for="item,x in product.items">
+                  
+                <td> @{{x+1}}</td>
+                <td> @{{item.barcode}}</td>
+                <td>@{{item.descript}}</td>
+              <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
+              <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
+              <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
+              <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
+              <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
+              <td>@{{item.days_onhand.toFixed(0) }} days</td>
+              <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
+              
               {{-- <td v-if="(product.avrgcost * product.onhand) <= 0 " class="text-danger ">R@{{toDecimal(toDecimal(product.avrgcost) * toDecimal(product.onhand)) }}</td>
               <td v-else class="text-success  ">R@{{toDecimal(toDecimal(product.avrgcost) * toDecimal(product.onhand)) }}</td>
 
@@ -70,8 +101,11 @@
               <td v-else class="text-success font-weight-bold">@{{product.onhand}}</td>  --}}  
               
               {{-- <td>@{{product.nett_sales}}</td> --}}
-              {{-- <td>@{{product.created_at}}</td> --}}  
-            </tr>
+              {{-- <td>@{{product.category}}</td>   --}}
+              </tr> 
+            </template>
+            <br>
+          
        </tbody> 
 </table>
   </div>
@@ -129,9 +163,12 @@ const { createApp } = Vue;
                       products[x].purchases = 0
                 }
 
-                products[x].avr_rr = this.toDecimal(products[x].nett_sales) / 3;
-                products[x].stock_value = (this.toDecimal(products[x].avrgcost) * Number(products[x].onhand));
-                products[x].days_onhand = ( products[x].stock_value / products[x].avr_rr) * 25;
+                let category = products[x].descript.toLowerCase();
+                    category = category.split(' ');
+                    products[x].category = category[0]+" "+category[1];
+                    products[x].avr_rr = this.toDecimal(products[x].nett_sales) / 3;
+                    products[x].stock_value = (this.toDecimal(products[x].avrgcost) * Number(products[x].onhand));
+                    products[x].days_onhand = ( products[x].stock_value / products[x].avr_rr) * 25;
 
                 // if(!isNaN(products[x].avr_rr)){
                 //   products.splice(x, 1)
@@ -141,11 +178,46 @@ const { createApp } = Vue;
 
              let allProducts = products.filter(function (el) { return el.days_onhand && isFinite(el.days_onhand) });
 
-              // console.log(products); 
 
-              this.products = [ ...allProducts ] 
+                  function compare( a, b ) {
+                    if ( a.category < b.category ){
+                      return -1;
+                    }
+                    if ( a.category > b.category ){
+                      return 1;
+                    }
+                    return 0;
+                  }
+ 
+              allProducts = allProducts.sort(compare);
 
-              
+              let categories = []; let categoryIDs = [];
+              for (let y = 0; y < allProducts.length; y++) {
+
+                let catID = allProducts[y].category;
+                
+                if (!categoryIDs.includes(catID)) {
+                  categories[ catID ] = [];   // add array of sales for this code
+                  categoryIDs.push(catID);
+                  categories[ catID ]['tot_SV'] = 0;
+                  categories[ catID ]['items'] = [];  
+                  categories[ catID ]['category'] = catID;  
+                  categories[ catID ]['nett_sales'] = 0;  
+                  categories[ catID ]['avr_rr'] = 0;  
+                  categories[ catID ]['DOHs'] = [];  
+                  categories[ catID ]['DOH'] = 0;  
+                }
+  
+                categories[ catID ]['nett_sales'] += this.toDecimal(allProducts[y].nett_sales);  
+                categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
+                categories[ catID ]['tot_SV'] += Number(allProducts[y].onhand) * this.toDecimal(allProducts[y].avrgcost);
+                categories[ catID ]['DOH'] = ( this.toDecimal(categories[ catID ]['tot_SV']) / this.toDecimal(categories[ catID ]['avr_rr'])) * 25; //Math.max( ...categories[ catID ]['DOHs'] )  
+                categories[ catID ]['items'].push(allProducts[y]);
+                
+              }
+
+              console.log(Object.values(categories)); 
+              this.products = [ ...Object.values(categories) ]  
 
       },
       methods:
@@ -156,6 +228,19 @@ const { createApp } = Vue;
               number = number.replace(/,/g, "");
               number = Number.parseFloat(number)
               return number//.toFixed(2); 
+          },
+          titleCase: function(str) {
+              var splitStr = str.toLowerCase().split(' ');
+              for (var i = 0; i < splitStr.length; i++) {
+                  // You do not need to check if i is larger than splitStr length, as your for does that for you
+                  // Assign it back to the array
+                  splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+              }
+              // Directly return the joined string
+              return splitStr.join(' '); 
+          },
+          keyExists(obj, key) {
+              return key in obj;
           }
       }
  }).mount("#app");
