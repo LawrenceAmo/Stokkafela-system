@@ -246,11 +246,11 @@ const { createApp } = Vue;
             let search = this.searchtext.toLowerCase()
             let mydata = []
             // console.log(DBdata)  // JSON.parse(JSON.stringify(
-           if (search.length < 3) {
-                this.products = [];
-                this.products = [ ...DBdata ];
-                return true;
-            } 
+          //  if (search.length < 3) {
+          //       this.products = [];
+          //       this.products = [ ...DBdata ];
+          //       return true;
+          //   } 
 
             this.products = [];
             for (let i = 0; i < DBdata.length; i++) {
