@@ -18,7 +18,7 @@
 
   </style>
   {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
-  <main class="m-0  px-4 py-5 w-100" id="app" v-cloak>
+  <main class="m-0  px-4 pb-5 pt-3 w-100" id="app" v-cloak>
 
       {{-- <form action="{{ route('store') }}" method="GET" class="d-flex justify-content-between shadow rounded   py-0 pt-3 mb-3 w-100">
           <div class="d-flex"> 
@@ -40,12 +40,19 @@
               </div>
           </div>
          
-      </form> --}}
-    
+      </form> --}} 
  
   {{-- <hr> --}}
+  <div class=" shadow row my-3 p-2">
+  <div class=" col-md-6  "> 
+    <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
+  </div>
+  <div class="col-md-6  d-flex justify-content-end">
+    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" onclick="alert('Please note: This feature is underdevelopment')">download stock analysis</a>
+  </div>
+  </div>
   <div class="ow border rounded p-3 w-100 pb-5">
-<p class="font-weight-bold h4">
+<p class="font-weight-bold h4 P-0">
     {{$selected_store->name}} &nbsp; &nbsp; Stock Analysis
 </p> 
 <div class="tableFixHead">
@@ -67,21 +74,21 @@
       </thead>
       <tbody>
             <template  v-for="product,i in products" :key="i">
-              {{--  v-if="keyExists(product, product.barcode)" --}}
-              
-              <tr class="text-uppercase categories">
-                  <td></td>
+               
+              <tr class="text-uppercase categories accordion-toggle"
+                 :data-target="'#ID'+i">
+                  <td class="category-row"> @{{i+1}}.</td>
                   <td></td>
                   <td scope="row" class="bg-black   category-row" ><b class="">@{{product.category}}</b></td>
                   <td></td>
                   <td></td>
-                  <td scope="row">R@{{product.tot_SV.toFixed(2)}}</td>
-                  <td scope="row">R@{{product.nett_sales.toFixed(2) }}</td>
-                  <td scope="row">R@{{(product.avr_rr).toFixed(2)}}</td>
-                  <td scope="row">@{{product.DOH.toFixed(0) }} Days</td>
+                  <td scope="row" class="category-row">R@{{product.tot_SV.toFixed(2)}}</td>
+                  <td scope="row" class="category-row">R@{{product.nett_sales.toFixed(2) }}</td>
+                  <td scope="row" class="category-row">R@{{(product.avr_rr).toFixed(2)}}</td>
+                  <td scope="row" class="category-row">@{{product.DOH.toFixed(0) }} Days</td>
                   <td></td>
               </tr>
-              <tr v-for="item,x in product.items">
+              <tr v-for="item,x in product.items"  >
                   
                 <td> @{{x+1}}</td>
                 <td> @{{item.barcode}}</td>
@@ -93,15 +100,7 @@
               <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
               <td>@{{item.days_onhand.toFixed(0) }} days</td>
               <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
-              
-              {{-- <td v-if="(product.avrgcost * product.onhand) <= 0 " class="text-danger ">R@{{toDecimal(toDecimal(product.avrgcost) * toDecimal(product.onhand)) }}</td>
-              <td v-else class="text-success  ">R@{{toDecimal(toDecimal(product.avrgcost) * toDecimal(product.onhand)) }}</td>
 
-              <td v-if="product.onhand < 1 " class="text-danger font-weight-bold">@{{product.onhand}}</td>
-              <td v-else class="text-success font-weight-bold">@{{product.onhand}}</td>  --}}  
-              
-              {{-- <td>@{{product.nett_sales}}</td> --}}
-              {{-- <td>@{{product.category}}</td>   --}}
               </tr> 
             </template>
             <br>
@@ -120,15 +119,16 @@ const { createApp } = Vue;
     createApp({
       data() {
         return { 
-          products: [], 
+          products: [],
+          productsDB: [], 
+          searchtext: "",
         }          
       },
      async created() { 
 
         let products = JSON.parse( document.getElementById("products").value );
         let stock_analysis = JSON.parse( document.getElementById("stock_analysis").value );
-        // let stores_only = JSON.parse( document.getElementById("stores").value );
- 
+  
             let total_sales = 0; let items = []; let stock = [];   let codes = []; let itemCodes = []; let store_data = [];
 
             for (let i = 0; i < stock_analysis.length; i++) {
@@ -170,15 +170,10 @@ const { createApp } = Vue;
                     products[x].avr_rr = this.toDecimal(products[x].nett_sales) / 3;
                     products[x].stock_value = (this.toDecimal(products[x].avrgcost) * Number(products[x].onhand));
                     products[x].days_onhand = ( products[x].stock_value / products[x].avr_rr) * 25;
-
-                // if(!isNaN(products[x].avr_rr)){
-                //   products.splice(x, 1)
-                // }
-
+ 
               }
 
              let allProducts = products.filter(function (el) { return el.days_onhand && isFinite(el.days_onhand) });
-
 
                   function compare( a, b ) {
                     if ( a.category < b.category ){
@@ -217,8 +212,10 @@ const { createApp } = Vue;
                 
               }
 
-              console.log(Object.values(categories)); 
+              // console.log(Object.values(categories)); 
               this.products = [ ...Object.values(categories) ]  
+              this.productsDB = [ ...Object.values(categories) ]  
+              // console.log(this.productsDB);
 
       },
       methods:
@@ -242,9 +239,32 @@ const { createApp } = Vue;
           },
           keyExists(obj, key) {
               return key in obj;
+          },
+          searchFun: function(event){
+            const DBdata =  this.productsDB
+            let products = this.products
+            let search = this.searchtext.toLowerCase()
+            let mydata = []
+            // console.log(DBdata)  // JSON.parse(JSON.stringify(
+           if (search.length < 3) {
+                this.products = [];
+                this.products = [ ...DBdata ];
+                return true;
+            } 
+
+            this.products = [];
+            for (let i = 0; i < DBdata.length; i++) {
+                if (DBdata[i].category.includes(search)) {
+                  this.products.push(DBdata[i])
+                    console.log(  DBdata[i])
+                  
+                } 
+            } 
+ 
           }
       }
  }).mount("#app");
  
   </script>
 </x-app-layout>
+             

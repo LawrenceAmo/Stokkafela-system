@@ -36,7 +36,7 @@
         </div>  
     </div>
     <hr>
-    <div class="border rounded p-3 my-1">
+    <div class="border rounded p-3 my-1"> 
 
       <div class="">
         <div class="form-group">
