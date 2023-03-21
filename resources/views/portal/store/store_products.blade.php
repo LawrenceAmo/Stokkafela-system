@@ -48,7 +48,7 @@
     <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
   </div>
   <div class="col-md-6  d-flex justify-content-end">
-    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" onclick="alert('Please note: This feature is underdevelopment')">download stock analysis</a>
+    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</a>
   </div>
   </div>
   <div class="ow border rounded p-3 w-100 pb-5">
@@ -88,8 +88,9 @@
                   <td scope="row" class="category-row">@{{product.DOH.toFixed(0) }} Days</td>
                   <td></td>
               </tr>
-              <tr v-for="item,x in product.items"  >
-                  
+              <tr v-for="item,x in product.items"  >                  
+                {{-- barcode,  descript, avrgcost, sellpinc1,  stock_value, nett_sales, avr_rr, days_onhand  --}}
+
                 <td> @{{x+1}}</td>
                 <td> @{{item.barcode}}</td>
                 <td>@{{item.descript}}</td>
@@ -245,13 +246,7 @@ const { createApp } = Vue;
             let products = this.products
             let search = this.searchtext.toLowerCase()
             let mydata = []
-            // console.log(DBdata)  // JSON.parse(JSON.stringify(
-          //  if (search.length < 3) {
-          //       this.products = [];
-          //       this.products = [ ...DBdata ];
-          //       return true;
-          //   } 
-
+            
             this.products = [];
             for (let i = 0; i < DBdata.length; i++) {
                 if (DBdata[i].category.includes(search)) {
@@ -261,7 +256,108 @@ const { createApp } = Vue;
                 } 
             } 
  
+          },
+           get_csv: function() {
+              function convertToCSV(objArray) {
+                var array =
+                  typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+                var str = "";
+
+                for (var i = 0; i < array.length; i++) {
+                  var line = "";
+                  for (var index in array[i]) {
+                    if (line != "") line += ",";
+
+                    line += array[i][index];
+                  }
+
+            str += line + "\r\n";
           }
+
+          return str;
+        }
+
+        function exportCSVFile(headers, items, fileTitle = "file") {
+          if (headers) {
+            items.unshift(headers);
+          }
+
+          // Convert Object to JSON
+          var jsonObject = JSON.stringify(items);
+
+          var csv = convertToCSV(jsonObject);
+
+          var exportedFilenmae = fileTitle + ".csv" || "export.csv";
+
+          var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, exportedFilenmae);
+          } else {
+            var link = document.createElement("a");
+            if (link.download !== undefined) {
+              // feature detection
+              // Browsers that support HTML5 download attribute
+              var url = URL.createObjectURL(blob);
+              link.setAttribute("href", url);
+              link.setAttribute("download", exportedFilenmae);
+              link.style.visibility = "hidden";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }
+          }
+        }
+
+        // barcode,  descript, avrgcost, sellpinc1,  stock_value, nett_sales, avr_rr, days_onhand 
+
+        var headers = {
+              barcode: "Barcode",
+              descript: "Description", // remove commas to avoid errors
+              avrgcost: "Average Cost",
+              sellpinc1: "Selling Price",
+              stock_value: "Stock Value",
+              nett_sales: "Nett Sales",
+              avr_rr: "Average Tun Rate",
+              days_onhand: "Days onHand",  
+            };
+
+        let uid = localStorage.getItem("uid");
+        let products = this.products; //JSON.parse(localStorage.getItem("products"));
+ 
+        itemsNotFormatted = products;
+
+        var itemsFormatted = [];
+
+        // format the data
+        itemsNotFormatted.forEach((item) => {
+ 
+          for (let y = 0; y < item.items.length; y++) {
+            
+            itemsFormatted.push({
+            barcode: "'"+item.items[y].barcode+"",
+            descript: item.items[y].descript,  
+            avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
+            sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
+            stock_value: this.toDecimal(item.items[y].stock_value).toFixed(2),
+            nett_sales: this.toDecimal(item.items[y].nett_sales).toFixed(2),
+            avr_rr: this.toDecimal(item.items[y].avr_rr).toFixed(2),
+            days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
+              
+          });
+            
+          }
+          
+        });
+
+
+        // console.log(itemsFormatted);
+       
+         var fileTitle = "Stokkafela"; // or 'my-unique-title'
+
+        exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
+      } 
+
       }
  }).mount("#app");
  
