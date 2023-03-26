@@ -43,7 +43,7 @@
       </form> --}} 
  
   {{-- <hr> --}}
-  <div class="shadow rounded d-flex justify-content-between mb-3 p-2 d-none">
+  {{-- <div class="shadow rounded d-flex justify-content-between mb-3 p-2 d-none">
     
     <div class="form-check">
       <label class="form-check-label">
@@ -82,7 +82,7 @@
       </select>
     </div>
       
-  </div>
+  </div> --}}
   <div class=" shadow rounded row mb-3 p-2">
   <div class=" col-md-6  "> 
     <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
