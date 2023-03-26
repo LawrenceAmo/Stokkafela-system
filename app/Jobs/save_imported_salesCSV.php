@@ -54,7 +54,7 @@ class save_imported_salesCSV implements ShouldQueue
                     ['storeID', '=', intval($this->form['store'])]] )
                 ->delete();
 
-        // if ($sale->isEmpty()) {
+        // if ($sale->isEmpty()) { 
 
             $sales = new Sales();
             $sales->barcode = $this->sales['code']; 

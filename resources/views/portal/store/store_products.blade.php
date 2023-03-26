@@ -43,7 +43,47 @@
       </form> --}} 
  
   {{-- <hr> --}}
-  <div class=" shadow row my-3 p-2">
+  <div class="shadow rounded d-flex justify-content-between mb-3 p-2 d-none">
+    
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" name="filter" @click="filter(ldoh)" value="checkedValue" checked>
+        Low DOH
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" name="filter" @click="filter(hdoh)" value="checkedValue" checked>
+        High DOH
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" name="filter" @click="filter(hdoh)" value="checkedValue" checked>
+        Display value
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="" class="font-weight-bold">Run Rate</label>
+      <select class="form-control" name="" id="">
+        <option selected disabled>Select</option>
+        <option value="low">Law</option>
+        <option value="high">High</option>
+        <option value="clear" class="bg-danger text-light">clear</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="" class="font-weight-bold">Day onHand</label>
+      <select class="form-control" name="" id="">
+        <option selected disabled>Select</option>
+        <option value="low">Law</option>
+        <option value="high">High</option>
+        <option value="clear" class="bg-danger text-light">clear</option>
+      </select>
+    </div>
+      
+  </div>
+  <div class=" shadow rounded row mb-3 p-2">
   <div class=" col-md-6  "> 
     <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
   </div>
@@ -89,18 +129,17 @@
                   <td></td>
               </tr>
               <tr v-for="item,x in product.items"  >                  
-                {{-- barcode,  descript, avrgcost, sellpinc1,  stock_value, nett_sales, avr_rr, days_onhand  --}}
-
+ 
                 <td> @{{x+1}}</td>
                 <td> @{{item.barcode}}</td>
                 <td>@{{item.descript}}</td>
-              <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
-              <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
-              <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
-              <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
-              <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
-              <td>@{{item.days_onhand.toFixed(0) }} days</td>
-              <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
+                <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
+                <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
+                <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
+                <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
+                <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
+                <td>@{{item.days_onhand.toFixed(0) }} days</td>
+                <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
 
               </tr> 
             </template>
@@ -111,8 +150,8 @@
 </div>
   </div>
   </main>
-  <input type="hidden" name="" id="products" value="{{$products}}">
-  <input type="hidden" name="" id="stock_analysis" value="{{$stock_analysis}}">
+  {{-- <input type="hidden" name="" id="products" value="{{$products}}"> --}}
+  {{-- <input type="hidden" name="" id="stock_analysis" value="{{$stock_analysis}}"> --}}
   <input type="hidden" name="" id="selected_store" value="{{$selected_store->storeID}}">
   <script>
 
@@ -127,71 +166,22 @@ const { createApp } = Vue;
       },
      async created() { 
 
-        let products = JSON.parse( document.getElementById("products").value );
-        let stock_analysis = JSON.parse( document.getElementById("stock_analysis").value );
-  
-            let total_sales = 0; let items = []; let stock = [];   let codes = []; let itemCodes = []; let store_data = [];
+        let selected_store = document.getElementById("selected_store").value ;
 
-            for (let i = 0; i < stock_analysis.length; i++) {
- 
-                let code = stock_analysis[i].code;
+        let stock = await  await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
+        products = await stock.data;
 
-              if (!codes.includes(code)) {
-                    items[ code ] = [];   // add array of sales for this code
-                    codes.push(code);
-                    items[ code ]['nett_sales'] = 0
-                    items[ code ]['department'] = stock_analysis[i].department;
-                    items[ code ]['code'] = code;
-                    items[ code ]['invoices'] = 0
-                    items[ code ]['purchases'] = 0                  
-                }
-                items[ code ]['invoices'] +=  this.toDecimal(stock_analysis[i].invoices)
-                items[ code ]['purchases'] +=  this.toDecimal(stock_analysis[i].purchases)
-                items[ code ]['nett_sales'] +=  this.toDecimal(stock_analysis[i].nettSales )
-             }
-                  
-            ////////////////////////////////////////////////////////////////////////////////////
-             for (let x = 0; x < products.length; x++) {
-                let code = products[x].barcode;
- 
-                if (code in items) {
-                      products[x].nett_sales = items[code]['nett_sales']
-                      products[x].department = items[code]['department']
-                      products[x].invoices = items[code]['invoices'] 
-                      products[x].purchases = items[code]['purchases']
-                }else{
-                      products[x].nett_sales = 0
-                      products[x].invoices = 0 
-                      products[x].purchases = 0
-                }
-
-                let category = products[x].descript.toLowerCase();
-                    category = category.split(' ');
-                    products[x].category = category[0]+" "+category[1];
-                    products[x].avr_rr = this.toDecimal(products[x].nett_sales) / 3;
-                    products[x].stock_value = (this.toDecimal(products[x].avrgcost) * Number(products[x].onhand));
-                    products[x].days_onhand = ( products[x].stock_value / products[x].avr_rr) * 25;
- 
-              }
-
-             let allProducts = products.filter(function (el) { return el.days_onhand && isFinite(el.days_onhand) });
-
-                  function compare( a, b ) {
-                    if ( a.category < b.category ){
-                      return -1;
-                    }
-                    if ( a.category > b.category ){
-                      return 1;
-                    }
-                    return 0;
-                  }
- 
-              allProducts = allProducts.sort(compare);
-
+        console.log(selected_store)
+        console.log(stock)
+   
               let categories = []; let categoryIDs = [];
-              for (let y = 0; y < allProducts.length; y++) {
+              for (let y = 0; y < products.length; y++) {
 
-                let catID = allProducts[y].category;
+                let category = products[y].descript.toLowerCase();
+                    category = category.split(' ');
+                    products[y].category = category[0]+" "+category[1];
+                    
+                let catID = products[y].category;
                 
                 if (!categoryIDs.includes(catID)) {
                   categories[ catID ] = [];   // add array of sales for this code
@@ -204,16 +194,28 @@ const { createApp } = Vue;
                   categories[ catID ]['DOHs'] = [];  
                   categories[ catID ]['DOH'] = 0;  
                 }
-  
-                categories[ catID ]['nett_sales'] += this.toDecimal(allProducts[y].nett_sales);  
+              
+                categories[ catID ]['nett_sales'] += this.toDecimal(products[y].nett_sales);  
                 categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
-                categories[ catID ]['tot_SV'] += Number(allProducts[y].onhand) * this.toDecimal(allProducts[y].avrgcost);
+                categories[ catID ]['tot_SV'] += Number(products[y].onhand) * this.toDecimal(products[y].avrgcost);
                 categories[ catID ]['DOH'] = ( this.toDecimal(categories[ catID ]['tot_SV']) / this.toDecimal(categories[ catID ]['avr_rr'])) * 25; //Math.max( ...categories[ catID ]['DOHs'] )  
-                categories[ catID ]['items'].push(allProducts[y]);
+                categories[ catID ]['items'].push(products[y]);
                 
               }
 
-              // console.log(Object.values(categories)); 
+              function compare( a, b ) {
+                    if ( a.category < b.category ){
+                      return -1;
+                    }
+                    if ( a.category > b.category ){
+                      return 1;
+                    }
+                    return 0;
+                  }
+
+              categories = Object.values(categories).sort(compare);
+
+              // console.log(categories); 
               this.products = [ ...Object.values(categories) ]  
               this.productsDB = [ ...Object.values(categories) ]  
               // console.log(this.productsDB);

@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
+use App\Models\Test;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +17,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(
+                function () {
+                DB::table('test')
+                ->where( [['id', '=', 1]] )
+                ->update([
+                        'title' => "hello Amo Sc",                        
+                        ]);
+            })->everyMinute();
+            //      INSERT INTO `test` (`id`, `title`) VALUES (NULL, 'Hi');
     }
 
     /**

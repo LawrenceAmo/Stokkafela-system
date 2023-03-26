@@ -6,17 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+use App\Http\Controllers\ReportsController;
 Route::get('/', function () {
 
      $s = time();
@@ -39,6 +29,7 @@ Route::get('/', function () {
 
     // Sales
     Route::get('sales',[SalesController::class, 'get_sales'])->name('get_sales');
+    Route::get('get_stock_analysis/{id}',[ReportsController::class, 'get_stock_analysis'])->name('get_stock_analysis');
 
 Route::get('/', [PortalController::class, 'get_all_stores_data'])->name('get_all_stores_data'); // test
 

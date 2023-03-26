@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
  use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;use App\Models\Maintanance;
+
 class ReportsController extends Controller
 {
     /**
@@ -19,7 +20,7 @@ class ReportsController extends Controller
         //
     }
 
-    public function stock_analysis($id)
+    public function get_stock_analysis($id)
     {
         $id == true ? $storeID = $id : $storeID = 0;
 
@@ -27,31 +28,27 @@ class ReportsController extends Controller
         $selected_store = $this->get_store($stores, $storeID); 
         $storeID = $selected_store->storeID;
 
-        $from = date_sub(now(), date_interval_create_from_date_string("90 days"));
-        $to = date_sub(now(), date_interval_create_from_date_string("0 days"));
+        $analysis = new Maintanance();
 
-        $stock_analysis = DB::table('stock_analyses')
-                            ->where( [
-                                ['date', '>=', $from], ['date', '<=', $to],
-                                     ['storeID', '=', $storeID]])
-                            ->orderBy('date', 'asc')
-                            ->get();
-        // return count($stock_analysis);
+        return $analysis->stock_analysis($storeID);
+        // return $id;
+    }
 
-        $products = DB::table('products')
-                        ->where( [['storeID', '=', $storeID]])
-                        ->orderBy('onhand', 'DESC')
-                        ->get();
+    public function stock_analysis($id)
+    {
+        $id == true ? $storeID = $id : $storeID = 0;
 
-        // $nettsales = array_sum( array_column($salesdata->toArray(), 'nettSales') ); 
+        $stores = DB::table('stores')->get(); // remove limit to show all stores
+        $selected_store = $this->get_store($stores, $storeID); 
+        $storeID = $selected_store->storeID;
+  
 
         return view('portal.store.store_products')
-                ->with('stock_analysis', $stock_analysis)
+                // ->with('products', $products)
                 ->with('storeID', $storeID)
                 ->with('stores', $stores)
                 ->with('selected_store', $selected_store)
-                ->with('products', $products)
-                 ;
+                  ;
     }
 
 
