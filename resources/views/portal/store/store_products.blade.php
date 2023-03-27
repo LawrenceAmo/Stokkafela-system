@@ -388,7 +388,7 @@ const { createApp } = Vue;
               {
                 let avr_rr = e.avr_rr;
                 let expected_val = e.sellpinc1 * 10;
-                if (e.days_onhand > 0 && e.stock_value > 0 && e.nett_sales > 0) {
+                if (e.days_onhand > 90 && e.stock_value > 0 && e.nett_sales > 0 ) {
                   return avr_rr < expected_val
                 }
 
