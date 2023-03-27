@@ -156,7 +156,7 @@
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">SOH > 0</a>
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">avr rr <= 0</a>
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">avr rr > 0</a>
-          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">Slow Moving Items</a>
+          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="filter_doh_perproduct('slow_moving')">Slow Moving Items</a>
         </div>
         <div class="my-3 border rounded p-2 ">
           <input type="number" name="DOH"  v-model="doh_search" class="form-control" placeholder="Enter Days on Hand"> 
@@ -376,6 +376,7 @@ const { createApp } = Vue;
                   if (sort == 'zero') { products = products.filter(e => e.DOH <= 0);      } 
               this.products = products; 
           },
+          //  slow_moving_item
 
           filter_doh_perproduct: function(filter){
             let products = this.raw_products_data;
@@ -383,7 +384,12 @@ const { createApp } = Vue;
             console.log(doh)
             if (filter == 'less') { products = products.filter(e => e.days_onhand < doh);      }
             if (filter == 'greater') { products = products.filter(e => e.days_onhand > doh);      }
-            // if (filter == 'equal') { products = products.filter(e => e.days_onhand = doh);      }
+            if (filter == 'slow_moving') { products = products.filter(e =>
+              {
+                let avr_rr = e.avr_rr;
+                let expected_val = e.sellpinc1 * 10;
+                return avr_rr < expected_val
+               });      }
 
             function compare( a, b ) {
               if ( a.days_onhand < b.days_onhand ){   return -1;  }
@@ -396,8 +402,6 @@ const { createApp } = Vue;
 
           this.products = [ ...Object.values(categories) ]  
           this.productsDB = [ ...Object.values(categories) ] 
-                        console.log(categories)
-
           },
 
            get_csv: function() {
@@ -455,7 +459,7 @@ const { createApp } = Vue;
               sellpinc1: "Selling Price",
               stock_value: "Stock Value",
               nett_sales: "Nett Sales",
-              avr_rr: "Average Tun Rate",
+              avr_rr: "Average Run Rate",
               days_onhand: "Days onHand",  
             };
 
