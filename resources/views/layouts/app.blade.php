@@ -134,7 +134,7 @@
           <a class="navbar-brand pl-3" href="{{route('portal')}}">
             <img
               src="{{ asset('fadaeco.png') }}"
-              height="35"
+              height="40"
               alt="Fadaeco"
               loading="lazy"
             />

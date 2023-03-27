@@ -40,7 +40,7 @@
        
           <img
             alt="fadaeco"
-                          height="35"
+                          height="40"
             src="{{ asset('fadaeco.png') }}"
             id="navbar-logo"
             class="animate fadeInLeft"

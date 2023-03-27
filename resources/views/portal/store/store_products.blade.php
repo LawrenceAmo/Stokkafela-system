@@ -152,11 +152,12 @@
         <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-danger" @click="clear_filters()">clear All Filters</a>
 <br>
         <div class="">
-          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">SOH <= 0</a>
+          {{-- <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">SOH <= 0</a>
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">SOH > 0</a>
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">avr rr <= 0</a>
-          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">avr rr > 0</a>
+          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="clear_filters()">avr rr > 0</a> --}}
           <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="filter_doh_perproduct('slow_moving')">Slow Moving Items</a>
+          <a class="btn float-end btn-sm rounded font-weight-bold btn-outline-grey" @click="filter_doh_perproduct('oos')">Out of Stock</a>
         </div>
         <div class="my-3 border rounded p-2 ">
           <input type="number" name="DOH"  v-model="doh_search" class="form-control" placeholder="Enter Days on Hand"> 
@@ -389,6 +390,17 @@ const { createApp } = Vue;
                 let avr_rr = e.avr_rr;
                 let expected_val = e.sellpinc1 * 10;
                 if (e.days_onhand > 90 && e.stock_value > 0 && e.nett_sales > 0 ) {
+                  return avr_rr < expected_val
+                }
+
+               });      }
+
+              //   out of stock
+              if (filter == 'oos') { products = products.filter(e =>
+              {
+                let avr_rr = e.avr_rr;
+                let expected_val = e.sellpinc1 * 10;
+                if ( e.days_onhand != 0 && e.days_onhand < 10 && e.stock_value != 0 && e.nett_sales > 0 ) {
                   return avr_rr < expected_val
                 }
 
