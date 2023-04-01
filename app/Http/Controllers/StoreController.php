@@ -56,53 +56,30 @@ class StoreController extends Controller
      */
     public function save(Request $request)
     {
-        // return $request;
-         $request->validate([
-                    'store_name' => 'required|string',
-                    'trading_name' => 'required|string',
-                    // 'slogan' => 'required|string',
-                    // 'zip_code' => 'required',
-                    // 'street' => 'required|string',
-                 ]);
+        $request->validate([
+                'name' => 'required|string',
+                'trading_name' => 'required|string',                    
+                ]);
 
+        $store = DB::table('stores')
+            ->where([ ['name', $request->name ], ['trading_name', $request->trading_name ] ])
+            ->exists();
 
-        $userID = Auth::id();
-        // $planID = Plans::where('name', '=', 'trial')->limit(1)->get('planID');
-       
-        // // if($request->terms_and_conditions){
-        // //     return redirect()->back();
-        // // } 
-        // if(count($planID) > 0){
-        //      $planID =  $planID[0]-> planID;
-        // }else{
-            $planID = 1;
-        // } 
+         if ($store) {
+            return redirect()->back()->with("error", "The store ".$request->trading_name." already exists!!!");
+        }
 
-        // Create new store
+         // Create new store
         $store = new Store();
-        $store->name = $request->store_name;
+        $store->name = $request->name;
         $store->trading_name = $request->trading_name;
         $store->slogan = $request->slogan;
         $store->discription = $request->description;
-        $store->userID = $userID;
+        $store->planID = 1;
+        $store->userID = Auth::id();
         $store->save();
-
-        // Create the Contact details for a store
-        $contact = new Contacts();
-        $contact->storeID = $store->id;
-        $contact->phone = $store->phone;
-        $contact->alt_email = $store->email;
-        $contact->street = $store->street;
-        $contact->suburb = $store->suburb;
-        $contact->city = $store->city;
-        $contact->state = $store->pronvince;
-        $contact->country = $store->country;
-        $contact->zip_code = $store->zip_code;
-        $contact->userID = $userID;
-        $contact->store = true;
-        $contact->save();
-
-        return redirect()->to('/portal/stores')->with("success", "The store was created successfully!!!");
+ 
+        return redirect()->back()->with("success", "The store was created successfully!!!");
     }
 
     /**

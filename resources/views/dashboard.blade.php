@@ -47,8 +47,9 @@
     <hr>
     
     <div class="ow border rounded p-3 w-100">
-<p class="font-weight-bold h4">
-   All Stores Data
+<p class="font-weight-bold h4 d-flex justify-content-between border">
+  <span> All Stores Data</span>
+  <span><a href="{{ route('sales_analysis') }}" class="btn btn-sm rounded btn-outline-info font-weight-bold">Sales Analysis</a></span>
 </p>
 <table class="table table-striped table-inverse table-responsive"  style="height: 500px;">
     <thead class="thead-inverse">
@@ -187,4 +188,5 @@
    }).mount("#app");
   
     </script>
+
 </x-app-layout>

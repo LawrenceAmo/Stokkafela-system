@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<main class="m-0  px-4 py-5   w-100">
+<main class="m-0  px-4 py-5   w-100" id="app">
     <div class="row mx-0 animated fadeInDown">
         <div class="col-12 text-center p-0 m-0">
             <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
@@ -23,6 +23,29 @@
             </div>
         </div>
     </section>
+
+<hr>
+    
+    <section class="card rounded p-2">
+        <div class="row">
+            <div class="col">
+                <p class="font-weight-bold ">Sales </p>
+                <div class="border rounded text-center">
+                    <a type="button"  data-toggle="modal" data-target="#import_sales" class="btn btn-info rounded btn-sm">import Sales</a>
+                </div>
+            </div>
+            <div class="col">
+                <p class="font-weight-bold">Stock Analysis</p>
+                <div class="border rounded text-center">
+                    <a href="" class="btn btn-sm btn-success rounded font-weight-bold" data-toggle="modal" data-target="#import_stock_analysis">Upload Stock Analysis</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+ 
+
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
 
@@ -56,7 +79,7 @@
                       </select>
                     </div>
                     <hr>
-                    <div class=" " id="date">
+                    <div class=" " id="date"> 
                         <div class="form-group">
                         <label for="">Month & Year</label>
                         <input type="month" min="" name="date" id="date" class="form-control" placeholder="" aria-describedby="helpId">
@@ -72,7 +95,7 @@
         </form>
     </div>
 </div>
-{{-- /// --}}
+{{-- /// start modal --}}
 <div class="modal fade" id="import_stock" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form action="{{ route('save_product') }}" enctype="multipart/form-data" method="post" class="modal-content">
@@ -111,4 +134,102 @@
         </form>
     </div>
 </div>
+
+{{-- /////////////////////////////// All Sales --}}
+<div class="modal fade" id="import_sales" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('save_sales') }}" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Import sales file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+       
+                    <div class="form-group">
+                      <label for="">Select CSV, xlsx File</label>
+                      <input type="file" name="sales_file" value="" accept=".csv, .xlsx, .xls, .xlsm" class="form-control-file"  id="sales_file" >
+                      <small class="form-text text-muted d-none">
+                        <span class="font-weight-bold">Note</span>
+                        Only CSV or xlsx files are allowed... 
+                      </small>
+                    </div>
+                    <div class="form-group">
+                      <label for="">Select Store</label>
+                      <select class="form-control" name="store" required>
+                        <option class="" @disabled(true) selected>Select Store</option>
+                        @foreach ($stores as $store)
+                            <option value="{{$store->storeID}}">{{$store->name}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <hr>
+                    <div class="d-grid b-3 ">
+
+                      <div class="form-check   ">
+                        <div >Are these daily Totals</div>
+                        <label class="form-check-label pl-5">
+                          <input type="radio" class="form-check-input" name="isDailyTotals" @change="isDailyTotals(true)" value="1"  >
+                          Yes
+                        </label>
+                        <label class="form-check-label pl-5">
+                          <input type="radio" class="form-check-input" name="isDailyTotals" @change="isDailyTotals(false)" value="" >
+                            No
+                        </label>
+                      </div>
+                      <hr>
+                        <div class="d-none" id="date">
+                          <div class="form-group">
+                            <label for="">Sales Date</label>
+                            <input type="date" min="" name="date_from" id="date_from" class="form-control" placeholder="" aria-describedby="helpId">
+                           </div>
+                        </div>                             
+                  </div>
+                </div>
+            </div>
+            <div class="d-none" id="buttons">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm" :click="dailyTotals">Save</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ////////////////////////////////////////////////////////////////// --}} 
+<script>
+ 
+    const { createApp } = Vue;
+         createApp({
+            data() {
+              return {
+            
+                dailyTotals: [], 
+                 
+              }          
+            },
+           async created() { 
+                   
+            },
+           methods:{ 
+            isDailyTotals(val){
+                  let date = document.getElementById("date")
+                  let buttons = document.getElementById("buttons")
+    
+                  if (val) {
+                    date.classList.add('d-none');
+                  } else{
+                    date.classList.remove('d-none');
+                  }
+                   buttons.classList.remove('d-none');
+                },
+ 
+           }
+       }).mount("#app");
+     
+    </script>
 </x-app-layout>

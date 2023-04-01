@@ -9,8 +9,10 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SalesController; 
+use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
+use App\Http\Controllers\TargetsController;
 use Illuminate\Support\Facades\DB; 
 
 /*
@@ -86,8 +88,30 @@ Route::get('/analysis/stock/{id}', [ReportsController::class, 'stock_analysis'])
 //  Sales
 Route::get('/sales', [SalesController::class, 'index'])->name('sales');
 Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
+Route::post('/sales/create/repsale', [SalesController::class, 'create_rep_sale'])->name('create_rep_sale');
 Route::POST('/sales/save', [SalesController::class, 'save'])->name('save_sales');
-// Route::get('/product', [StoreController::class, 'index'])->name('save_store');
+Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
+Route::get('/sales/repsale/update/{id}/{delete?}', [SalesController::class, 'update_rep_sale'])->name('update_rep_sale');
+Route::post('/sales/repsale/save', [SalesController::class, 'save_rep_sale'])->name('save_rep_sale');
+Route::get('/sales/repsale/delete/{id}', [SalesController::class, 'delete_rep_sale'])->name('delete_rep_sale');
+
+ 
+//  Debtors
+Route::get('/debtors', [RepsController::class, 'index'])->name('debtors');
+// Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
+Route::POST('/debtors/rep/create', [RepsController::class, 'create_rep'])->name('create_rep');
+Route::get('/debtors/rep/update/{id}/{delete?}', [RepsController::class, 'update_rep'])->name('update_rep');
+Route::post('/debtors/rep/save', [RepsController::class, 'save_rep'])->name('save_rep');
+Route::get('/debtors/rep/delete/{id}', [RepsController::class, 'delete_rep'])->name('delete_rep');
+
+// 
+
+//  Targets
+// Route::get('/targets', [RepsController::class, 'index'])->name('debtors');
+// Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
+Route::POST('/targets/rep/create', [TargetsController::class, 'create_rep_target'])->name('create_rep_target');
+// Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
+
 
 
 //  Job Roles and Titles

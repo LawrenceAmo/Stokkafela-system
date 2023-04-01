@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Stokkafela Systems') }}</title>
 
 <link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
 <link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
@@ -76,6 +76,11 @@
               href="{{ route("staff")}}"
               class="list-group-item list-group-item-action py-2 ripple"
               ><i class="fa fa-users fa-x2 "></i><span>Staff</span></a
+            >
+            <a
+              href="{{ route("debtors")}}"
+              class="list-group-item list-group-item-action py-2 ripple"
+              ><i class="fa fa-users fa-x2 "></i><span>Debtors</span></a
             >
             <a
               href="{{ route("departments")}}"

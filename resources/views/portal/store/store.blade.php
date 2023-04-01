@@ -164,7 +164,7 @@ const { createApp } = Vue;
               number = Number.parseFloat(num)
               return number.toFixed(2); 
           }
-      }
+      } 
  }).mount("#app");
 
   //  Charts.js start    

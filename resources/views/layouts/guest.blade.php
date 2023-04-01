@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Fadaeco') }}</title>
+        <title>{{ config('app.name', 'Stokkafela Systems') }}</title>
         <link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
         <link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">

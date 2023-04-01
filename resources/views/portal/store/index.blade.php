@@ -9,8 +9,10 @@
             </div>
          </div> 
 <p class="font-weight-bold h4 d-flex justify-content-between">
-   <span> All Available Stores  </span> <a href="{{ route('create_store')}}" class="btn btn-info rounded btn-sm">add new Store</a>
+   <span> All Available Stores  </span>
+   <a  class="btn btn-info rounded btn-sm" data-toggle="modal" data-target="#create_new_store">add new Store</a>
 </p>
+{{-- href="{{ route('create_store')}}" --}}
  <?php $i = 1 ?>
 <table class="table table-striped w-auto p-0 " >
     <thead class=" m-0 p-0">
@@ -43,14 +45,7 @@
              </tr>
              <?php $i++ ?>
             @endforeach
-            {{--
-            "name" => "fada of ecommerce"
-            "trading_name" => "fadaeco"
-            "slogan" => "By creating a store you agree to our Terms & Conditions"
-            "active" => 0
-            "discription" => 
-            "created_at" => "2022-08-11 13:45:17"
-            "updated_at" => "2022-08-11 13:45:17" --}}
+       
                       
         </tbody>
     </table>
@@ -60,6 +55,41 @@
         </i>
     @endif
  
+    </div>
+
+    {{-- /////////////////////   MODAL START  ///////////////////////// --}}
+
+    <div class="modal fade" id="create_new_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('save_store') }}" enctype="multipart/form-data" method="post" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Store</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <div class="">
+                        <div class="form-group">
+                          <label for="">Store Name</label>
+                          <input type="text" class="form-control" name="name" placeholder="Enter Store Name" >
+                        </div>
+                        <div class="form-group">
+                          <label for="">Store Trading Name</label>
+                          <input type="text" class="form-control" name="trading_name" placeholder="Enter Store trading Name" >
+                          <small class="text-muted">e.g 'Stokkafela Tembisa' / 'Mabebeza Bambanani'</small>
+                        </div>
+                        
+                       
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
     </main>
     <script> 

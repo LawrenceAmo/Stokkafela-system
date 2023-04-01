@@ -197,7 +197,7 @@ const { createApp } = Vue;
                     }
                     return 0;
                   }
-          products =  products.sort(compare);
+          products =  products.sort(compare); 
 
           let categories = this.create_categories(products)
 

@@ -9,6 +9,8 @@ class PortalController extends Controller
 { 
     public function index(Request $request)
     {  
+        return redirect('/portal/sales/analysis');
+
         // Check user filter, if not set, set filter request values to default
         if($request>isEmpty() || !$request->from || !$request->to ){
             $from = date_sub(now(), date_interval_create_from_date_string("31 days"));   // get last 30 days date
@@ -33,11 +35,11 @@ class PortalController extends Controller
                     ->where( [['from', '>=', $from], ['to', '<=', $to], ['daily_total', '=', true]])
                      ->get();
  
-        return view('dashboard')
-                ->with('products_data', $products_data)
-                ->with('dates', [ 'from' => $from, 'to' => $to])
-                ->with('sales_data', $sales_data)
-                ->with('stores', $stores);
+        // return view('dashboard')
+        //         ->with('products_data', $products_data)
+        //         ->with('dates', [ 'from' => $from, 'to' => $to])
+        //         ->with('sales_data', $sales_data)
+        //         ->with('stores', $stores);
                 // ->with('get_products_stats', $this->get_products_stats());
     }
 }
