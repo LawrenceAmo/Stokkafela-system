@@ -73,7 +73,7 @@
           
        </tbody>
  </table>
- @if (count($reps) <= 0)
+ @if (count($destributors) <= 0)
  <i class="font-weight-bold grey-text h3 text-center">
    No Data Available...
  </i>
