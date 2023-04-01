@@ -75,7 +75,7 @@ class RepsController extends Controller
         ]); 
 
         $dest = DB::table('destributors')
-            ->where([ 'name', $request->name  ])
+            ->where( 'name', '=', $request->name  )
             ->exists();
 
          if ($dest) {

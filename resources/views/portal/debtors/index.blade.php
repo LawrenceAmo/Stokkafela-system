@@ -128,7 +128,7 @@
 {{-- ////////////////////////// DESTRIBUTION CENTERS --}}
 <div class="modal fade" id="create_new_destributor" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <form action="{{ route('create_rep') }}" enctype="multipart/form-data" method="post" class="modal-content">
+      <form action="{{ route('create_destributor') }}" enctype="multipart/form-data" method="post" class="modal-content">
           @csrf
           <div class="modal-header">
               <h5 class="modal-title">Create New Destribution Center</h5>
@@ -148,9 +148,9 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="">Select Destributer</label>
+                    <label for="">Select Store</label>
                     <select class="form-control" name="store" required>
-                      <option class="" @disabled(true) selected>Select Destributor</option>
+                      <option class="" @disabled(true) selected>Select Store</option>
                       @foreach ($stores as $store)
                           <option value="{{$store->storeID}}" >{{$store->name}}</option>
                       @endforeach

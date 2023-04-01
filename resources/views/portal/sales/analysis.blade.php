@@ -20,13 +20,29 @@
          table  { border-collapse: collapse; width: 100% !important; }
         th, td { padding: 8px 16px; }
    
+        /* ::-webkit-scrollbar {
+        width: 5px;
+        background:lightgray;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgb(255, 228, 155); 
+            border-radius: 15px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+            background:rgb(255, 225, 77);
+        } */
+
     </style>
     {{-- id="app" v-cloak --}}
     <main class="m-0  p-3  w-100" id="app" v-cloak>
          
         <div class="  d-flex shadow rounded p-2">
             <div class="  " >
-                <table class="table table-striped table-inverse table-responsive    ">
+                <table class="table table-striped table-inverse table-responsive    "  >
                     <thead class="thead-inverse    mx-0"  style="height: 80px;">
                         <tr class="">
                             <th>#</th>
@@ -63,8 +79,7 @@
                                         <td v-else class="text-success font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ destributor.current_sales.toLocaleString('en-US')}}</td>
                                     </tr>
-                                                                {{-- Rep left table --}}
-
+                                        {{-- Rep left table --}}
                                     <tr v-for="rep,i in destributor.reps" style="height: 80px;">
                                         <td scope="row">@{{i+1}}</td>
                                         <td>@{{ rep.rep_number}}</td>
@@ -81,7 +96,7 @@
                 </table>
             </div>
              <div class=" w-50">
-                <table class="table table-striped table-inverse table-responsive  ">
+                <table class="table table-striped table-inverse table-responsive  "   >
                     <thead class="thead-inverse" style="height: 80px;"> 
                        <tr>
                         <template v-for="y in lastDay">

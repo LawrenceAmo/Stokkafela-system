@@ -96,9 +96,10 @@ Route::post('/sales/repsale/save', [SalesController::class, 'save_rep_sale'])->n
 Route::get('/sales/repsale/delete/{id}', [SalesController::class, 'delete_rep_sale'])->name('delete_rep_sale');
 
  
-//  Debtors
+//  Debtors //create_destributor
 Route::get('/debtors', [RepsController::class, 'index'])->name('debtors');
 // Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
+Route::POST('/debtors/Destributor/create', [RepsController::class, 'create_destributor'])->name('create_destributor');
 Route::POST('/debtors/rep/create', [RepsController::class, 'create_rep'])->name('create_rep');
 Route::get('/debtors/rep/update/{id}/{delete?}', [RepsController::class, 'update_rep'])->name('update_rep');
 Route::post('/debtors/rep/save', [RepsController::class, 'save_rep'])->name('save_rep');
