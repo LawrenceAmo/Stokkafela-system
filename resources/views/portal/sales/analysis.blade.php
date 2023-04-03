@@ -13,6 +13,12 @@
           color: aliceblue  !important;
           font-size: 900px !important;
         }
+
+        .main-categories-main{
+          background-color: rgb(0, 0, 0)  !important;
+          color: rgb(252, 255, 221)  !important;
+          font-size: 900px !important;
+        }
   
         .tableFixHead          { overflow: auto !important;    }
         .tableFixHead thead th { position: sticky !important; top: 0 !important; z-index: 1 !important;background-color: rgb(37, 37, 37)  !important; }
@@ -38,10 +44,10 @@
 
     </style>
     {{-- id="app" v-cloak --}}
-    <main class="m-0  p-3  w-100" id="app" v-cloak>
+    <main class="m-0  p-1  w-100" id="app" v-cloak>
          
-        <div class="  d-flex shadow rounded p-2">
-            <div class="  " >
+        <div class=" w-100 d-flex shadow rounded py-2">
+            <div class="   " >
                 <table class="table table-striped table-inverse table-responsive    "  >
                     <thead class="thead-inverse    mx-0"  style="height: 80px;">
                         <tr class="">
@@ -55,6 +61,14 @@
                          </tr>
                     </thead>
                     <tbody class=" mx-0 border-right border-warning "style="margin:0px !important;">
+                            <tr class="text-uppercase main-categories-main " style="height: 80px;"> 
+                                <td colspan="3" class="font-weight-bold border-right">Stokkafela Revenue</td>
+                                <td class="font-weight-bold ">R@{{ stores[0]['target_amount'].toLocaleString('en-US') }}</td>
+                                <td class="font-weight-bold ">R@{{ (stores[0]['daily_rr']).toLocaleString('en-US',1)}}</td>
+                                <td class="font-weight-bold " v-if="stores[0]['target_percent'] < 100" class="text-danger font-weight-bold">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
+                                <td class="font-weight-bold " v-else class="text-success font-weight-bold">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
+                                <td class="font-weight-bold ">R@{{ stores[0]['current_sales'].toLocaleString('en-US')}}</td>
+                            </tr>
                         <template  v-for="main_destributor,i in data" :key="i">
 
                             {{-- Main Destributer left table --}}
@@ -62,7 +76,7 @@
                                 <td scope="row">@{{i+1}}</td>
                                 <td colspan="2" class="font-weight-bold text-light border-right">@{{ main_destributor.main_des_name}}</td>
                                 <td>R@{{ main_destributor.target_amount.toLocaleString('en-US')}}</td>
-                                <td>R@{{ (main_destributor.target_amount / 22).toLocaleString('en-US')}}</td>
+                                <td>R@{{ (Number((main_destributor.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
                                 <td v-if="main_destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td v-else class="text-success font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td>R@{{ main_destributor.current_sales.toLocaleString('en-US')}}</td>
@@ -74,7 +88,7 @@
                                         <td scope="row">@{{i+1}}</td>
                                          <td colspan="2" class="font-weight-bold text-light border-right">@{{ destributor.des_name}}</td>
                                         <td>R@{{ destributor.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (destributor.target_amount / 22).toLocaleString('en-US')}}</td>
+                                        <td>R@{{ (Number((destributor.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
                                         <td v-if="destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td v-else class="text-success font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ destributor.current_sales.toLocaleString('en-US')}}</td>
@@ -85,7 +99,7 @@
                                         <td>@{{ rep.rep_number}}</td>
                                         <td class="border-right">@{{ rep.rep_name}}</td>
                                         <td>R@{{ rep.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (rep.target_amount / 22).toLocaleString('en-US')}}</td>
+                                        <td>R@{{ (Number((rep.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
                                          <td v-if="rep.target_percent < 100" class="text-danger font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                             <td v-else class="text-success font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ rep.current_sales.toLocaleString('en-US')}}</td>
@@ -105,6 +119,13 @@
                        </tr>
                         </thead>
                         <tbody>
+
+                            <tr class="text-uppercase categories-main" style="height: 80px;">
+                                <template v-for="a in lastDay" class=" ">
+                                    <td class="border-right text-success font-weight-bold" v-if="stores[0]['date_sales'][a]" style="height: 80px;">R@{{ stores[0]['date_sales'][a].toLocaleString('en-US') }}</td>
+                                    <td class="border-right " v-else style="height: 80px;"></td>     
+                                </template>
+                            </tr>
 
                             <template  v-for="main_destributor in data"  > 
                                 
@@ -235,6 +256,7 @@ const { createApp } = Vue;
         data() {
           return {
             data: [],
+            stores: [],
             month: '',
             lastDay: 0,
     
@@ -247,7 +269,7 @@ const { createApp } = Vue;
            this.month = d[1];
            this.lastDay = Number(d[2]); 
  
-        let sales = JSON.parse( document.getElementById("sales").value);
+        let sales = JSON.parse( document.getElementById("sales").value );
   
         let repIDs = []; let reps = [];
         for (let i = 0; i < sales.length; i++) {
@@ -318,12 +340,10 @@ const { createApp } = Vue;
         } 
 
         destributors = Object.values(destributors)
-        // let destributors_names = [ 'diplomat', 'tiger brands', 'shop sales', 'destributor' ]
-
+ 
         let desIDs = []; let main_destributors = [];
         for (let y = 0; y < destributors.length; y++) {
-            let desID = destributors[y].des_name.split(' ')
-                desID = desID[0]
+            let desID = destributors[y].des_name.split(' '); desID = desID[0];
 
             if (!desIDs.includes(desID)) {
                     desIDs.push(desID);
@@ -350,12 +370,33 @@ const { createApp } = Vue;
             } 
             console.log(main_destributors); 
         } 
-        console.log(Object.values(main_destributors));
-        console.log("////////////////////////////////////////////////////");
-        // console.log(destributors);
 
+        main_destributors = Object.values(main_destributors)
 
-        this.data = [ ...Object.values(main_destributors)]
+        // /// Display totals for the store level ( Stokkafela as a whole ) //////
+         let stores = {current_sales: 0, target_amount: 0, target_percent: 0, daily_rr: 0, date_sales: []};
+        for (let z = 0; z < main_destributors.length; z++) {
+   
+            stores["current_sales"] += main_destributors[z].current_sales;
+            stores["target_amount"] += main_destributors[z].target_amount;
+            stores["daily_rr"] = Number((stores["target_amount"] / 22).toFixed(2)) ;
+            stores["target_percent"] += (main_destributors[z].current_sales / main_destributors[z].target_amount )*100;;
+             
+            for (let a = 0; a < main_destributors[z]['date_sales'].length; a++) {
+                if (isNaN(stores['date_sales'][a])) {
+                    stores['date_sales'][a] = 0
+                }
+                stores['date_sales'][a] += destributors[z]['date_sales'][a]
+            } 
+         } 
+////////////////////////////////////////////////////
+console.log("////////////////////////////////////////////////////");
+
+        console.log( stores);
+ 
+
+        this.stores = [ ... [stores]]
+        this.data = [ ... main_destributors]
 
          },
         methods:

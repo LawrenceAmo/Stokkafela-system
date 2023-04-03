@@ -33,7 +33,7 @@
           <div class="list-group list-group-flush mx-3 mt-1 pt-1">
             <a
               href="{{route('portal')}}"
-              class="list-group-item list-group-item-action py-2 ripple "
+              class="list-group-item list-group-item-action py-2 ripple " 
               aria-current="true"
             >
               <i class="fa fa-tachometer-alt fa-fw h6"></i><span>Dashboard</span>
