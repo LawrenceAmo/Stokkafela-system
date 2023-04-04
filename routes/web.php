@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\DestributorsController;
 use App\Http\Controllers\SalesController; 
 use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
@@ -96,10 +97,14 @@ Route::post('/sales/repsale/save', [SalesController::class, 'save_rep_sale'])->n
 Route::get('/sales/repsale/delete/{id}', [SalesController::class, 'delete_rep_sale'])->name('delete_rep_sale');
 
  
-//  Debtors //create_destributor
+//  Debtors // destributor
 Route::get('/debtors', [RepsController::class, 'index'])->name('debtors');
 // Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
-Route::POST('/debtors/Destributor/create', [RepsController::class, 'create_destributor'])->name('create_destributor');
+Route::POST('/debtors/destributor/create', [DestributorsController::class, 'create_destributor'])->name('create_destributor');
+Route::get('/debtors/destributor/update/{id}/{delete?}', [DestributorsController::class, 'update_destributor'])->name('update_destributor');
+Route::post('/debtors/destributor/save', [DestributorsController::class, 'save_destributor'])->name('save_destributor');
+
+    // ////// Reps
 Route::POST('/debtors/rep/create', [RepsController::class, 'create_rep'])->name('create_rep');
 Route::get('/debtors/rep/update/{id}/{delete?}', [RepsController::class, 'update_rep'])->name('update_rep');
 Route::post('/debtors/rep/save', [RepsController::class, 'save_rep'])->name('save_rep');

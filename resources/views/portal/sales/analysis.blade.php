@@ -65,7 +65,7 @@
                                 <td colspan="3" class="font-weight-bold border-right">Stokkafela Revenue</td>
                                 <td class="font-weight-bold ">R@{{ stores[0]['target_amount'].toLocaleString('en-US') }}</td>
                                 <td class="font-weight-bold ">R@{{ (stores[0]['daily_rr']).toLocaleString('en-US',1)}}</td>
-                                <td class="font-weight-bold " v-if="stores[0]['target_percent'] < 100" class="text-danger font-weight-bold">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
+                                <td class="font-weight-bold text-danger font-weight-bold" v-if="stores[0]['target_percent'] < 100">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
                                 <td class="font-weight-bold " v-else class="text-success font-weight-bold">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
                                 <td class="font-weight-bold ">R@{{ stores[0]['current_sales'].toLocaleString('en-US')}}</td>
                             </tr>
@@ -82,7 +82,6 @@
                                 <td>R@{{ main_destributor.current_sales.toLocaleString('en-US')}}</td>
                              </tr>
                                                          {{-- sub Destributer left table --}}
-
                                 <template v-for="destributor,i in main_destributor.destributors" destributors>
                                     <tr class="text-uppercase categories " style="height: 80px;">
                                         <td scope="row">@{{i+1}}</td>
@@ -120,7 +119,7 @@
                         </thead>
                         <tbody>
 
-                            <tr class="text-uppercase categories-main" style="height: 80px;">
+                            <tr class="text-uppercase main-categories-main" style="height: 80px;">
                                 <template v-for="a in lastDay" class=" ">
                                     <td class="border-right text-success font-weight-bold" v-if="stores[0]['date_sales'][a]" style="height: 80px;">R@{{ stores[0]['date_sales'][a].toLocaleString('en-US') }}</td>
                                     <td class="border-right " v-else style="height: 80px;"></td>     
@@ -132,24 +131,24 @@
                                 {{-- Main Destributer right table --}}
                                 <tr class="text-uppercase categories-main" style="height: 80px;">
                                     <template v-for="a in lastDay" class=" ">
-                                        <td class="border-right text-success font-weight-bold" v-if="main_destributor.date_sales[a]" style="height: 80px;">R@{{ main_destributor.date_sales[a].toLocaleString('en-US') }}</td>
-                                        <td class="border-right " v-else style="height: 80px;"></td>     
+                                        <td class="border-right text-success font-weight-bold" :title="[a, month]" v-if="main_destributor.date_sales[a]" style="height: 80px;">R@{{ main_destributor.date_sales[a].toLocaleString('en-US') }}</td>
+                                        <td class="border-right " :title="[a, month]" v-else style="height: 80px;"></td>     
                                     </template>
                                 </tr>
                                            {{-- Sub Destributer Right table --}}
                                 <template v-for="destributor in main_destributor.destributors">
                                     <tr class="text-uppercase categories" style="height: 80px;">
                                         <template v-for="a in lastDay" class=" ">
-                                            <td class="border-right text-success font-weight-bold" v-if="destributor.date_sales[a]" style="height: 80px;">R@{{ destributor.date_sales[a].toLocaleString('en-US') }}</td>
-                                            <td class="border-right " v-else style="height: 80px;"></td> 
+                                            <td class="border-right text-success font-weight-bold" :title="[a, month]" v-if="destributor.date_sales[a]" style="height: 80px;">R@{{ destributor.date_sales[a].toLocaleString('en-US') }}</td>
+                                            <td class="border-right " :title="[a, month]" v-else style="height: 80px;"></td> 
                                         </template>
                                     </tr>                                 
                                 {{--  Rep Right table --}}
                                 <tr v-for="rep,z in destributor.reps">
     
                                     <template v-for="a in lastDay" >
-                                         <td class="border-right text-success font-weight-bold" v-if="rep.date_sales[a]" style="height: 80px;">R@{{ rep.date_sales[a].toLocaleString('en-US') }}</td>
-                                        <td class="border-right " v-else style="height: 80px;"></td> 
+                                         <td class="border-right text-success font-weight-bold" :title="[a, month  ]" v-if="rep.date_sales[a]" style="height: 80px;">R@{{ rep.date_sales[a].toLocaleString('en-US') }}</td>
+                                        <td class="border-right " :title="[a, month]" v-else style="height: 80px;"></td> 
                                      </template>
                                
                                 </tr>   
@@ -299,20 +298,14 @@ const { createApp } = Vue;
             let day = date[0].split('-'); day = Number(day[2])  ;
             let  sale = this.toDecimal(sales[i].NettSales) + this.toDecimal(sales[i].VAT)
              reps[ repID ]['date_sales'][day] =  sale
-            reps[ repID ]['dates'].push(day)
-
-            // console.log(date[0].split('-'))
-            // console.log(reps[ repID ]['dates'])
- 
+            reps[ repID ]['dates'].push(day)  
         }
 
         reps = reps.filter( e => e)
-
-        // console.log(reps)
-
+ 
         let deIDs = []; let destributors = [];
         for (let x = 0; x < reps.length; x++) {
-            let deID = reps[x].destributor_name//.replace(' ', '')
+            let deID = reps[x].destributor_name 
             if (!deIDs.includes(deID)) {
                     deIDs.push(deID);
                     destributors[ deID ] = []; 

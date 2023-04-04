@@ -60,6 +60,7 @@
            <th>Destribution Center</th>         
            {{-- <th>Rep Number</th> --}}
            <th>Region</th>         
+           <th>Action</th>         
        </tr>
        </thead>
        <tbody>  
@@ -67,7 +68,11 @@
             <tr>
                <td scope="row">{{$i}}</td>
                <td>{{$destributor->name}}</td>
-               <td >{{$destributor->address}}</td>  
+               <td >{{$destributor->address}}</td> 
+               <td class="">
+                <a href=" {{ route('update_destributor', [$destributor->destributorID]) }}" class="text-info"><i class="fas fa-pencil-alt "></i></a> &nbsp; |  &nbsp;  
+                <a href="{{ route('update_destributor', [$destributor->destributorID, true]) }}" class="text-danger"><i class="fas fa-trash-alt "></i></a>  
+              </td> 
             <?php $i++ ?>
            @endforeach 
           

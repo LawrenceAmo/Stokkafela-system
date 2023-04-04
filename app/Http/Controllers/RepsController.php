@@ -65,32 +65,7 @@ class RepsController extends Controller
         return redirect()->back()->with('success', 'Rep: '.$request->first_name.' with Rep number: '.$request->rep_number.' was created successfully');
     }
 
-    // Create a new DESTRIBUTOR
-    public function create_destributor(Request $request)
-    { 
-        $request->validate([
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'store' => 'required',             
-        ]); 
-
-        $dest = DB::table('destributors')
-            ->where( 'name', '=', $request->name  )
-            ->exists();
-
-         if ($dest) {
-            return redirect()->back()->with("error", "The Destributor ".$request->trading_name." already exists!!!");
-        }
-  
-        $des = new Destributors();
-        $des->name = $request->name;
-        $des->address = $request->address;
-        $des->storeID = (int)$request->store;
-        $des->save();
-         
-        return redirect()->back()->with('success', 'Destribution Center: '.$request->name.' with region: '.$request->address.' was created successfully');
-    }
-
+    
     public function update_rep($id, $delete = false)
     {
         $destributors = DB::table('destributors')->get();
@@ -104,6 +79,7 @@ class RepsController extends Controller
                 ->with('destributors', $destributors)
                 ->with('delete', $delete);
     }
+    
     // update rep sale (Not done yet)
     public function save_rep(Request $request)
     {  
