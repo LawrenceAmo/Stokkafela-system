@@ -101,14 +101,14 @@ class RepsController extends Controller
             'destributor' => 'required',           
         ]); 
 
-        $rep = DB::table('reps')
-        ->where([ ['first_name', $request->first_name], ['destributorID', $request->destributor] ])
-        ->exists();
+        // $rep = DB::table('reps')
+        // ->where([ ['first_name', $request->first_name], ['destributorID', $request->destributor] ])
+        // ->exists();
 
-        if ($rep) {
-            return redirect()->back()->with("error", "The Rep ".$request->first_name." with Rep Number: ".$request->rep_number." already exists!!!");
-        }
-        
+        // if ($rep) {
+        //     return redirect()->back()->with("error", "The Rep ".$request->first_name." with Rep Number: ".$request->rep_number." already exists!!!");
+        // }
+
         $last_name = $request->last_name;   
         $rep_number = $request->rep_number;  
 
