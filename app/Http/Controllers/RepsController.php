@@ -37,8 +37,8 @@ class RepsController extends Controller
     { 
         $request->validate([
             'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'rep_number' => 'required',
+            // 'last_name' => 'required|string',
+            // 'rep_number' => 'required',
             'destributor' => 'required',             
         ]); 
        
@@ -50,14 +50,25 @@ class RepsController extends Controller
             return redirect()->back()->with("error", "The Rep ".$request->first_name." with Rep Number: ".$request->rep_number." already exists!!!");
         }
 
+        $last_name = $request->last_name;   
+        $rep_number = $request->rep_number;  
+
+        if (!$last_name) {
+            $last_name = '';
+        }
+        
+        if (!$rep_number) {
+            $rep_number = 0;
+        }
+
         $store = DB::table('destributors')
         ->where('destributorID', $request->destributor) 
         ->get();
  
         $rep = new Reps();
         $rep->first_name = $request->first_name;
-        $rep->last_name = $request->last_name;
-        $rep->rep_number = $request->rep_number;
+        $rep->last_name = $last_name;
+        $rep->rep_number = $rep_number;
         $rep->storeID = (int)$store[0]->storeID;
         $rep->destributorID = (int)$request->destributor;
         $rep->save();
@@ -85,18 +96,28 @@ class RepsController extends Controller
     {  
         $request->validate([
             'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'rep_number' => 'required',
+            // 'last_name' => 'required|string',
+            // 'rep_number' => 'required',
             'destributor' => 'required',           
-        ]);    
-    
+        ]); 
+
+        $last_name = $request->last_name;   
+        $rep_number = $request->rep_number;  
+
+        if (!$last_name) {
+            $last_name = '';
+        }
+        
+        if (!$rep_number) {
+            $rep_number = 0;
+        }
         // return $request;
         DB::table('reps')
               ->where('repID', $request->repID)
               ->update([
                 'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'rep_number' => $request->rep_number,
+                'last_name' => $last_name,
+                'rep_number' => $rep_number,
                 'destributorID' => $request->destributor,                 
             ]);
  

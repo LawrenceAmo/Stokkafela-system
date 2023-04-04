@@ -73,14 +73,14 @@ class DestributorsController extends Controller
     
 
     // 
-    public function delete_rep($id)
+    public function delete_destributor($id)
     {
-        $sales =  DB::table('rep_sales')
-                    ->where('repID', $id)
+        $reps =  DB::table('reps')
+                    ->where('destributorID', $id)
                     ->exists();
 
-        if ($sales) {
-            return redirect()->back()->with('error', 'This Rep have sales, You can\'t delete Reps with sales. Delete all sales for this Rep first and try again...');
+        if ($reps) {
+            return redirect()->back()->with('error', 'This Destributor have Reps, You can\'t delete Destributor with Reps. Delete all Reps for this Destributor first and try again...');
         }
  
         DB::table('reps')
