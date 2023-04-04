@@ -43,7 +43,7 @@ class RepsController extends Controller
         ]); 
        
         $rep = DB::table('reps')
-        ->where([ ['first_name', $request->name] ])
+        ->where([ ['first_name', $request->first_name], ['destributorID', $request->destributor] ])
         ->exists();
 
         if ($rep) {
@@ -72,7 +72,7 @@ class RepsController extends Controller
         $rep->storeID = (int)$store[0]->storeID;
         $rep->destributorID = (int)$request->destributor;
         $rep->save();
-         
+
         return redirect()->back()->with('success', 'Rep: '.$request->first_name.' with Rep number: '.$request->rep_number.' was created successfully');
     }
 
@@ -101,6 +101,14 @@ class RepsController extends Controller
             'destributor' => 'required',           
         ]); 
 
+        $rep = DB::table('reps')
+        ->where([ ['first_name', $request->first_name], ['destributorID', $request->destributor] ])
+        ->exists();
+
+        if ($rep) {
+            return redirect()->back()->with("error", "The Rep ".$request->first_name." with Rep Number: ".$request->rep_number." already exists!!!");
+        }
+        
         $last_name = $request->last_name;   
         $rep_number = $request->rep_number;  
 
@@ -138,6 +146,6 @@ class RepsController extends Controller
               ->where('repID', $id)
               ->delete();
 
-        return redirect('/portal/sales')->with('success', 'Rep was deleted successfully');
+        return redirect('/portal/debtors')->with('success', 'Rep was deleted successfully');
     }
 }
