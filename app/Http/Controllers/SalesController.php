@@ -144,21 +144,25 @@ class SalesController extends Controller
        
         for ($i=0; $i < count($data) ; $i++) { 
 
+            // $repID = DB::table('reps')
+            //         ->where( 'rep_number', '=', (int)$data[$i][$header['rep_number']] )
+            //         ->get('repID');
+
             $rep = DB::table('rep_sales')
                     ->where( 'repID', '=', (int)$data[$i][$header['rep_number']] )
                     ->where('date', 'like', $date.'%')
-                    ->exists();
+                    ->delete(); 
 
             if ($rep) {
                 continue;
             } 
 
-            $rep_sale = new RepSales();
-            $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
-            $rep_sale->VAT = (float)$data[$i][$header['vat']];
-            $rep_sale->date = $date;
-            $rep_sale->repID = (int)$data[$i][$header['rep_number']];
-            $rep_sale->save();
+            // $rep_sale = new RepSales();
+            // $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
+            // $rep_sale->VAT = (float)$data[$i][$header['vat']];
+            // $rep_sale->date = $date;
+            // $rep_sale->repID = (int)$data[$i][$header['rep_number']];
+            // $rep_sale->save();
         }
    
          return redirect()->back()->with('success', 'Sale was created successfully');
