@@ -94,6 +94,7 @@ Route::POST('/sales/save', [SalesController::class, 'save'])->name('save_sales')
 Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
 Route::get('/sales/repsale/update/{id}/{delete?}', [SalesController::class, 'update_rep_sale'])->name('update_rep_sale');
 Route::post('/sales/repsale/save', [SalesController::class, 'save_rep_sale'])->name('save_rep_sale');
+Route::post('/sales/repsale/import', [SalesController::class, 'import_rep_sales'])->name('import_rep_sales');
 Route::get('/sales/repsale/delete/{id}', [SalesController::class, 'delete_rep_sale'])->name('delete_rep_sale');
 
  

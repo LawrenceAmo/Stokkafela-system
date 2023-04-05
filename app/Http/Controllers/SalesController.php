@@ -71,12 +71,11 @@ class SalesController extends Controller
         $thisMonth = date("Y-m", strtotime("first day of 0 months"));
 
         $sales = DB::table('reps')
-                ->join('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
+                ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
                 ->join('rep_sales', 'rep_sales.repID', '=', 'reps.repID')
                 ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
                 ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', '>=', $from]])
                 ->get();
-
                 
         $destributors = DB::table('destributors')
                      ->get();
@@ -85,7 +84,7 @@ class SalesController extends Controller
                 ->leftJoin('rep_targets', function($join) use ($thisMonth){
                     $join->on('reps.repID', '=', 'rep_targets.repID')
                     ->where('rep_targets.date', 'like', $thisMonth.'%');
-                }) 
+                  }) 
                 ->whereNull('rep_targets.targetID')
                 ->select('reps.*')
                 ->get();
@@ -125,7 +124,45 @@ class SalesController extends Controller
         $rep_sale->save();
          
         return redirect()->back()->with('success', 'Sale for Rep: '.$rep_data[0]->first_name.' for: '.$request->date.' was created successfully');
-    }
+    } 
+
+    // 
+     public function import_rep_sales(Request $request)
+     { 
+         $request->validate([
+             'file' => 'required', 
+             'date' => 'required',             
+         ]); 
+         $date = substr($request->date,0, 10);
+         
+         $data = Excel::toArray(new CSVImport, request()->file('file'));       
+         $sales = new Sales();
+         $import_sales = $sales->import_sales_csv($data, $request, true);
+
+         $header = $import_sales[1];
+         $data = $import_sales[0];
+       
+        for ($i=0; $i < count($data) ; $i++) { 
+
+            $rep = DB::table('rep_sales')
+                    ->where( 'repID', '=', (int)$data[$i][$header['rep_number']] )
+                    ->where('date', 'like', $date.'%')
+                    ->exists();
+
+            if ($rep) {
+                continue;
+            } 
+
+            $rep_sale = new RepSales();
+            $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
+            $rep_sale->VAT = (float)$data[$i][$header['vat']];
+            $rep_sale->date = $date;
+            $rep_sale->repID = (int)$data[$i][$header['rep_number']];
+            $rep_sale->save();
+        }
+   
+         return redirect()->back()->with('success', 'Sale was created successfully');
+     }
  
     public function update_rep_sale($id, $delete = false)
     {

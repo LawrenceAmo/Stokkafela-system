@@ -35,17 +35,14 @@
                 </div>
             </div>
             <div class="col">
-                <p class="font-weight-bold">Stock Analysis</p>
+                <p class="font-weight-bold">Rep Sales</p>
                 <div class="border rounded text-center">
-                    <a href="" class="btn btn-sm btn-success rounded font-weight-bold" data-toggle="modal" data-target="#import_stock_analysis">Upload Stock Analysis</a>
+                    <a href="" class="btn btn-sm btn-success rounded font-weight-bold" data-toggle="modal" data-target="#import_rep_sales">Upload Rep Sales</a>
                 </div>
             </div>
         </div>
     </section>
-
-
  
-
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
 
@@ -83,6 +80,47 @@
                         <div class="form-group">
                         <label for="">Month & Year</label>
                         <input type="month" min="" name="date" id="date" class="form-control" placeholder="" aria-describedby="helpId">
+                        {{-- <small id="helpId" class="text-muted">Help text</small> --}}
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
+
+<div class="modal fade" id="import_rep_sales" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('import_rep_sales') }}" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Import Rep Sales</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <div class="form-group">
+                      <label for="">Select Rep Sales File</label>
+                      <input type="file" value="" accept=".csv, .xlsx, .xls" class="form-control-file" name="file" id="products_file" >
+                      <small class="form-text text-muted">
+                        <span class="font-weight-bold">Note</span>
+                        Only CSV or xlsx files are allowed...
+                    </small>
+                    </div>
+                   
+                    <hr>
+                    <div class=" " id="date"> 
+                        <div class="form-group">
+                        <label for="">Date</label>
+                        <input type="date" min="" name="date" id="date" class="form-control" placeholder="" aria-describedby="helpId">
                         {{-- <small id="helpId" class="text-muted">Help text</small> --}}
                         </div> 
                     </div>

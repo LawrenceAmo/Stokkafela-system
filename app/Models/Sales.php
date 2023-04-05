@@ -10,7 +10,7 @@ class Sales extends Model
 {
     use HasFactory;
 
-    public function import_sales_csv($data, $request)
+    public function import_sales_csv($data, $request, $rep_sales = false)
     {
         $data = $data[0];
         $products = []; 
@@ -31,10 +31,8 @@ class Sales extends Model
         $Profit = array_search('Profit', $data[0]);
         $vat = array_search('VAT', $data[0]);
         $date = array_search('Date', $data[0]);
-         
-        if (!$vat && $request->isDailyTotals) {
-            return false;
-        }
+        $rep_number = array_search('Rep', $data[0]);
+             
         // return 'request->isDailyTotals';
         //  make the index for the sales
         $header = [
@@ -50,6 +48,7 @@ class Sales extends Model
                     'profit' => $Profit,
                     'vat' => $vat,
                     'date' => $date,
+                    'rep_number' => $rep_number,
                 ];
 
                 //  check if the headeres are correct or not
@@ -68,57 +67,30 @@ class Sales extends Model
                 {
                     return false;
                 }
-        //   array_shift($data);  // remove the old headers 
+          array_shift($data);  // remove the old headers 
+
+        if (!$vat && $request->isDailyTotals) {
+            return false;
+        }
+
+        return [$data, $header];
  
-         $form = [
-                        'userID' => $request->userID,
-                        'store' => $request->store,
-                        'date_from' => $request->date_from,
-                        'date_to' => $request->date_to,
-                        'isDailyTotals' => $request->isDailyTotals,
-                    ];
-                    // \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])
-    //                 $date = $data[1][0];
-    //                 $date = $data[17][$date];
-    //                 $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp( $date );
-    //                 $date = date('Y-m-d', $date );
-    //                 // 2023-02-16 18:53:20
-    // $date = (string)$date."%";
-    // return gettype($date);
-    
-//  return $this->test($data, $header, $form ); 
+        // if (condition) {
+        //     # code...
+        // }
+
+        $form = [
+                    'userID' => $request->userID,
+                    'store' => $request->store,
+                    'date_from' => $request->date_from,
+                    'date_to' => $request->date_to,
+                    'isDailyTotals' => $request->isDailyTotals,
+                ];
+                     
 import_salesCSV::dispatch($data, $header, $form ); 
 // return only wanted fields from data in the excel file.
         return true;
     }
-
-    public function test($data, $header, $form)
-    {
-
-        for ($i=0; $i <count($data); $i++) {
-            
-            // foreach ($this->data as $data) {
-                    
-                $sales = [  
-                    'code' => $data[$i][$header['code']],
-                    'descript' => $data[$i][$header['descript']],
-                    'mainitem' => $data[$i][$header['mainitem']],
-                    'department' => $data[$i][$header['department']],
-                    'sales' => $data[$i][$header['sales']],
-                    'salescost' => $data[$i][$header['salescost']],
-                    'refund' => $data[$i][$header['refund']],
-                    'refundscost' => $data[$i][$header['refundscost']],
-                    'nettsales' => $data[$i][$header['nettsales']],
-                    'profit' => $data[$i][$header['profit']],
-                    // 'vat' => $data[$i][$header['vat']],
-                 ];
-
-                 return $sales;
-                // save_imported_salesCSV::dispatch($sales, $this->form);
-                // return $data;
-            }
-
-            return $sales;
-    }
+ 
 }
   
