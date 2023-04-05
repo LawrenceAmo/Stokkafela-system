@@ -21,34 +21,46 @@ class TargetsController extends Controller
     public function create_rep_target(Request $request)
     { 
         $request->validate([
-            'rep' => 'required',
+            'des' => 'required',
             'target_amount' => 'required',
             // 'date' => 'required',             
         ]); 
 
         $date = date("Y-m-d", strtotime("first day of 0 months"));
-       
-         $rep = DB::table('rep_targets')
-                ->where( 'repID', '=', (int)$request->rep )
+        
+        $reps = DB::table('reps')
+                ->where([['destributorID', (int)$request->des]]) 
+                ->get('repID');
+  
+         for ($i=0; $i < count($reps) ; $i++) { 
+
+            $rep = DB::table('rep_targets')
+                ->where( 'repID', '=', (int)$reps[$i]->repID )
                 ->where('date', 'like', '%'.$date.'%')
                 ->exists();
 
-        $rep_data = DB::table('reps')
-                ->where([['repID', (int)$request->rep]]) 
-                ->get();
-                // return $rep_data;
+           if ($rep) {
 
-        if ($rep) {
-            return redirect()->back()->with("error", "The target for Rep ".$rep_data[0]->first_name." at ".$date." already exists!!!");
+                DB::table('rep_targets')
+                ->where('repID', '=', (int)$reps[$i]->repID )
+                ->where('date', 'like', $date.'%')
+                ->update([
+                    'target_amount' => $request->target_amount,
+                    'date' => $date.'-01'
+                ]);
+           }
+            else
+           {
+                $rep_target = new RepTargets();
+                $rep_target->target_amount = $request->target_amount;
+                $rep_target->date = $date;
+                $rep_target->repID = (int)$reps[$i]->repID;
+                $rep_target->save();
+         }
         } 
- 
-        $rep_target = new RepTargets();
-        $rep_target->target_amount = $request->target_amount;
-        $rep_target->date = $date;
-        $rep_target->repID = (int)$request->rep;
-        $rep_target->save();
+
          
-        return redirect()->back()->with('success', 'Parget for Rep: '.$rep_data[0]->first_name.' for: '.$date.' was created successfully');
+        return redirect()->back()->with('success', 'Target for this month was created successfully');
     }
 
     /**

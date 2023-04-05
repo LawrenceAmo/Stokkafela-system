@@ -77,17 +77,20 @@ class SalesController extends Controller
                 ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', '>=', $from]])
                 ->get();
 
-                $reps = DB::table('reps')
+                
+        $destributors = DB::table('destributors')
+                     ->get();
+
+        $reps = DB::table('reps')
                 ->leftJoin('rep_targets', function($join) use ($thisMonth){
                     $join->on('reps.repID', '=', 'rep_targets.repID')
                     ->where('rep_targets.date', 'like', $thisMonth.'%');
-
                 }) 
                 ->whereNull('rep_targets.targetID')
                 ->select('reps.*')
                 ->get();
   
-        return view('portal.sales.analysis')->with('sales', $sales)->with('reps_with_notargets', $reps);
+        return view('portal.sales.analysis')->with('sales', $sales)->with('destributors', $destributors)->with('reps_with_notargets', $reps);
     }
 
     // 

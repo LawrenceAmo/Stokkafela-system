@@ -213,19 +213,19 @@
         <form action="{{ route('create_rep_target') }}" enctype="multipart/form-data" method="post" class="modal-content">
             @csrf
             <div class="modal-header">
-                <h5 class="modal-title">Set Rep Tartget</h5>
+                <h5 class="modal-title">Set Rep Tartget By Destributor</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
             <div class="modal-body">
                 <div class=""> 
-                    <div class="form-group">
-                      <label for="">Select Rep</label>
-                      <select class="form-control" name="rep" required>
-                        <option class="" @disabled(true) selected>Select Rep</option>
-                        @foreach ($reps_with_notargets as $rep)
-                            <option value="{{$rep->repID}}">{{$rep->rep_number}} {{$rep->first_name}} </option>
+                    <div class="form-group"> 
+                      <label for="">Select Destribution</label>
+                      <select class="form-control" name="des" required>
+                        <option class="" @disabled(true) selected>Select Destribution</option>
+                        @foreach ($destributors as $destributor)
+                            <option value="{{$destributor->destributorID}}">{{$destributor->name}} {{$destributor->address}} </option>
                         @endforeach
                       </select>
                     </div>
