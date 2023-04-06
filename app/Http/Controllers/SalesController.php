@@ -111,28 +111,30 @@ class SalesController extends Controller
         $rep_data = DB::table('reps')
                 ->where([['repID', (int)$request->rep]]) 
                 ->get();
- 
+
         if ($rep) {
             return redirect()->back()->with("error", "The sale for Rep ".$rep_data[0]->first_name." at ".$date." already exists!!!");
         } 
- 
+
+        // create 
         $rep_sale = new RepSales();
         $rep_sale->nettSales = $request->nett_sale;
         $rep_sale->VAT = $request->vat;
         $rep_sale->date = $request->date;
         $rep_sale->repID = (int)$request->rep;
         $rep_sale->save();
-         
+
         return redirect()->back()->with('success', 'Sale for Rep: '.$rep_data[0]->first_name.' for: '.$request->date.' was created successfully');
     } 
 
-    // only use this, 
+    // only use this, for importing the rep sales in bulk
      public function import_rep_sales(Request $request)
      {
          $request->validate([
-             'file' => 'required', 
-             'date' => 'required',             
-         ]); 
+                    'file' => 'required', 
+                    'date' => 'required',             
+                ]);
+
          $date = substr($request->date,0, 10);
 
          $data = Excel::toArray(new CSVImport, request()->file('file'));       

@@ -180,9 +180,7 @@
                     <th>#</th>
                     <th>Rep Name</th>         
                     <th>Rep number</th>         
-                   {{-- <th>Destribution Center</th>          --}}
-                    <th>Target Amount</th>         
-             
+                     <th>Target Amount</th>             
                 </tr>
                 </thead>
                 <tbody>  
@@ -302,6 +300,8 @@ const { createApp } = Vue;
         }
 
         reps = reps.filter( e => e)
+
+        // console.log(reps)
  
         let deIDs = []; let destributors = [];
         for (let x = 0; x < reps.length; x++) {
@@ -314,6 +314,8 @@ const { createApp } = Vue;
                     destributors[ deID ]["target_amount"] = 0; 
                     destributors[ deID ]["current_sales"] = 0;
                     destributors[ deID ]['date_sales'] = new Array(this.lastDay); 
+                    destributors[ deID ]['date_sales'].fill(0 ,0, this.lastDay);
+
                 // let des_days = new Array(this.lastDay)
             }
             destributors[ deID ]["reps"].push(reps[x]); 
@@ -325,10 +327,15 @@ const { createApp } = Vue;
                 if (isNaN(destributors[ deID ]['date_sales'][z])) {
                     destributors[ deID ]['date_sales'][z] = 0
                 }
+                if (isNaN(reps[x]['date_sales'][z])) {
+                    reps[x]['date_sales'][z] = 0
+                }
                 destributors[ deID ]['date_sales'][z] += reps[x]['date_sales'][z]
-
+ 
             } 
-            // console.log(destributors[ deID ]['date_sales']);                
+            // console.log(destributors[ deID ]);     
+            console.log(reps[x]['date_sales']);                
+           
 
         } 
 
@@ -353,16 +360,15 @@ const { createApp } = Vue;
             main_destributors[ desID ]["target_amount"] += destributors[y].target_amount;
             main_destributors[ desID ]["target_percent"] += (destributors[y].current_sales / destributors[y].target_amount )*100;;
             main_destributors[ desID ]["destributors"].push(destributors[y])
-            
+
             for (let z = 0; z < destributors[y]['date_sales'].length; z++) {
                 if (isNaN(main_destributors[desID]['date_sales'][z])) {
                     main_destributors[ desID ]['date_sales'][z] = 0
                 }
                 main_destributors[ desID ]['date_sales'][z] += destributors[y]['date_sales'][z]
-
             } 
-            console.log(main_destributors); 
-        } 
+            // console.log(main_destributors); 
+        }
 
         main_destributors = Object.values(main_destributors)
 
@@ -379,15 +385,17 @@ const { createApp } = Vue;
                 if (isNaN(stores['date_sales'][a])) {
                     stores['date_sales'][a] = 0
                 }
-                stores['date_sales'][a] += destributors[z]['date_sales'][a]
+                stores['date_sales'][a] += main_destributors[z]['date_sales'][a]
             } 
          } 
+        //  console.log(main_destributors)
+        //  console.log(stores['date_sales'])
+
 ////////////////////////////////////////////////////
 console.log("////////////////////////////////////////////////////");
 
-        console.log( stores);
+        // console.log( stores);
  
-
         this.stores = [ ... [stores]]
         this.data = [ ... main_destributors]
 
