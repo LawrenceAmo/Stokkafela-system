@@ -162,8 +162,8 @@ class SalesController extends Controller
                         ['repID', '=', $repID ],
                         ['date', 'like', $date.'%']
                         ])
-                    ->exists(); 
- 
+                    ->exists();
+
             if ($rep) {
 
                 DB::table('rep_sales')

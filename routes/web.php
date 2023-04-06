@@ -83,7 +83,7 @@ Route::get('/product/create', [ProductController::class, 'create'])->name('creat
 Route::POST('/product/save', [ProductController::class, 'save'])->name('save_product');
 // Route::get('/product', [StoreController::class, 'index'])->name('save_store');
 
-// Stock Analysis / Reports
+// Stock Analysis / Reports 
 Route::get('/analysis/stock/{id}', [ReportsController::class, 'stock_analysis'])->name('stock_analysis');
 
 //  Sales
@@ -117,6 +117,7 @@ Route::get('/debtors/rep/delete/{id}', [RepsController::class, 'delete_rep'])->n
 // Route::get('/targets', [RepsController::class, 'index'])->name('debtors');
 // Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
 Route::POST('/targets/rep/create', [TargetsController::class, 'create_rep_target'])->name('create_rep_target');
+Route::POST('/targets/rep/createbydes', [TargetsController::class, 'create_rep_target_bydes'])->name('create_rep_target_bydes');
 // Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
 
 

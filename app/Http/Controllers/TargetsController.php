@@ -21,6 +21,47 @@ class TargetsController extends Controller
     public function create_rep_target(Request $request)
     { 
         $request->validate([
+            'repID' => 'required',
+            'target_amount' => 'required',
+            // 'date' => 'required',             
+        ]); 
+
+        // return $request;
+        $date = date("Y-m-d", strtotime("first day of 0 months"));
+         
+            $rep = DB::table('rep_targets')
+                ->where([['repID', '=', (int)$request->repID], ['date', 'like', $date.'%']] )
+                ->exists();
+
+ 
+           if (!$rep) {
+
+                DB::table('rep_targets')
+                ->where([['repID', '=', (int)$request->repID], ['date', 'like', $date.'%']] )
+                ->update([
+                    'target_amount' => $request->target_amount,
+                 ]);
+           }
+            else
+           {
+                $rep_target = new RepTargets();
+                $rep_target->target_amount = $request->target_amount;
+                $rep_target->date = $date;
+                $rep_target->repID = (int)$request->repID;
+                $rep_target->save();
+         }
+         
+
+         
+        return redirect()->back()->with('success', 'Target for this month was created successfully');
+    }
+
+    
+    
+
+    public function create_rep_target_bydes(Request $request)
+    { 
+        $request->validate([
             'des' => 'required',
             'target_amount' => 'required',
             // 'date' => 'required',             
@@ -61,17 +102,6 @@ class TargetsController extends Controller
 
          
         return redirect()->back()->with('success', 'Target for this month was created successfully');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
