@@ -148,11 +148,18 @@ class SalesController extends Controller
 
             $repID = DB::table('reps')
                         ->where( 'rep_number', '=', (int)$data[$i][$header['rep_number']] )
+                        ->limit(1)
                         ->get('repID');
+                        // return (int)$data[$i][$header['rep_number']];
+            if (count($repID) === 0) {
+               continue;
+            }
+            // return (int)$repID[0]->repID;
+            $repID = (int)$repID[0]->repID;
 
             $rep = DB::table('rep_sales')
                     ->where( [
-                        ['repID', '=', (int)$repID[0]->repID ],
+                        ['repID', '=', $repID ],
                         ['date', 'like', $date.'%']
                         ])
                     ->exists(); 
@@ -161,7 +168,7 @@ class SalesController extends Controller
 
                 DB::table('rep_sales')
                     ->where( [
-                            ['repID', '=', (int)$repID[0]->repID ],
+                            ['repID', '=',  $repID ],
                             ['date', 'like', $date.'%']
                         ])
                     ->update([
@@ -176,7 +183,7 @@ class SalesController extends Controller
                 $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
                 $rep_sale->VAT = (float)$data[$i][$header['vat']];
                 $rep_sale->date = $date;
-                $rep_sale->repID = (int)$repID[0]->repID;
+                $rep_sale->repID =  $repID;
                 $rep_sale->save();
             }
         }
