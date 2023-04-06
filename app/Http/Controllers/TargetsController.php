@@ -34,7 +34,7 @@ class TargetsController extends Controller
                 ->exists();
 
  
-           if (!$rep) {
+           if ($rep) {
 
                 DB::table('rep_targets')
                 ->where([['repID', '=', (int)$request->repID], ['date', 'like', $date.'%']] )
@@ -50,9 +50,7 @@ class TargetsController extends Controller
                 $rep_target->repID = (int)$request->repID;
                 $rep_target->save();
          }
-         
-
-         
+                  
         return redirect()->back()->with('success', 'Target for this month was created successfully');
     }
 
