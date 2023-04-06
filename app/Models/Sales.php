@@ -33,8 +33,7 @@ class Sales extends Model
         $date = array_search('Date', $data[0]);
         $rep_number = array_search('Rep', $data[0]);
              
-        // return 'request->isDailyTotals';
-        //  make the index for the sales
+    //  make the index for the sales
         $header = [
                     'code' => $CODE, 
                     'descript' => $Descript,
@@ -67,18 +66,18 @@ class Sales extends Model
                 {
                     return false;
                 }
-          array_shift($data);  // remove the old headers 
+
+        array_shift($data);  // remove the old headers 
+
+        // for importing rep sales only
+        if ($rep_sales) {
+            return [$data, $header];
+        }
 
         if (!$vat && $request->isDailyTotals) {
             return false;
         }
-
-        return [$data, $header];
  
-        // if (condition) {
-        //     # code...
-        // }
-
         $form = [
                     'userID' => $request->userID,
                     'store' => $request->store,
@@ -86,8 +85,9 @@ class Sales extends Model
                     'date_to' => $request->date_to,
                     'isDailyTotals' => $request->isDailyTotals,
                 ];
-                     
-import_salesCSV::dispatch($data, $header, $form ); 
+
+        import_salesCSV::dispatch($data, $header, $form );
+
 // return only wanted fields from data in the excel file.
         return true;
     }

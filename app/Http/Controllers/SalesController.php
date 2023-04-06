@@ -126,43 +126,57 @@ class SalesController extends Controller
         return redirect()->back()->with('success', 'Sale for Rep: '.$rep_data[0]->first_name.' for: '.$request->date.' was created successfully');
     } 
 
-    // 
+    // only use this, 
      public function import_rep_sales(Request $request)
-     { 
+     {
          $request->validate([
              'file' => 'required', 
              'date' => 'required',             
          ]); 
          $date = substr($request->date,0, 10);
-         
+
          $data = Excel::toArray(new CSVImport, request()->file('file'));       
          $sales = new Sales();
          $import_sales = $sales->import_sales_csv($data, $request, true);
 
          $header = $import_sales[1];
          $data = $import_sales[0];
-       
-        for ($i=0; $i < count($data) ; $i++) { 
+
+        for ($i=0; $i < count($data); $i++) { 
 
             $repID = DB::table('reps')
-                    ->where( 'rep_number', '=', (int)$data[$i][$header['rep_number']] )
-                    ->get('repID');
+                        ->where( 'rep_number', '=', (int)$data[$i][$header['rep_number']] )
+                        ->get('repID');
 
             $rep = DB::table('rep_sales')
-                    ->where( 'repID', '=', (int)$repID[0]->repID )
-                    ->where('date', 'like', $date.'%')
-                    ->delete(); 
-
+                    ->where( [
+                        ['repID', '=', (int)$repID[0]->repID ],
+                        ['date', 'like', $date.'%']
+                        ])
+                    ->exists(); 
+ 
             if ($rep) {
-                continue;
-            } 
 
-            $rep_sale = new RepSales();
-            $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
-            $rep_sale->VAT = (float)$data[$i][$header['vat']];
-            $rep_sale->date = $date;
-            $rep_sale->repID = (int)$repID[0]->repID;
-            $rep_sale->save();
+                DB::table('rep_sales')
+                    ->where( [
+                            ['repID', '=', (int)$repID[0]->repID ],
+                            ['date', 'like', $date.'%']
+                        ])
+                    ->update([
+                        'nettSales' => (float)$data[$i][$header['nettsales']],
+                        'VAT' => (float)$data[$i][$header['vat']],
+                    ]);
+
+                continue;
+            }else{
+
+                $rep_sale = new RepSales();
+                $rep_sale->nettSales = (float)$data[$i][$header['nettsales']];
+                $rep_sale->VAT = (float)$data[$i][$header['vat']];
+                $rep_sale->date = $date;
+                $rep_sale->repID = (int)$repID[0]->repID;
+                $rep_sale->save();
+            }
         }
    
          return redirect()->back()->with('success', 'Sale was created successfully');

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class import_salesCSV implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+ 
     public $data;
     public $header;
     public $form;
