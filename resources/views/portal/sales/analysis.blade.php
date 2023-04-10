@@ -76,7 +76,7 @@
                                 <td scope="row">@{{i+1}}</td>
                                 <td colspan="2" class="font-weight-bold text-light border-right">@{{ main_destributor.main_des_name}}</td>
                                 <td>R@{{ main_destributor.target_amount.toLocaleString('en-US')}}</td>
-                                <td>R@{{ (Number((main_destributor.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
+                                <td>R@{{ (Number((main_destributor.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
                                 <td v-if="main_destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td v-else class="text-success font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td>R@{{ main_destributor.current_sales.toLocaleString('en-US')}}</td>
@@ -87,7 +87,7 @@
                                         <td scope="row">@{{i+1}}</td>
                                          <td colspan="2" class="font-weight-bold text-light border-right">@{{ destributor.des_name}}</td>
                                         <td>R@{{ destributor.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (Number((destributor.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
+                                        <td>R@{{ (Number((destributor.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
                                         <td v-if="destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td v-else class="text-success font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ destributor.current_sales.toLocaleString('en-US')}}</td>
@@ -98,7 +98,7 @@
                                         <td>@{{ rep.rep_number}}</td>
                                         <td class="border-right">@{{ rep.rep_name}}</td>
                                         <td>R@{{ rep.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (Number((rep.target_amount / 22).toFixed(2))).toLocaleString('en-US')}}</td>
+                                        <td>R@{{ (Number((rep.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
                                          <td v-if="rep.target_percent < 100" class="text-danger font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                             <td v-else class="text-success font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ rep.current_sales.toLocaleString('en-US')}}</td>
@@ -415,8 +415,8 @@ const { createApp } = Vue;
    
             stores["current_sales"] += main_destributors[z].current_sales;
             stores["target_amount"] += main_destributors[z].target_amount;
-            stores["daily_rr"] = Number((stores["target_amount"] / 22).toFixed(2)) ;
-            stores["target_percent"] += (main_destributors[z].current_sales / main_destributors[z].target_amount )*100;;
+            stores["daily_rr"] = Number((stores["target_amount"] / 23).toFixed(2)) ;
+            stores["target_percent"] = (stores["current_sales"] / stores["target_amount"] )*100;
              
             for (let a = 0; a < main_destributors[z]['date_sales'].length; a++) {
                 if (isNaN(stores['date_sales'][a])) {
