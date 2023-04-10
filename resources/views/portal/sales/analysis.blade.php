@@ -395,7 +395,7 @@ const { createApp } = Vue;
 
             main_destributors[ desID ]["current_sales"] += destributors[y].current_sales;
             main_destributors[ desID ]["target_amount"] += destributors[y].target_amount;
-            main_destributors[ desID ]["target_percent"] += (destributors[y].current_sales / destributors[y].target_amount )*100;;
+            main_destributors[ desID ]["target_percent"] = (main_destributors[ desID ]["current_sales"] / main_destributors[ desID ]["target_amount"] ) * 100;;
             main_destributors[ desID ]["destributors"].push(destributors[y])
 
             for (let z = 0; z < destributors[y]['date_sales'].length; z++) {
