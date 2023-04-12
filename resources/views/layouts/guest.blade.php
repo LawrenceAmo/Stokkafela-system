@@ -110,7 +110,7 @@
               >
                 &copy; 2022
                 <a
-                  href="https://fadaeco.com"
+                  href="https://stokkafela.com"
                   class="font-weight-bold"
                   target="_blank"
                   >Stokkafela Systems</a

@@ -44,7 +44,7 @@
             aria-current="true"
           >
             <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
-          </a>
+          </a> 
             <a
               href="{{ route("stores")}}"
               class="list-group-item list-group-item-action py-2 ripple"
@@ -180,7 +180,7 @@
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
-
+ 
         <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
     </body>

@@ -13,8 +13,7 @@
              </div>
               
                 <p class="  h5">Your Data is secured with us</p>
-                <p class="   font-weight-light">Text Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Debitis consequatur sint rem facilis totam dolorum aut temporibus. Aliquam dicta optio sint,
+                <p class="   font-weight-light"> 
                 </p>
               </div>
             </div>

@@ -76,7 +76,8 @@ class SalesController extends Controller
                 ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
                 ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', '>=', $from]])
                 ->get();
-                
+
+                                
         $destributors = DB::table('destributors')
                      ->get();
 
@@ -88,8 +89,17 @@ class SalesController extends Controller
                 ->whereNull('rep_targets.targetID')
                 ->select('reps.*')
                 ->get();
+
+                $rep_targets = DB::table('reps')
+                                ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
+                                ->where([['rep_targets.date', '>=', $from], ['rep_targets.date', '<=', $to]])
+                                ->get();
   
-        return view('portal.sales.analysis')->with('sales', $sales)->with('destributors', $destributors)->with('reps_with_notargets', $reps);
+         return view('portal.sales.analysis')
+                ->with('sales', $sales)
+                ->with('destributors', $destributors)
+                ->with('reps_with_notargets', $reps)
+                ->with('rep_targets', $rep_targets);
     }
 
     // 

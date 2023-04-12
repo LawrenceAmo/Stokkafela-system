@@ -171,6 +171,7 @@
              </div>    
         <p class="font-weight-bold h4 d-flex justify-content-between">
             <span> Rep with no Targets </span>
+            <a  class="btn btn-warning rounded btn-sm font-weight-bold" data-toggle="modal" data-target="#update_rep_target">Update Rep Target</a>
             <a  class="btn btn-success rounded btn-sm font-weight-bold" data-toggle="modal" data-target="#set_rep_target">Set Rep Target</a>
             <a  class="btn btn-info rounded btn-sm font-weight-bold" data-toggle="modal" data-target="#set_des_target">Set Rep Target By Destributor</a>
         </p>
@@ -207,6 +208,36 @@
 
 {{-- ////////////////////////////////// --}}
 {{-- /// start modal --}}
+<div class="modal fade" id="update_rep_target" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="/a" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Update Rep Tartget </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body container">
+                <div class="container" > 
+                    
+                    @foreach ($rep_targets as $rep_target)
+                    <div class="">
+                            <a href="{{ route('update_rep_target', [$rep_target->repID] )}} " class=" text-dark">{{$rep_target->rep_number}} {{$rep_target->first_name}} </a>
+                    </div>
+                    <hr>
+                    @endforeach 
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade" id="set_rep_target" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form action="{{ route('create_rep_target') }}" enctype="multipart/form-data" method="post" class="modal-content">

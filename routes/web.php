@@ -118,6 +118,8 @@ Route::get('/debtors/rep/delete/{id}', [RepsController::class, 'delete_rep'])->n
 // Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
 Route::POST('/targets/rep/create', [TargetsController::class, 'create_rep_target'])->name('create_rep_target');
 Route::POST('/targets/rep/createbydes', [TargetsController::class, 'create_rep_target_bydes'])->name('create_rep_target_bydes');
+Route::get('/targets/rep/update/{id}', [TargetsController::class, 'update_rep_target'])->name('update_rep_target');
+Route::post('/targets/rep/save', [TargetsController::class, 'save_rep_target'])->name('save_rep_target');
 // Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
 
 
