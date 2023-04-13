@@ -220,13 +220,35 @@
             </div>
             <div class="modal-body container">
                 <div class="container" > 
-                    
-                    @foreach ($rep_targets as $rep_target)
-                    <div class="">
-                            <a href="{{ route('update_rep_target', [$rep_target->repID] )}} " class=" text-dark">{{$rep_target->rep_number}} {{$rep_target->first_name}} </a>
-                    </div>
+                    <table class="table table-striped table-inverse table-responsive">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Rep #</th>
+                                <th>Rep Names</th>
+                                <th>Destibutor</th>
+                                <th>Current Target</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($rep_targets as $rep_target)
+
+                                <tr>  
+                                    <td scope="row">{{$rep_target->rep_number}} </td>
+                                    <td>{{$rep_target->first_name}}</td>
+                                    <td>{{$rep_target->name}}</td>
+                                    <td>{{$rep_target->target_amount}}</td>
+                                    <td>
+                                        <a href="{{ route('update_rep_target', [$rep_target->repID] )}} " title="Update Rep target" class=" text-dark"> <i class="fas fa-pencil-alt  text-info  "></i>  </a>
+                                    </td>
+                                </tr>
+                                @endforeach 
+
+                            </tbody>
+                    </table>
+ 
+                        </div>
                     <hr>
-                    @endforeach 
 
                 </div>
             </div>

@@ -56,10 +56,16 @@ class TargetsController extends Controller
 
     public function update_rep_target(int $id)
     {
-       
+        $date = date("Y-m-d", strtotime("first day of 0 months"));
+
+        $rep = DB::table('rep_targets')
+                ->join('reps', 'reps.repID', '=', 'rep_targets.repID')
+                ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
+                ->where([['rep_targets.repID', '=', (int)$id], ['rep_targets.date', 'like', $date.'%']] )
+                ->get();
         
-        return 111;
-        return view('portal.sales.rep_target');
+        // return $rep;
+        return view('portal.sales.rep_target')->with('rep', $rep[0]);
     }
 
     public function save_rep_target(Request $request)
@@ -94,7 +100,7 @@ class TargetsController extends Controller
                 $rep_target->save();
          }
                   
-        return redirect()->back()->with('success', 'Target for this month was created successfully');
+        return redirect()->back()->with('success', 'Target for this month was Updated successfully');
     }
 
     

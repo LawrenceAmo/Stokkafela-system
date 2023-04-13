@@ -92,9 +92,11 @@ class SalesController extends Controller
 
                 $rep_targets = DB::table('reps')
                                 ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
+                                ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
                                 ->where([['rep_targets.date', '>=', $from], ['rep_targets.date', '<=', $to]])
                                 ->get();
   
+                                // return $rep_targets;
          return view('portal.sales.analysis')
                 ->with('sales', $sales)
                 ->with('destributors', $destributors)

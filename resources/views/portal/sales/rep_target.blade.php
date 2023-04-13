@@ -10,14 +10,22 @@
      </div> 
         <div class="">
             <div class="form-group "> 
-              <label for="" class="font-weight-bold pb-3"> 
+              <label for="" class="font-weight-bold h5 pb-3"> 
                 Update Rep Target
                </label>
                
             </div>
+            <div class="form-group">
+              <label for="">Rep Name</label>
+              <input type="text" disabled class="form-control" value="{{$rep->rep_number.' '.$rep->first_name}}" name="target" placeholder="Rep Nett Sale" >
+            </div> 
+            <div class="form-group">
+              <label for="">Destributor</label>
+              <input type="text" disabled class="form-control" value="{{$rep->name }}" name="target" placeholder="Rep Nett Sale" >
+            </div>  
               <div class="form-group">
-                <label for="">Nett Sale</label>
-                <input type="number" class="form-control" value="{{$rep->target_amount}}" name="target" placeholder="Rep Nett Sale" >
+                <label for="">Target Amount</label>
+                <input type="number" class="form-control" value="{{$rep->target_amount}}" name="target_amount" placeholder="Rep Nett Sale" >
               </div>                
               <hr>
               <div class="   d-flex justify-content-between">
@@ -37,7 +45,7 @@
           </div>
           </div> 
 
-          <input type="hidden" class="form-control"  name="salesID"  value="{{ $repID }}" >
+          <input type="hidden" class="form-control"  name="repID"  value="{{ $rep->repID }}" >
           
     </form>
     {{-- <input type="hidden" id="rdate" value="{{ $rep_sale->date}}"> --}}
