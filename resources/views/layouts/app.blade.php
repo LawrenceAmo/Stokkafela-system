@@ -38,20 +38,29 @@
             >
               <i class="fa fa-tachometer-alt fa-fw h6"></i><span>Dashboard</span>
             </a>
-            <a
-            href="{{route('profile')}}"
-            class="list-group-item list-group-item-action py-2 ripple "
-            aria-current="true"
-          >
-            <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
-          </a> 
+             
+          <a
+          href="{{route('profile')}}"
+          class="list-group-item list-group-item-action py-2 ripple "
+          aria-current="true"
+        >
+          <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
+        </a> 
             <a
               href="{{ route("stores")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
               <i class="fa fa-building"></i>
               <span>Stores</span>
-            </a>     <a
+            </a> 
+            <a
+            href="{{route('stock_analysis', [0])}}"
+            class="list-group-item list-group-item-action py-2 ripple "
+            aria-current="true"
+          >
+            <i class="fa fa-chart-pie fa-fw "></i><span>Stock Reports</span>
+          </a>
+            <a
               href="{{ route("products")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
@@ -69,7 +78,7 @@
               href="{{ route("maintanance")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
-              <i class="fa fa-chart-bar"></i>
+              <i class="fa fa-bars"></i>
               <span>Maintanance</span>
             </a>
              <a

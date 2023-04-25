@@ -238,7 +238,7 @@ const { createApp } = Vue;
                   categories[ catID ]['DOHs'] = [];  
                   categories[ catID ]['DOH'] = 0;  
                 }
-              
+                              
                 categories[ catID ]['nett_sales'] += this.toDecimal(products[y].nett_sales);  
                 categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
                 categories[ catID ]['tot_SV'] += Number(products[y].onhand) * this.toDecimal(products[y].avrgcost);

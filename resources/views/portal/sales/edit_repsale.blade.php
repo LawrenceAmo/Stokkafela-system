@@ -49,7 +49,7 @@
               e.g: Nettsales for Rep X is R0.00 for 30/01/2000
               </i></small>    
             </div>
-            @endif
+            @endif 
              
             <div class="">
               <a  type="button"   class="btn btn-sm btn-outline-info rounded font-weight-bold" onclick="window.history.back()">go back</a>

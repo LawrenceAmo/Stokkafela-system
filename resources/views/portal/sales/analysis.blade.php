@@ -45,6 +45,9 @@
     </style>
     {{-- id="app" v-cloak --}}
     <main class="m-0  p-1  w-100" id="app" v-cloak>
+        {{-- <div class="">
+            <a href="" class="btn btn-sm rounded btn-outline-info">Stock Analysis</a>
+        </div> --}}
          
         <div class=" w-100 d-flex shadow rounded py-2">
             <div class="   " >
@@ -232,8 +235,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($rep_targets as $rep_target)
-
-                                <tr>  
+                                <tr>
                                     <td scope="row">{{$rep_target->rep_number}} </td>
                                     <td>{{$rep_target->first_name}}</td>
                                     <td>{{$rep_target->name}}</td>
@@ -242,11 +244,9 @@
                                         <a href="{{ route('update_rep_target', [$rep_target->repID] )}} " title="Update Rep target" class=" text-dark"> <i class="fas fa-pencil-alt  text-info  "></i>  </a>
                                     </td>
                                 </tr>
-                                @endforeach 
-
+                                @endforeach
                             </tbody>
-                    </table>
- 
+                    </table> 
                         </div>
                     <hr>
 

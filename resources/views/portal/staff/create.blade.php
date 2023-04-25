@@ -3,58 +3,102 @@
 <main class="m-0  px-4 py-5   w-100">
 
 <form class="card border rounded p-3 w-100">
-
+  <div class="">
+    <p class="h3">Enter Stuff Information</p>
+  </div>
+  <hr>
     <!-- 2 column grid layout with text inputs for the first and last names -->
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" class="form-control" />
           <label class="form-label" for="form6Example1">First name</label>
+          <input type="text" id="form6Example1" class="form-control" />
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" class="form-control" />
           <label class="form-label" for="form6Example2">Last name</label>
+          <input type="text" id="form6Example2" class="form-control" />
         </div>
       </div>
     </div>
   
     <!-- Text input -->
     <div class="form-outline mb-4">
+      <label class="form-label" for="form6Example3">ID Number</label>
       <input type="text" id="form6Example3" class="form-control" />
-      <label class="form-label" for="form6Example3">Company name</label>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-group">
+          <label for="">Gender</label>
+          <select class="form-control" name="" id="">
+            <option selected disabled>Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer Not to Say</option>
+          </select>
+        </div>
+      </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="">Gender</label>
+        <select class="form-control" name="" id="">
+          <option selected disabled>Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Prefer Not to Say</option>
+        </select>
+      </div>
+    </div>
+   </div>
+
+    <div class="py-3">
+      <p class="h5">Address Information</p>
     </div>
   
     <!-- Text input -->
     <div class="form-outline mb-4">
       <input type="text" id="form6Example4" class="form-control" />
-      <label class="form-label" for="form6Example4">Address</label>
+      <label class="form-label" for="form6Example4">Street Address</label>
     </div>
   
     <!-- Email input -->
     <div class="form-outline mb-4">
-      <input type="email" id="form6Example5" class="form-control" />
-      <label class="form-label" for="form6Example5">Email</label>
+      <input type="text" id="form6Example5" class="form-control" />
+      <label class="form-label" for="form6Example5">Surbub</label>
     </div>
   
-    <!-- Number input -->
+    <!-- Text input -->
     <div class="form-outline mb-4">
-      <input type="number" id="form6Example6" class="form-control" />
-      <label class="form-label" for="form6Example6">Phone</label>
+      <input type="text" id="form6Example6" class="form-control" />
+      <label class="form-label" for="form6Example6">City</label>
     </div>
-  
+
+     <!-- Text input -->
+     <div class="form-outline mb-4">
+      <input type="text" id="form6Example6" class="form-control" />
+      <label class="form-label" for="form6Example6">Zip Code</label>
+    </div>
+
+     <!-- Text input -->
+     <div class="form-outline mb-4">
+      <input type="text" id="form6Example6" class="form-control" />
+      <label class="form-label" for="form6Example6">Country</label>
+    </div>
+
+
+    <div class="py-3">
+      <p class="h5">Job Description</p>
+    </div>
+    <hr>
+
     <!-- Message input -->
     <div class="form-outline mb-4">
       <textarea class="form-control" id="form6Example7" rows="4"></textarea>
       <label class="form-label" for="form6Example7">Additional information</label>
     </div>
-  
-    <!-- Checkbox -->
-    {{-- <div class="form-check d-flex  mb-4">
-      <input class="form-check-input me-2" type="checkbox" value="" id="form6Example8" checked />
-      <label class="form-check-label" for="form6Example8"> Create an account? </label>
-    </div> --}}
 
     <div class="form-outline mb-4">
       <div class="form-group">
@@ -79,11 +123,11 @@
         </select>
       </div>
     </div>
-  
+
     <!-- Submit button -->
     <button type="submit" class="btn btn-info btn-block mb-4">Create user</button>
   </form>
 </main>
-
- 
 </x-app-layout>
+
+
