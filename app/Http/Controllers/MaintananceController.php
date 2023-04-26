@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\auth_token;
+use App\Models\User;
 use App\Models\Product;
 use App\Imports\CSVImport;
 use App\Models\Maintanance;
@@ -47,9 +48,7 @@ class MaintananceController extends Controller
 
         $maintanance = new Maintanance();
         $stock_analysis = $maintanance->import_stock_analysis_csv($data, $request);
-
-        // return $request;
-        // return $import_product;
+ 
         if (!$stock_analysis) {
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload sales file!!!');
         }
@@ -64,9 +63,29 @@ class MaintananceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function delete_rep_sale_by_date(Request $request)
     {
-        //
+        $request->validate([
+            'date' => 'required',                  
+         ]); 
+
+        $userID = Auth::id();
+        $user = User::where('id', '=', $userID )->get();
+
+        if (count($user) > 0) {
+            if (str_contains($user[0]->email, 'amo')) {
+                
+                DB::table('rep_sales')
+                    ->where('date', 'like', $request->date."%")
+                    ->delete();
+ 
+                return redirect()->back()->with('success', 'you deleted all sales reps for '.$request->date);
+
+            }
+            return redirect()->back()->with('error', 'You don\'t have access, please contact your Admin');
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong, please contact your Admin');
     }
 
     /**

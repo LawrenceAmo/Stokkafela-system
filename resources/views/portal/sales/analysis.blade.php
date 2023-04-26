@@ -50,7 +50,7 @@
         </div> --}}
          
         <div class=" w-100 d-flex shadow rounded py-2">
-            <div class="   " >
+            <div class=" " >
                 <table class="table table-striped table-inverse table-responsive    "  >
                     <thead class="thead-inverse    mx-0"  style="height: 80px;">
                         <tr class="">

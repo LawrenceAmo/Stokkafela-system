@@ -42,6 +42,21 @@
             </div>
         </div>
     </section>
+
+    <hr>
+    
+    <section class="card rounded p-2">
+        <form action="{{ route('delete_rep_sale_by_date') }}" method="POST" class="row">
+            @csrf
+            <div class="col">
+                <p class="font-weight-bold ">delete sales where date =? </p>
+                <div class="border rounded text-center">
+                    <input type="date" class="form-control" name="date" id="" placeholder="Please enter the date">
+                    <button type="submit" class="btn btn-info rounded btn-sm">import Sales</button>
+                </div>
+            </div> 
+        </form>
+    </section>
  
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}

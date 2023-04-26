@@ -107,7 +107,7 @@ class StoreController extends Controller
             $stores = DB::table('stores')->get(); // remove limit to show all stores
             $selected_store = $this->get_store($stores, $storeID); 
             $storeID = $selected_store->storeID;
- 
+
             $salesdata = DB::table('sales')
                             ->where( [['from', '>=', $from], ['to', '<=', $to], ['daily_total', '=', true],
                                     ['storeID', '=', $storeID]])

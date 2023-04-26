@@ -46,6 +46,7 @@ Route::prefix('portal/' )->middleware(['auth'])->group(function ()
 // Maintance
 Route::get('/maintanance', [MaintananceController::class, 'index'])->name('maintanance');
 Route::post('/maintanance/stock-analysis/save', [MaintananceController::class, 'stock_analysis'])->name('save_stock_analysis');
+Route::post('/maintanance/delete_rep_sale_by_date', [MaintananceController::class, 'delete_rep_sale_by_date'])->name('delete_rep_sale_by_date');
 
 //  profile
 Route::get('/profile', [UsersController::class, 'index'])->name('profile');
