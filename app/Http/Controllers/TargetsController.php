@@ -76,7 +76,7 @@ class TargetsController extends Controller
          ]); 
 
         // return $request;
-        $date = date("Y-m-d", strtotime("first day of 0 months"));
+        $date = date("Y", strtotime("first day of 0 months"));
          
             $rep = DB::table('rep_targets')
                 ->where([['repID', '=', (int)$request->repID], ['date', 'like', $date.'%']] )
