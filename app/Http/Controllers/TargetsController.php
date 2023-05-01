@@ -56,7 +56,7 @@ class TargetsController extends Controller
 
     public function update_rep_target(int $id)
     {
-        $date = date("Y-m-d", strtotime("first day of 0 months"));
+        $date = date("Y", strtotime("first day of 0 months"));
 
         $rep = DB::table('rep_targets')
                 ->join('reps', 'reps.repID', '=', 'rep_targets.repID')
