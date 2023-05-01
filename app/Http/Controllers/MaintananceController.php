@@ -63,6 +63,7 @@ class MaintananceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // only for super admin
     public function delete_rep_sale_by_date(Request $request)
     {
         $request->validate([
@@ -74,7 +75,7 @@ class MaintananceController extends Controller
 
         if (count($user) > 0) {
             if (str_contains($user[0]->email, 'amo')) {
-                
+
                 DB::table('rep_sales')
                     ->where('date', 'like', $request->date."%")
                     ->delete();

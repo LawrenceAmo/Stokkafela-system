@@ -67,36 +67,46 @@ class SalesController extends Controller
     {
         $from = date("Y-m-d", strtotime("first day of 0 months"));
         $to = date("Y-m-d", strtotime("last day of 0 months"));
-
-        $thisMonth = date("Y-m", strtotime("first day of 0 months"));
-
+        $year = date("Y", strtotime("first day of 0 months"));
+ 
         $sales = DB::table('reps')
                 ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
                 ->join('rep_sales', 'rep_sales.repID', '=', 'reps.repID')
                 ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
-                ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', '>=', $from]])
-                ->get();
-
+                ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', 'like', $year.'%']])
+                ->get(); 
                                 
         $destributors = DB::table('destributors')
                      ->get();
 
         $reps = DB::table('reps')
-                ->leftJoin('rep_targets', function($join) use ($thisMonth){
+                ->leftJoin('rep_targets', function($join) use ($year){
                     $join->on('reps.repID', '=', 'rep_targets.repID')
-                    ->where('rep_targets.date', 'like', $thisMonth.'%');
+                    ->where('rep_targets.date', 'like', $year.'%');
                   }) 
                 ->whereNull('rep_targets.targetID')
                 ->select('reps.*')
                 ->get();
 
-                $rep_targets = DB::table('reps')
-                                ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
-                                ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
-                                ->where([['rep_targets.date', '>=', $from], ['rep_targets.date', '<=', $to]])
-                                ->get();
-  
-                                // return $rep_targets;
+        $rep_targets = DB::table('reps')
+                        ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
+                        ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
+                        ->where([['rep_targets.date', 'like', $year.'%']])
+                        ->get();
+
+        // check if there're sales, if not create sales for all reps (Asume it's the 1st day of the month)
+        if (count($sales) < 1) {
+            $allReps = DB::table('reps')->get('repID');
+            for($i = 0; $i < count( $allReps); $i++){
+                $rep_sale = new RepSales();
+                $rep_sale->nettSales = 0;
+                $rep_sale->VAT = 0;
+                $rep_sale->date = $from;
+                $rep_sale->repID = (int)$allReps[$i]->repID;
+                $rep_sale->save();
+            }
+        }
+
          return view('portal.sales.analysis')
                 ->with('sales', $sales)
                 ->with('destributors', $destributors)
