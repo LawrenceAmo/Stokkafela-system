@@ -63,21 +63,27 @@ class SalesController extends Controller
 
   
     //  view rep sales analysis
-    public function sales_analysis( )
+    public function sales_analysis( $date = null)
     {
-        $from = date("Y-m-d", strtotime("first day of 0 months"));
-        $to = date("Y-m-d", strtotime("last day of 0 months"));
+        
+        if(!$date){ 
+            $date = date("Y-m", strtotime("first day of 0 months"));
+            // $to = date("Y-m", strtotime("last day of 0 months"));
+        }else{
+            $date = date('Y-m', strtotime($date));       
+        }
+        // return $date;
         $year = date("Y", strtotime("first day of 0 months"));
  
         $sales = DB::table('reps')
                 ->leftjoin('rep_targets', 'rep_targets.repID', '=', 'reps.repID')
                 ->join('rep_sales', 'rep_sales.repID', '=', 'reps.repID')
                 ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
-                ->where([['rep_sales.date', '>=', $from], ['rep_sales.date', '<=', $to], ['rep_targets.date', 'like', $year.'%']])
+                ->where([['rep_sales.date', 'like', $date.'%'], ['rep_targets.date', 'like', $year.'%']])
                 ->get(); 
                                 
         $destributors = DB::table('destributors')
-                     ->get();
+                           ->get();
 
         $reps = DB::table('reps')
                 ->leftJoin('rep_targets', function($join) use ($year){
@@ -95,23 +101,24 @@ class SalesController extends Controller
                         ->get();
 
         // check if there're sales, if not create sales for all reps (Asume it's the 1st day of the month)
-        if (count($sales) < 1) {
-            $allReps = DB::table('reps')->get('repID');
-            for($i = 0; $i < count( $allReps); $i++){
-                $rep_sale = new RepSales();
-                $rep_sale->nettSales = 0;
-                $rep_sale->VAT = 0;
-                $rep_sale->date = $from;
-                $rep_sale->repID = (int)$allReps[$i]->repID;
-                $rep_sale->save();
-            }
-        }
+        // if (count($sales) < 1) {
+        //     $allReps = DB::table('reps')->get('repID');
+        //     for($i = 0; $i < count( $allReps); $i++){
+        //         $rep_sale = new RepSales();
+        //         $rep_sale->nettSales = 0;
+        //         $rep_sale->VAT = 0;
+        //         $rep_sale->date = $date;
+        //         $rep_sale->repID = (int)$allReps[$i]->repID;
+        //         $rep_sale->save();
+        //     }
+        // }
 
          return view('portal.sales.analysis')
                 ->with('sales', $sales)
                 ->with('destributors', $destributors)
                 ->with('reps_with_notargets', $reps)
-                ->with('rep_targets', $rep_targets);
+                ->with('rep_targets', $rep_targets)
+                ->with('date', $date);
     }
 
     // 

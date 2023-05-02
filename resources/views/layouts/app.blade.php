@@ -21,8 +21,7 @@
   
     </head>
     <body class="font-sans antialiased">
-            <!-- Page Heading -->
-           
+            <!-- Page Heading -->           
             <header>
       <!-- Sidebar -->
       <nav
@@ -186,6 +185,7 @@
                 {{ $slot }}
             </main>
         </div>
+        {{-- All the js files --}}
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>

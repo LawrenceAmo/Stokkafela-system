@@ -44,15 +44,23 @@
 
     </style>
     {{-- id="app" v-cloak --}}
-    <main class="m-0  p-1  w-100" id="app" v-cloak>
-        {{-- <div class="">
-            <a href="" class="btn btn-sm rounded btn-outline-info">Stock Analysis</a>
-        </div> --}}
-         
+    <main class="m-0  p-1  w-100 overflow-auto"   id="app" v-cloak>
+    
+        {{-- <div class="  rounded overflow-auto shadow m-0 p-0 w-100"> --}}
+             <div class="form-group rounded overflow-auto   row   p-0 m-0">
+                    <div class="col-md-10">
+                        <input type="month" name="" id="" v-model="report_date" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-2 pt-auto">
+                        <a @click="change_date()" class="btn btn-sm rounded py-2 form-control m-0  font-weight-bold btn-outline-grey border border-info ">  change Month </a>
+                    </div>
+    </div>
+        {{-- </div> --}}
+
         <div class=" w-100 d-flex shadow rounded py-2">
-            <div class=" " >
-                <table class="table table-striped table-inverse table-responsive    "  >
-                    <thead class="thead-inverse    mx-0"  style="height: 80px;">
+            <div class="" >
+                <table class="table table-striped table-inverse table-responsive ">
+                    <thead class="thead-inverse mx-0" style="height: 80px;">
                         <tr class="">
                             <th>#</th>
                             <th>Rep ID</th>
@@ -82,7 +90,7 @@
                                 <td colspan="2" class="font-weight-bold text-light border-right">@{{ main_destributor.main_des_name}}</td>
                                 <td>R@{{ main_destributor.target_amount.toLocaleString('en-US')}}</td>
                                 <td>R@{{ main_destributor.projections.toLocaleString('en-US')}}</td>
-                                <td>R@{{ (Number((main_destributor.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
+                                <td>R@{{ main_destributor.required_daily_rr.toLocaleString('en-US')}}</td>
                                 <td v-if="main_destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td v-else class="text-success font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td>R@{{ main_destributor.current_sales.toLocaleString('en-US')}}</td>
@@ -94,19 +102,19 @@
                                          <td colspan="2" class="font-weight-bold text-light border-right">@{{ destributor.des_name}}</td>
                                          <td>R@{{ destributor.target_amount.toLocaleString('en-US')}}</td>
                                          <td>R@{{ destributor.projections.toLocaleString('en-US')}}</td>
-                                         <td>R@{{ (Number((destributor.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
+                                         <td>R@{{ destributor.required_daily_rr.toLocaleString('en-US')}}</td>
                                         <td v-if="destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td v-else class="text-success font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ destributor.current_sales.toLocaleString('en-US')}}</td>
                                     </tr>
-                                        {{-- Rep left table --}}
+                                        {{-- Rep left table required_daily_rr --}}
                                     <tr v-for="rep,i in destributor.reps" style="height: 80px;">
                                         <td scope="row">@{{i+1}}</td>
                                         <td>@{{ rep.rep_number}}</td>
                                         <td class="border-right">@{{ rep.rep_name}}</td>
                                         <td>R@{{ rep.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (Number((rep.projections ).toFixed(2))).toLocaleString('en-US')}}</td>
-                                        <td>R@{{ (Number((rep.target_amount / 23).toFixed(2))).toLocaleString('en-US')}}</td>
+                                        <td>R@{{ rep.projections.toLocaleString('en-US')}}</td>
+                                        <td>R@{{ rep.required_daily_rr.toLocaleString('en-US')}}</td>
                                          <td v-if="rep.target_percent < 100" class="text-danger font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                             <td v-else class="text-success font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                         <td>R@{{ rep.current_sales.toLocaleString('en-US')}}</td>
@@ -116,7 +124,7 @@
                     </tbody>
                 </table>
             </div>
-             <div class=" w-50">
+             <div class=" overflow-auto w-50">
                 <table class="table table-striped table-inverse table-responsive  "   >
                     <thead class="thead-inverse" style="height: 80px;"> 
                        <tr>
@@ -340,7 +348,8 @@
 {{--    date("Y-m-d", strtotime("first day of 0 months"))     --}}
  
 <input type="hidden" name="" id="sales" value="{{$sales}}">
-<input type="hidden" name="" id="date" value="{{date("Y-M-d", strtotime("last day of 0 months"))}}">
+<input type="hidden" name="" id="date" value="{{date("Y-M-d", strtotime("last day of ".$date))}}">
+<input type="hidden" name="" id="month" value="{{date("m", strtotime($date))}}">
 <script>
 
 const { createApp } = Vue;
@@ -351,16 +360,27 @@ const { createApp } = Vue;
             stores: [],
             month: '',
             lastDay: 0,
-    
+            report_date: '',            
+            next_url: ''    
           }          
         },
        async created() {
 
-       let d =  document.getElementById("date").value;
+        let d =  document.getElementById("date").value;
+        let m =  document.getElementById("month").value;
+
            d = d.split('-');
+           this.next_url = d[0]+'-'+m; 
+
            this.month = d[1];
            this.lastDay = Number(d[2]); 
- 
+           console.log(this.next_url)
+           console.log(m)
+
+            // complete once got fomuler
+           let working_days_monfry = 0
+           let working_days_monsat = 0
+
         let sales = JSON.parse( document.getElementById("sales").value );
   
         let repIDs = []; let reps = [];
@@ -381,6 +401,7 @@ const { createApp } = Vue;
                     reps[ repID ]['nettsales'] = 0;    
                     reps[ repID ]['vat'] = 0;    
                     reps[ repID ]['target_percent'] = 0;    
+                    reps[ repID ]['required_daily_rr'] = 0;    
                     reps[ repID ]['dates'] = [];    
                     reps[ repID ]['date_sales'] = [];   
             }  
@@ -389,6 +410,7 @@ const { createApp } = Vue;
             reps[ repID ]['current_sales'] = reps[ repID ]['nettsales'] + reps[ repID ]['vat']
             reps[ repID ]['target_percent'] = (reps[ repID ]['current_sales'] / reps[ repID ]['target_amount'] )*100;    
             reps[ repID ]['projections'] = reps[ repID ]['current_sales'];  // Do your projections fomular
+            reps[ repID ]['required_daily_rr'] = reps[ repID ]['target_amount'];    
 
             let day = date[0].split('-'); day = Number(day[2])  ;
             let  sale = this.toDecimal(sales[i].NettSales) + this.toDecimal(sales[i].VAT)
@@ -398,9 +420,7 @@ const { createApp } = Vue;
 
         reps = reps.filter( e => e)
 
-        // console.log(reps)
- 
-        let deIDs = []; let destributors = [];
+       let deIDs = []; let destributors = [];
         for (let x = 0; x < reps.length; x++) {
             let deID = reps[x].destributor_name 
             if (!deIDs.includes(deID)) {
@@ -409,18 +429,18 @@ const { createApp } = Vue;
                     destributors[ deID ]["des_name"] = reps[x].destributor_name; 
                     destributors[ deID ]["reps"] = []; 
                     destributors[ deID ]["target_amount"] = 0; 
+                    destributors[ deID ]["required_daily_rr"] = 0; 
                     destributors[ deID ]["projections"] = 0; 
                     destributors[ deID ]["current_sales"] = 0;
                     destributors[ deID ]['date_sales'] = new Array(this.lastDay); 
                     destributors[ deID ]['date_sales'].fill(0 ,0, this.lastDay);
 
-                // let des_days = new Array(this.lastDay)
+                // let des_days = new Array(this.lastDay)   required_daily_rr
             }
             destributors[ deID ]["reps"].push(reps[x]); 
             destributors[ deID ]["target_amount"] += reps[x].target_amount; 
             destributors[ deID ]["current_sales"] += reps[x].current_sales; 
             destributors[ deID ]['target_percent'] = (destributors[ deID ]['current_sales'] / destributors[ deID ]['target_amount'] )*100;    
-            destributors[ deID ]["projections"] = destributors[ deID ]["current_sales"]; 
 
             for (let z = 0; z < reps[x]['date_sales'].length; z++) {
                 if (isNaN(destributors[ deID ]['date_sales'][z])) {
@@ -432,6 +452,9 @@ const { createApp } = Vue;
                 destributors[ deID ]['date_sales'][z] += reps[x]['date_sales'][z]
  
             } 
+            destributors[ deID ]["projections"] = destributors[ deID ]["current_sales"]; 
+            destributors[ deID ]["required_daily_rr"] = destributors[ deID ]["target_amount"]; 
+
             // console.log(destributors[ deID ]);     
             console.log(reps[x]['date_sales']);                
            
@@ -453,14 +476,14 @@ const { createApp } = Vue;
                     main_destributors[ desID ]["target_percent"] = 0;
                     main_destributors[ desID ]["target_amount"] = 0;
                     main_destributors[ desID ]["projections"] = 0;
+                    main_destributors[ desID ]["required_daily_rr"] = 0;
                     main_destributors[ desID ]['date_sales'] = new Array(this.lastDay); 
-            }
+            }   //  required_daily_rr
  
             main_destributors[ desID ]["current_sales"] += destributors[y].current_sales;
             main_destributors[ desID ]["target_amount"] += destributors[y].target_amount;
             main_destributors[ desID ]["target_percent"] = (main_destributors[ desID ]["current_sales"] / main_destributors[ desID ]["target_amount"] ) * 100;;
             main_destributors[ desID ]["destributors"].push(destributors[y])
-            main_destributors[ desID ]["projections"] = main_destributors[ desID ]["current_sales"]; //
 
             for (let z = 0; z < destributors[y]['date_sales'].length; z++) {
                 if (isNaN(main_destributors[desID]['date_sales'][z])) {
@@ -468,6 +491,10 @@ const { createApp } = Vue;
                 }
                 main_destributors[ desID ]['date_sales'][z] += destributors[y]['date_sales'][z]
             } 
+            main_destributors[ desID ]["required_daily_rr"] = main_destributors[ desID ]["target_amount"];
+            main_destributors[ desID ]["projections"] = main_destributors[ desID ]["current_sales"]; //
+
+
             // console.log(main_destributors); 
         }
 
@@ -480,7 +507,6 @@ const { createApp } = Vue;
             stores["current_sales"] += main_destributors[z].current_sales;
             stores["target_amount"] += main_destributors[z].target_amount;
             stores["projections"] += main_destributors[z].current_sales;
-            stores["daily_rr"] = Number((stores["target_amount"] / 23).toFixed(2)) ;
             stores["target_percent"] = (stores["current_sales"] / stores["target_amount"] )*100;
              
             for (let a = 0; a < main_destributors[z]['date_sales'].length; a++) {
@@ -489,6 +515,8 @@ const { createApp } = Vue;
                 }
                 stores['date_sales'][a] += main_destributors[z]['date_sales'][a]
             } 
+            stores["daily_rr"] = Number((stores["target_amount"] / 23).toFixed(2)) ;
+
          } 
         //  console.log(main_destributors)
         //  console.log(stores['date_sales'])
@@ -510,10 +538,14 @@ console.log("////////////////////////////////////////////////////");
                 let number = num.replace(/,/g, "");
                     number = Number.parseFloat(number)
                 return number; 
-            }
-        }
+            },
+            change_date: function( )
+            {
+                location.href = this.next_url; // {{ route('sales_analysis', [date("m", strtotime($date))])}}
+                // console.log(this.report_date)nalysis')  
+            },
+         }
    }).mount("#app");
-  
 
     </script>
 </x-app-layout>
