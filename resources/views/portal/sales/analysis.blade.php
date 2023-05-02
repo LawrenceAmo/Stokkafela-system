@@ -370,7 +370,7 @@ const { createApp } = Vue;
         let m =  document.getElementById("month").value;
 
            d = d.split('-');
-           this.next_url = d[0]+'-'+m; 
+           this.next_url = this.report_date;    //d[0]+'-'+m; 
 
            this.month = d[1];
            this.lastDay = Number(d[2]); 
@@ -529,7 +529,6 @@ console.log("////////////////////////////////////////////////////");
  
         this.stores = [ ... [stores]]
         this.data = [ ... main_destributors]
-
          },
         methods:
         {
@@ -541,8 +540,8 @@ console.log("////////////////////////////////////////////////////");
             },
             change_date: function( )
             {
-                location.href = this.next_url; // {{ route('sales_analysis', [date("m", strtotime($date))])}}
-                // console.log(this.report_date)nalysis')  
+                let current_url = window.location.href.replace(/analysis.*/,'');
+                location.href = current_url+"analysis/"+this.report_date;                
             },
          }
    }).mount("#app");

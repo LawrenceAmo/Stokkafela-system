@@ -92,12 +92,11 @@ Route::get('/sales', [SalesController::class, 'index'])->name('sales');
 Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
 Route::post('/sales/create/repsale', [SalesController::class, 'create_rep_sale'])->name('create_rep_sale');
 Route::POST('/sales/save', [SalesController::class, 'save'])->name('save_sales');
-Route::get('/sales/analysis/{id?}', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
+Route::get('/sales/analysis/{id?}/', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
 Route::get('/sales/repsale/update/{id}/{delete?}', [SalesController::class, 'update_rep_sale'])->name('update_rep_sale');
 Route::post('/sales/repsale/save', [SalesController::class, 'save_rep_sale'])->name('save_rep_sale');
 Route::post('/sales/repsale/import', [SalesController::class, 'import_rep_sales'])->name('import_rep_sales');
 Route::get('/sales/repsale/delete/{id}', [SalesController::class, 'delete_rep_sale'])->name('delete_rep_sale');
-
  
 //  Debtors // destributor
 Route::get('/debtors', [RepsController::class, 'index'])->name('debtors');
