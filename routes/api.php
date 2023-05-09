@@ -12,7 +12,7 @@ Route::get('/', function () {
      $s = time();
     for($i = 0; $i < 1000; $i++){
          User::find(1);
-    }
+    } 
        $e= time();
  
     return [(int)$e , (int)$s];
