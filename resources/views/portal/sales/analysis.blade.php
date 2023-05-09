@@ -481,7 +481,7 @@ const { createApp } = Vue;
             }   //  required_daily_rr
  
             main_destributors[ desID ]["target_amount"] += destributors[y].target_amount;
-            main_destributors[ desID ]["current_sales"] +=main_destributors[ desID ]["target_amount"] / working_days_monsat;
+            main_destributors[ desID ]["current_sales"]  += destributors[y].current_sales;
             main_destributors[ desID ]["target_percent"] = (main_destributors[ desID ]["current_sales"] / main_destributors[ desID ]["target_amount"] ) * 100;;
             main_destributors[ desID ]["destributors"].push(destributors[y])
 
@@ -505,7 +505,7 @@ const { createApp } = Vue;
         for (let z = 0; z < main_destributors.length; z++) {
 
             stores["target_amount"] += main_destributors[z].target_amount;
-            stores["current_sales"] = stores["target_amount"] / working_days_monsat;
+            stores["current_sales"] += main_destributors[z].current_sales;// stores["target_amount"] / working_days_monsat;
             stores["projections"] += main_destributors[z].current_sales;
             stores["target_percent"] = (stores["current_sales"] / stores["target_amount"] )*100;
              
@@ -515,7 +515,7 @@ const { createApp } = Vue;
                 }
                 stores['date_sales'][a] += main_destributors[z]['date_sales'][a]
             } 
-            stores["daily_rr"] = Number((stores["target_amount"] / 23).toFixed(2)) ;
+            stores["daily_rr"] = stores["target_amount"] / working_days_monsat ;
 
          } 
         //  console.log(main_destributors)
