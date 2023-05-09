@@ -65,7 +65,7 @@
 
   <div class=" shadow rounded row mb-3 p-2">
   <div class=" col-md-6  "> 
-    <input type="search" name="" class="fobrm-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
+    <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
   </div>
   <div class="col-md-6  d-flex justify-content-end">
 
