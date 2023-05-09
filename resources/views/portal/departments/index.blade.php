@@ -1,7 +1,7 @@
 <x-app-layout>
     <main class="m-0  px-4   w-100">
         
-        <div class="  row bg-white shadow border rounded p-3 w-100">
+        {{-- <div class="  row bg-white shadow border rounded p-3 w-100">
          
             <div class="col-md-3">
                  <div class="card p-3 border border-info">
@@ -23,13 +23,11 @@
                  <div class="card p-3 border border-info">
                     <p class="font-weight-bold h5 text-center">Available Jobs <span>{{$miniStats['jobs']}}</span></p>
                  </div>
-            </div>
-    
-            
-        </div>
+            </div>           
+        </div> --}}
     <hr>
    
-    <div class="card border rounded p-3 w-100">
+    <div class="card   rounded p-3 w-100">
         <div class="row mx-0 animated fadeInDown">
             <div class="col-12 text-center p-0 m-0">
                 <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
@@ -79,9 +77,68 @@
 <i class="font-weight-bold grey-text h3 text-center">
     No Data Available...
 </i>
-@endif
- 
-<!-- Modal -->
+@endif 
+
+    </div>
+
+
+    <hr>
+   
+    <div class="card   rounded p-3 w-100">
+        <div class="row mx-0 animated fadeInDown">
+            <div class="col-12 text-center p-0 m-0">
+                <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
+            </div>
+         </div> 
+<p class="font-weight-bold h4 d-flex justify-content-between">
+   <span> All Roles   </span> 
+   <a type="button" class="btn btn-info rounded btn-sm" data-toggle="modal" data-target="#addrole">add new Role</a>
+</p>
+{{-- href="{{ route('create_department')}}" --}}
+<?php $i = 1 ?>
+<table class="table table-striped table-inverse w-auto ">
+    <thead class="thead-inverse rounded ">
+        <tr class="border font-weight-bold shadow bg-dark text-light rounded">
+            <th>#</th>
+            <th>Role <Title></Title></th>
+            <th>Department</th>
+            {{-- <th>Stuff</th>
+            <th>Jobs</th> --}}
+             <th>Created</th>
+             <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+             @foreach ($roles as $role)
+             <tr>
+                <td scope="row">{{$i}}</td>
+                <td>{{$role->role_title}}</td>
+                <td>{{$role->name}}</td>
+                {{-- <td>{{$role->stuff}}</td>
+                <td>{{$role->jobs}}</td> --}}
+                <td>{{$role->created_at}}</td>
+                 <td class=" px-0">
+                    {{-- <a href="" class="px-1 text-info"><i class="fas fa-eye    "></i></a> | --}}
+                    <a href="{{ route('update_role', [$role->roleID])}}" class="px-1 text-primary"><i class="fa fa-fas fa-pencil-alt    "></i></a>|
+                    <a href="{{ route('delete_role', [$role->roleID])}}" id="{{$role->roleID}}" class="px-1 text-danger"><i class="fas fa-trash-alt    "></i></a>
+                {{--   --}}
+                </td>
+            </tr>
+             <?php $i++ ?>
+            @endforeach 
+                      
+        </tbody>
+</table>
+@if (count($roles) <= 0)
+<i class="font-weight-bold grey-text h3 text-center">
+    No Data Available...
+</i>
+@endif 
+
+    </div>
+
+    {{-- //////////////////////////////       Modal         //////////////////////////////// --}}
+    <!-- Modal -->
 <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form class="modal-content"action="{{ route('create_department')}}" method="post">
@@ -120,14 +177,13 @@
     </div>
 </div>
 {{-- //// End Modal 1 --}}
-
 <!-- Modal -->
-<div class="modal fade" id="modeldelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form class="modal-content"action="{{ route('create_department')}}" method="post">
+        <form class="modal-content"action="{{ route('create_role')}}" method="post">
             @csrf
             <div class="modal-header">
-                <h5 class="modal-title">Create New Department</h5>
+                <h5 class="modal-title">Create New Role</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -136,20 +192,30 @@
                 <div class="">
                     
                         <div class="form-group">
-                          <label for="">Department Name</label>
-                          <input type="text" name="name" id="" class="form-control" placeholder="" aria-describedby="helpId">
-                          <small id="helpId" class="text-muted">e.g Information Technology/ Human Resource</small>
+                          <label  >Role Title <small><i>(Job Title)</i></small></label>
+                          <input type="text" name="role_title" class="form-control" placeholder=""  >
+                          <small   class="text-muted">e.g Store Manager/ Cashier</small>
                         </div>
                         <div class="form-group">
-                            <label for="">Department Other/Short Name <i class="small">(optional)</i></label>
-                            <input type="text" name="other_names" class="form-control" placeholder="" aria-describedby="helpId">
-                            <small id="helpId" class="text-muted">e.g IT/HR</small>
+                            <label  >Description <i class="small">(optional)</i></label>
+                               <textarea class="form-control" name="description" id="" rows="3"></textarea>
+                             {{-- <small id="helpId" class="text-muted">e.g IT/HR</small> --}}
                           </div>
-                          <div class="form-check form-check-inline">
+                          <div class="form-group">
+                            <label  >Select Department for this Role</label>
+                            <select class="form-control" name="department" id="">
+                                <option selected disabled>Select Department</option>
+                                @foreach ($departments as $department)
+                                <option value="{{$department->departmentID}}">{{ $department->name }}</option>
+                              @endforeach
+                               
+                            </select>
+                          </div>
+                          {{-- <div class="form-check form-check-inline">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox" name="active" checked> Activate this department
                             </label>
-                          </div>
+                          </div> --}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -159,15 +225,10 @@
         </form>
     </div>
 </div>
-{{-- //// End Modal 2 delete --}}
-    </div>
+{{-- //// End Modal 2 --}}
+ 
     </main>
     <script>
-        // function amo(id) {
-        //     console.log(id)
-
-        //     // window.confirm();
-        // }
-        // console.log(delete(id))
+ 
     </script>
 </x-app-layout>

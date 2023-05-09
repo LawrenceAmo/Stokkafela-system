@@ -12,16 +12,15 @@ class DepartmentsController extends Controller
  
     //
     public function index()
-    { 
-        $departments = DB::table('departments')
-        ->leftJoin('positions','departments.departmentID','=','positions.departmentID')
-        // ->where('stores.storeID', '=', $id)
+    {  
+        $departments = DB::table('departments')->get();
+        
+        $roles = DB::table('roles')
+        ->Join('departments','departments.departmentID','=','roles.departmentID')
         ->get();
-        // return $departments;
+        // return $roles;
 
-        $departments = DB::table('departments')->where('active', '!=', null)->get();
-
-        return view('portal.departments.index', ['miniStats'=> $this->get_mini_stats()])->with('num',111)->with('departments',$departments);
+        return view('portal.departments.index')->with('roles',$roles)->with('departments',$departments);
     } 
 
     // 
@@ -30,7 +29,7 @@ class DepartmentsController extends Controller
         $request->validate([
             'name' => 'required|string',                  
          ]);
-
+ 
          $department = new Department();
          $department->name = $request->name;
          $department->other_names = $request->other_names;

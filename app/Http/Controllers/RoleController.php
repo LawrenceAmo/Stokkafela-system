@@ -2,75 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+     
+    public function create_Role(Request $request)
+     {
+         $request->validate([
+            'role_title' => 'required',                  
+            // 'description' => 'required|string',                  
+            'department' => 'required|string',                  
+        ]);
+        // return $request;
+
+          $role = new Role();
+          $role->role_title = $request->role_title;
+          $role->description = $request->description;
+          $role->departmentID = $request->department;
+          $role->save();
+
+         return redirect()->back()->with('success', 'Role was created successfully!!!');
+     }
+   
+     
+     public function update_role(int $id)
     {
-        // 
+        $role = DB::table('roles')->where('roleID', '=', $id)->get();
+        $departments = DB::table('departments')->get();
+        return view('portal.departments.role_edit')->with('role',$role[0])->with('departments',$departments);
+    }
+    
+    //  
+    public function save_role(Request $request)
+    { 
+        $request->validate([
+            'role_title' => 'required',                  
+            // 'description' => 'required|string',                  
+            'department' => 'required|string',                  
+        ]);
+
+        DB::table('roles')
+            ->where('roleID', '=', $request->roleID)
+            ->update([
+                'role_title' => $request->role_title,
+                'description' => $request->description,
+                'departmentID' => $request->department
+            ]);
+
+            return redirect()->to('portal/departments')->with('success', 'The Role was Updated successfuly!');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
+   
     /**
      * Remove the specified resource from storage.
      *
@@ -79,6 +64,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+         DB::table('roles')->where('roleID', '=', $id)->delete();
+         return redirect()->back()->with('success', 'The Role was deleted successfuly!');
+     }
 }

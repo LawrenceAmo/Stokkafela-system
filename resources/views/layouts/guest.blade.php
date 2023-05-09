@@ -143,5 +143,11 @@
         </div>
       </div>
     </footer>
+    <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
+
+    <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
+    <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
     </body>
 </html>

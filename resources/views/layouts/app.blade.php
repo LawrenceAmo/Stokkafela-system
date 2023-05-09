@@ -26,7 +26,7 @@
       <!-- Sidebar -->
       <nav
         id="sidebarMenu"
-        class="collapse d-lg-block sidebar shadow-2xl  collapse "
+        class="collapse d-lg-block sidebar shadow-2xl  collapse " style="z-index: 1;"
       >
         <div class="position-sticky ">
           <div class="list-group list-group-flush mx-3 mt-1 pt-1">
@@ -80,42 +80,47 @@
               <i class="fa fa-bars"></i>
               <span>Maintanance</span>
             </a>
-             <a
-              href="{{ route("staff")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-users fa-x2 "></i><span>Staff</span></a
-            >
+             
             <a
               href="{{ route("debtors")}}"
               class="list-group-item list-group-item-action py-2 ripple"
               ><i class="fa fa-users fa-x2 "></i><span>Debtors</span></a
             >
-            <a
+            {{-- <div class="dropdown" >
+              <button class="list-group-item list-group-item-action text-white border-0  dropdown-toggle"  type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" style="background-color: transparent;">
+                  <i class="fa fa-users fa-x2 "></i>   Human Resource
+                  </button>
+                   dropdown-item text-dark bg-light
+ dropdown-item text-dark bg-light
+              <div class="dropdown-menu bg-light" aria-labelledby="triggerId"> --}}
+                   <a
               href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple"
             >
               <i class="fa fa-bars "></i><span>Departments</span>
             </a>
-              {{-- <a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple"
-           ><i class="fa fa-graduation-cap fa-fw "></i><span>Jobs</span></a
-          ><a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple"
-           ><i class="fas fa-globe fa-fw "></i 
-          ><span>International</span></a
-          > 
             <a
+              href="{{ route("staff")}}"
+              class="list-group-item list-group-item-action py-2 ripple"
+              ><i class="fa fa-users fa-x2 "></i><span>Staff</span></a
+            > 
+              {{-- </div>
+            </div> --}}
+               
+            {{-- <a
               href="get_help.html"
               class="list-group-item list-group-item-action py-2 ripple"
               ><i class="fas fa-info-circle "></i><span>Find Help</span></a
             > --}}
+
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple"
               >
               @csrf
-              <label for="logout" class="c-pointer"><i class="fas fa-door-open "></i><span>Log out</span></label>
+              <label for="logout" class="c-pointer">
+                <i class="fas fa-door-open "></i><span>Log out</span>
+              </label>
               <input type="submit" name="" id="logout" class="d-none" >
               </form
             >
@@ -150,10 +155,7 @@
               height="40"
               alt="Fadaeco"
               loading="lazy"
-            />
-            {{-- <p class="h3 font-weight-bold"> 
-              {{ "Stokkafela Tembisa"}} 
-             </p> --}}
+            /> 
           </a>
       
           <!-- Right links -->
@@ -184,14 +186,19 @@
             <main class="    mt-5 pt-3   ">
                 {{ $slot }}
             </main>
-        </div>
+        {{-- </div> --}}
         {{-- All the js files --}}
+
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
-        <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
- 
         <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
+  
+   
+        <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
+        <script>
+          console.log("Amo dash")
+        </script>
     </body>
 </html>
  

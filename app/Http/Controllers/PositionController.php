@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Position;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,19 +20,7 @@ class PositionController extends Controller
         return $positions;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        $positions = new Position();
-
-        $data = [];
-        // $job->create_job($data);
-        return $request;
-    }
+      
 
     /**
      * Store a newly created resource in storage.
@@ -86,6 +75,6 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $id;
     }
 }

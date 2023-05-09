@@ -13,6 +13,8 @@ use App\Http\Controllers\DestributorsController;
 use App\Http\Controllers\SalesController; 
 use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TargetsController;
 use Illuminate\Support\Facades\DB; 
 
@@ -40,6 +42,9 @@ Route::get('/', function () {
 
 Route::prefix('portal/' )->middleware(['auth'])->group(function ()
 {
+    Route::get('/test', function () {    
+        return view('portal.test');
+     });
 
     Route::get('/', [PortalController::class, 'index'])->name('portal');
 
@@ -125,10 +130,12 @@ Route::post('/targets/rep/save', [TargetsController::class, 'save_rep_target'])-
 
 
 //  Job Roles and Titles
-// Route::get('/jobs', [ProductController::class, 'index'])->name('my_products');
+Route::post('/roles/create', [RoleController::class, 'create_role'])->name('create_role');
 // Route::get('/product/create', [ProductController::class, 'create'])->name('create_product');
 // .Route::POST('/product/save', [ProductController::class, 'save'])->name('save_product');
-// Route::get('/product', [StoreController::class, 'index'])->name('save_store');
+Route::post('/roles/delete/{id}', [RoleController::class, 'destroy'])->name('delete_role');
+Route::get('/roles/update/{id}', [RoleController::class, 'update_role'])->name('update_role');
+Route::post('/roles/save', [RoleController::class, 'save_role'])->name('save_role');
 
 });
  

@@ -17,69 +17,55 @@
  
   </style>
    <main class="m-0  px-4 pb-5 pt-3 w-100" id="app" v-cloak>
- 
-  <div class="shadow rounded d-flex justify-content-between mb-3  px-2 py-1">
-    <div class="d-flex justify-content-between   w-100 mr-5">
-      <div class="form-group">
-        <label for="" class="font-weight-bold">Stock Value</label>
-        <select class="form-control" name="" @change="filter_stock_value($event)" >
-          <option selected disabled>Select</option>
-          <option value="low"> From Law</option>
-          <option value="high">From High</option>
-          <option value="zero">With Zero</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="" class="font-weight-bold">Nett Sales</label> 
-        <select class="form-control" name="" @change="filter_nett_sales($event)">
-          <option selected disabled>Select</option>
-          <option value="low"> From Law</option>
-          <option value="high">From High</option>
-          <option value="zero">With Zero</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="" class="font-weight-bold">AVR RR</label>
-        <select class="form-control" name="" @change="filter_avr_rr($event)">
-          <option selected disabled>Select</option>
-          <option value="low"> From Law</option>
-          <option value="high">From High</option>
-          <option value="zero">With Zero</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="" class="font-weight-bold">Days onHand</label>
-        <select class="form-control" name="" @change="filter_days_onhand($event)">
-          <option selected disabled>Select</option>
-          <option value="low"> From Law</option>
-          <option value="high">From High</option>
-          <option value="zero">With Zero</option>
-        </select>
-      </div>
+  
+  
+  <div class="row border rounded p-3 w-100">
+       
+    <div class="col-md-4 mx-0 " title=" Click see detailed Stock Data">
+         <a href="#" class="card text-dark shadow px-2 py-1 border border-info">
+            <span class="font-weight-bold ">Out of stock Value  </span>
+            <span class="font-weight-bold h5 text-center text-danger"> R<span id="oosv">@{{ toDecimal(total_oosv.toFixed(2)).toLocaleString('en-US')}}</span> </span>
+            {{-- <span class="small  text-center">Stock on hand  </span> --}}
+         </a>
     </div>
-
-    <div   class="d-flex flex-column justify-content-center ">
-     <div class="d-flex fle"> 
-      <div class="form-group "> 
-        <label for="" class="font-weight-bold">Change Store</label>
-        <select class="custom-select" name="store" onchange=" window.location.href = this.value;">
-          <option value="" selected disabled>Select Store</option>
-            @foreach ($stores as $store)
-                 <option class="font-weight-bold" value="{{ route('stock_analysis', [$store->storeID] ) }}">{{$store->name}}</option>
-            @endforeach
-         </select>
-      </div>
-     </div>
+    <div class="col-md-4 mx-0 " title="Click see detailed Stock Data">
+        <a href="#" class="card text-dark shadow px-2 py-1 border border-info">
+            <span class="font-weight-bold ">Stock Value </span> 
+            <span class="font-weight-bold h5 text-center"> R <span id="stock_value">@{{  toDecimal(total_sohv.toFixed(2)).toLocaleString('en-US')}}</span> </span>
+            {{-- <span class="small  text-center">Last stock count 22 Jan 23</span> --}}
+         </a>
+    </div>
     
-    </div>
+    <div   class="col-md-4 py-0">
+      <label class="d-flex flex-column justify-content-center card text-dark shadow px-2 py-1 border border-info"> 
+       <div class="form-group  border-bottom"> 
+         {{-- <label for="" class="font-weight-bold"> </label> --}}
+         <select class="custom-select border-0 border-bottom" name="store" onchange=" window.location.href = this.value;">
+           <option value="" selected disabled>Select to Change Store</option>
+             @foreach ($stores as $store)
+                  <option class="font-weight-bold" value="{{ route('stock_analysis', [$store->storeID] ) }}">{{$store->name}}</option>
+             @endforeach
+          </select>
+       </div>
+      </label>
+     
+     </div>
+    {{-- <div class="col-md-3 " title=" Click see detailed Sales Data">
+        <a href="{{ route('sales') }}" class="card text-dark shadow px-2 py-1 border border-info">
+            <span class="font-weight-bold "> Sales </span>
+                <span class="font-weight-bold h5 text-center"> R
+                     <span id="nettsales"></span>
+                </span>
+            <span class="small  text-center">From {{$dates['from']}} - {{$dates['to']}}</span>
+          </a>
+        </div> --}}
+         
+</div>
+<hr>
 
-  </div>
   <div class=" shadow rounded row mb-3 p-2">
   <div class=" col-md-6  "> 
-    <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
+    <input type="search" name="" class="fobrm-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
   </div>
   <div class="col-md-6  d-flex justify-content-end">
 
@@ -145,6 +131,66 @@
 </div>
   </div>
   <hr>
+  <div class="shadow rounded d-flex justify-content-between mb-3  px-2 py-1">
+    <div class="d-flex justify-content-between   w-100 mr-5">
+      <div class="form-group">
+        <label for="" class="font-weight-bold">Stock Value</label>
+        <select class="form-control" name="" @change="filter_stock_value($event)" >
+          <option selected disabled>Select</option>
+          <option value="low"> From Law</option>
+          <option value="high">From High</option>
+          <option value="zero">With Zero</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="font-weight-bold">Nett Sales</label> 
+        <select class="form-control" name="" @change="filter_nett_sales($event)">
+          <option selected disabled>Select</option>
+          <option value="low"> From Law</option>
+          <option value="high">From High</option>
+          <option value="zero">With Zero</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="font-weight-bold">AVR RR</label>
+        <select class="form-control" name="" @change="filter_avr_rr($event)">
+          <option selected disabled>Select</option>
+          <option value="low"> From Law</option>
+          <option value="high">From High</option>
+          <option value="zero">With Zero</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="font-weight-bold">Days onHand</label>
+        <select class="form-control" name="" @change="filter_days_onhand($event)">
+          <option selected disabled>Select</option>
+          <option value="low"> From Law</option>
+          <option value="high">From High</option>
+          <option value="zero">With Zero</option>
+        </select>
+      </div>
+    </div>
+
+    <div   class="d-flex flex-column justify-content-center ">
+     <div class="d-flex fle"> 
+      <div class="form-group "> 
+        <label for="" class="font-weight-bold">Change Store</label>
+        <select class="custom-select" name="store" onchange=" window.location.href = this.value;">
+          <option value="" selected disabled>Select Store</option>
+            @foreach ($stores as $store)
+                 <option class="font-weight-bold" value="{{ route('stock_analysis', [$store->storeID] ) }}">{{$store->name}}</option>
+            @endforeach
+         </select>
+      </div>
+     </div>
+    
+    </div>
+
+  </div>
+  <hr>
   <div class="card p-3 mb-5">
     <p class="h3 font-weight-bold">Product Level Filter</p>
     <small class="muted"><i class="">Please Only use these filters when exporting data...</i></small>
@@ -179,6 +225,9 @@ const { createApp } = Vue;
           productsDB: [], 
           searchtext: "",
           doh_search: "",
+          total_sohv: 0,
+          total_oosv: 0,
+          total_oosv: 0,
         }          
       },
      async created() { 
@@ -186,9 +235,21 @@ const { createApp } = Vue;
         let selected_store = document.getElementById("selected_store").value ;
         let stock = await  await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
         products = await stock.data;
-        this.raw_products_data = products
+
+        // for (let i = 0; i < await array.length; i++) {
+        //   const element = array[i];
+        //   products.total_sv += products.avrgcost * products.onhand 
+          
+        // }
+
+
+        // console.log(products)
+        this.raw_products_data = await products
 
            function compare( a, b ) {
+
+                // console.log(a)
+
                     if ( a.descript.toLowerCase() < b.descript.toLowerCase() ){
                       return -1;
                     }
@@ -197,7 +258,8 @@ const { createApp } = Vue;
                     }
                     return 0;
                   }
-          products =  products.sort(compare); 
+
+          products = await products.sort(compare); 
 
           let categories = this.create_categories(products)
 
@@ -218,9 +280,16 @@ const { createApp } = Vue;
           // create categories to display data on table 
           create_categories: function(products){
             
-             let categories = []; let categoryIDs = [];
+             let categories = []; let categoryIDs = []; let total_sohv = 0;let total_oosv = 0;
               for (let y = 0; y < products.length; y++) {
 
+                // if (products[y].onhand > 0) {
+                    total_sohv += products[y].avrgcost * products[y].onhand ;
+                // }
+                if (products[y].onhand < 0) {
+                    total_oosv += products[y].avrgcost * products[y].onhand ;
+                }
+                // console.log()
                 let category = products[y].descript.toLowerCase();
                     category = category.split(' ');
                     products[y].category = category[0]+" "+category[1];
@@ -249,6 +318,10 @@ const { createApp } = Vue;
                   categories[ catID ]['DOH'] = 0
                 }                
               }
+              console.log(total_sohv,total_oosv);
+              this.total_oosv = total_oosv;
+              this.total_sohv = total_sohv;
+              // this.total_oosv = total_oosv;
               return  categories;
           },
 
@@ -447,7 +520,7 @@ const { createApp } = Vue;
           // Convert Object to JSON
           var jsonObject = JSON.stringify(items);
           var csv = convertToCSV(jsonObject);
-          var exportedFilenmae = fileTitle + ".csv" || "export.csv";
+          var exportedFilenmae = fileTitle + ".xlsx" || "export.xlsx";
           var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
           if (navigator.msSaveBlob) {
