@@ -66,7 +66,7 @@
                             <th>Rep ID</th>
                             <th>Rep name</th>
                             <th>Target Amount</th>
-                            <th>Projections As Today</th>
+                            {{-- <th>Projections As Today</th> --}}
                             <th>Required Daily RR</th>
                             <th>Target %</th>
                             <th>Current Sales</th>
@@ -76,7 +76,7 @@
                             <tr class="text-uppercase main-categories-main " style="height: 80px;"> 
                                 <td colspan="3" class="font-weight-bold border-right">Stokkafela Revenue</td>
                                 <td class="font-weight-bold ">R@{{ stores[0]['target_amount'].toLocaleString('en-US') }}</td>
-                                <td class="font-weight-bold ">R@{{ stores[0]['projections'].toLocaleString('en-US') }}</td>
+                                {{-- <td class="font-weight-bold ">R@{{ stores[0]['projections'].toLocaleString('en-US') }}</td> --}}
                                 <td class="font-weight-bold ">R@{{ (stores[0]['daily_rr']).toLocaleString('en-US',1)}}</td>
                                 <td class="font-weight-bold text-danger font-weight-bold" v-if="stores[0]['target_percent'] < 100">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
                                 <td class="font-weight-bold " v-else class="text-success font-weight-bold">@{{ stores[0]['target_percent'].toFixed(2)}}%</td>
@@ -89,7 +89,7 @@
                                 <td scope="row">@{{i+1}}</td>
                                 <td colspan="2" class="font-weight-bold text-light border-right">@{{ main_destributor.main_des_name}}</td>
                                 <td>R@{{ main_destributor.target_amount.toLocaleString('en-US')}}</td>
-                                <td>R@{{ main_destributor.projections.toLocaleString('en-US')}}</td>
+                                {{-- <td>R@{{ main_destributor.projections.toLocaleString('en-US')}}</td> --}}
                                 <td>R@{{ main_destributor.required_daily_rr.toLocaleString('en-US')}}</td>
                                 <td v-if="main_destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
                                 <td v-else class="text-success font-weight-bold">@{{ main_destributor.target_percent.toFixed(2)}}%</td>
@@ -101,7 +101,7 @@
                                         <td scope="row">@{{i+1}}</td>
                                          <td colspan="2" class="font-weight-bold text-light border-right">@{{ destributor.des_name}}</td>
                                          <td>R@{{ destributor.target_amount.toLocaleString('en-US')}}</td>
-                                         <td>R@{{ destributor.projections.toLocaleString('en-US')}}</td>
+                                         {{-- <td>R@{{ destributor.projections.toLocaleString('en-US')}}</td> --}}
                                          <td>R@{{ destributor.required_daily_rr.toLocaleString('en-US')}}</td>
                                         <td v-if="destributor.target_percent < 100" class="text-danger font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
                                         <td v-else class="text-success font-weight-bold">@{{ destributor.target_percent.toFixed(2)}}%</td>
@@ -113,7 +113,7 @@
                                         <td>@{{ rep.rep_number}}</td>
                                         <td class="border-right">@{{ rep.rep_name}}</td>
                                         <td>R@{{ rep.target_amount.toLocaleString('en-US')}}</td>
-                                        <td>R@{{ rep.projections.toLocaleString('en-US')}}</td>
+                                        {{-- <td>R@{{ rep.projections.toLocaleString('en-US')}}</td> --}}
                                         <td>R@{{ rep.required_daily_rr.toLocaleString('en-US')}}</td>
                                          <td v-if="rep.target_percent < 100" class="text-danger font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
                                             <td v-else class="text-success font-weight-bold">@{{ rep.target_percent.toFixed(2)}}%</td>
@@ -379,7 +379,7 @@ const { createApp } = Vue;
 
             // complete once got fomuler
            let working_days_monfry = 0
-           let working_days_monsat = 0
+           let working_days_monsat = 26
 
         let sales = JSON.parse( document.getElementById("sales").value );
   
@@ -410,7 +410,7 @@ const { createApp } = Vue;
             reps[ repID ]['current_sales'] = reps[ repID ]['nettsales'] + reps[ repID ]['vat']
             reps[ repID ]['target_percent'] = (reps[ repID ]['current_sales'] / reps[ repID ]['target_amount'] )*100;    
             reps[ repID ]['projections'] = reps[ repID ]['current_sales'];  // Do your projections fomular
-            reps[ repID ]['required_daily_rr'] = reps[ repID ]['target_amount'];    
+            reps[ repID ]['required_daily_rr'] = reps[ repID ]['target_amount'] / working_days_monsat;    
 
             let day = date[0].split('-'); day = Number(day[2])  ;
             let  sale = this.toDecimal(sales[i].NettSales) + this.toDecimal(sales[i].VAT)
@@ -453,7 +453,7 @@ const { createApp } = Vue;
  
             } 
             destributors[ deID ]["projections"] = destributors[ deID ]["current_sales"]; 
-            destributors[ deID ]["required_daily_rr"] = destributors[ deID ]["target_amount"]; 
+            destributors[ deID ]["required_daily_rr"] = destributors[ deID ]["target_amount"]  / working_days_monsat; 
 
             // console.log(destributors[ deID ]);     
             console.log(reps[x]['date_sales']);                
@@ -480,8 +480,8 @@ const { createApp } = Vue;
                     main_destributors[ desID ]['date_sales'] = new Array(this.lastDay); 
             }   //  required_daily_rr
  
-            main_destributors[ desID ]["current_sales"] += destributors[y].current_sales;
             main_destributors[ desID ]["target_amount"] += destributors[y].target_amount;
+            main_destributors[ desID ]["current_sales"] +=main_destributors[ desID ]["target_amount"] / working_days_monsat;
             main_destributors[ desID ]["target_percent"] = (main_destributors[ desID ]["current_sales"] / main_destributors[ desID ]["target_amount"] ) * 100;;
             main_destributors[ desID ]["destributors"].push(destributors[y])
 
@@ -491,7 +491,7 @@ const { createApp } = Vue;
                 }
                 main_destributors[ desID ]['date_sales'][z] += destributors[y]['date_sales'][z]
             } 
-            main_destributors[ desID ]["required_daily_rr"] = main_destributors[ desID ]["target_amount"];
+            main_destributors[ desID ]["required_daily_rr"] = main_destributors[ desID ]["target_amount"]  / working_days_monsat;
             main_destributors[ desID ]["projections"] = main_destributors[ desID ]["current_sales"]; //
 
 
@@ -503,9 +503,9 @@ const { createApp } = Vue;
         // /// Display totals for the store level ( Stokkafela as a whole ) //////
          let stores = {current_sales: 0, target_amount: 0,projections: 0, target_percent: 0, daily_rr: 0, date_sales: []};
         for (let z = 0; z < main_destributors.length; z++) {
-   
-            stores["current_sales"] += main_destributors[z].current_sales;
+
             stores["target_amount"] += main_destributors[z].target_amount;
+            stores["current_sales"] = stores["target_amount"] / working_days_monsat;
             stores["projections"] += main_destributors[z].current_sales;
             stores["target_percent"] = (stores["current_sales"] / stores["target_amount"] )*100;
              
