@@ -37,7 +37,7 @@ class save_stock_analysis_reports implements ShouldQueue
          ['barcode' => $this->product->barcode, 'storeID' => $this->product->storeID],
          [
              'barcode' => $this->product->barcode,
-             'descript' => $this->product->descript,
+             'descript' => $this->product->descript, 
              'department' => $this->product->department,
              'sellpinc1' => $this->product->sellpinc1,
              'onhand' => $this->product->onhand,

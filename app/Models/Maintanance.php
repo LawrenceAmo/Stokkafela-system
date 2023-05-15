@@ -75,7 +75,7 @@ class Maintanance extends Model
                                 ['date', '>=', $from], ['date', '<=', $to],
                                 ['storeID', '=', $storeID]])
                              ->orderBy('date', 'asc')
-                            ->get();
+                            ->get(); 
 
         $products = DB::table('products')
                         ->where( [['storeID', '=', $storeID]])
@@ -127,8 +127,7 @@ class Maintanance extends Model
 
                     $products[$i]->nett_sales = $get_nettsales[$code]['nett_sales'];
                     $products[$i]->department =  $get_nettsales[$code]['department'];
- 
-                    
+  
                 }else{
                     $products[$i]->nett_sales = 0;                     
                }

@@ -73,10 +73,11 @@
     <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</a>
   </div>
   </div>
-  <div class="ow border rounded p-3 w-100 pb-5">
+  <div class="row border rounded p-3 w-100 pb-5">
 <p class="font-weight-bold h4 P-0">
     {{$selected_store->name}} &nbsp; &nbsp; Stock Analysis
 </p> 
+
 <div class="tableFixHead">
   <table class="table table-striped table-inverse table-responsive "  style="height: 500px;">
   <thead class="thead-inverse">
@@ -90,10 +91,18 @@
           <th>Nett Sales</th>
           <th>AVR RR</th>
           <th>DOH</th>
+          <th>Suggested Order</th>
           <th>Margin</th>
        </tr>
       </thead>
       <tbody>
+        <tr v-if="products.length < 1">
+            <td colspan="10">
+              <div class="">
+                <p class="h5 i text-muted text-center">Loading Data Please Wait!!!...</p>
+              </div>
+            </td>
+        </tr>
             <template  v-for="product,i in products" :key="i">
                
               <tr class="text-uppercase categories accordion-toggle"
@@ -107,6 +116,8 @@
                   <td scope="row" class="category-row">R@{{product.nett_sales.toFixed(2) }}</td>
                   <td scope="row" class="category-row">R@{{(product.avr_rr).toFixed(2)}}</td>
                   <td scope="row" class="category-row" >@{{product.DOH.toFixed(0) }} Days</td>
+                  {{-- (averageRunRate * daysOnHand) - currentStockCost --}}
+                  <td scope="row" class="category-row" >R@{{((product.avr_rr/product.DOH) - product.tot_SV).toFixed(0) }}</td>
                   <td></td>
               </tr>
               <tr v-for="item,x in product.items"  >                  
@@ -128,6 +139,7 @@
           
        </tbody> 
 </table>
+
 </div>
   </div>
   <hr>
@@ -211,6 +223,10 @@
           <button class="btn  btn-sm rounded font-weight-bold btn-outline-grey" @click="filter_doh_perproduct('greater')">greater</button>
           {{-- <button class="btn  btn-sm rounded font-weight-bold btn-outline-grey" @click="filter_doh_perproduct('equal')">equal</button> --}}
         </div>
+  </div>
+  <hr>
+  <div class="card rounded p-3 text-center">
+    <a class="btn btn-sm rounded btn-outline-deep-purple" href="{{ route('stock_mabebeza', [$store->storeID] ) }}">Mabebeza MM</a>
   </div>
   </main> 
   <input type="hidden" name="" id="selected_store" value="{{$selected_store->storeID}}">

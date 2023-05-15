@@ -91,6 +91,7 @@ Route::POST('/product/save', [ProductController::class, 'save'])->name('save_pro
 
 // Stock Analysis / Reports 
 Route::get('/analysis/stock/{id}', [ReportsController::class, 'stock_analysis'])->name('stock_analysis');
+Route::get('/analysis/stock/mabebeza/{id}/{date?}', [ReportsController::class, 'stock_mabebeza'])->name('stock_mabebeza');
 
 //  Sales
 Route::get('/sales', [SalesController::class, 'index'])->name('sales');
