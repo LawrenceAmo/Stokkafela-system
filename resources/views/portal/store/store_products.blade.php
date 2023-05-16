@@ -117,7 +117,7 @@
                   <td scope="row" class="category-row">R@{{(product.avr_rr).toFixed(2)}}</td>
                   <td scope="row" class="category-row" >@{{product.DOH.toFixed(0) }} Days</td>
                   {{-- (averageRunRate * daysOnHand) - currentStockCost --}}
-                  <td scope="row" class="category-row" >R@{{((product.avr_rr/product.DOH) - product.tot_SV).toFixed(0) }}</td>
+                  <td scope="row" class="category-row" >R@{{((product.avr_rr * product.DOH) - product.tot_SV).toFixed(0) }}</td>
                   <td></td>
               </tr>
               <tr v-for="item,x in product.items"  >                  
@@ -131,6 +131,7 @@
                 <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
                 <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
                 <td>@{{item.days_onhand.toFixed(0) }} days</td>
+                <td>R@{{((item.avr_rr * item.days_onhand) - item.stock_value).toFixed(0) }}</td>
                 <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
 
               </tr> 

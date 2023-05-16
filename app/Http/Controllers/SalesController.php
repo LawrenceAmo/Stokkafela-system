@@ -90,7 +90,7 @@ class SalesController extends Controller
                     $join->on('reps.repID', '=', 'rep_targets.repID')
                     ->where('rep_targets.date', 'like', $year.'%');
                   }) 
-                ->whereNull('rep_targets.targetID')
+                ->whereNull('rep_targets.targetID') 
                 ->select('reps.*')
                 ->get();
 
