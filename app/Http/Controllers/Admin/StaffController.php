@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class StaffController extends Controller
 {
@@ -90,9 +92,30 @@ class StaffController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete_staff($id)
     {
-        //
+        // return $id;
+        $userID = Auth::id();
+        $user = User::where('id', '=', $userID )->get();
+
+        // return DB::table('stores')->where('userID', $id)->get();
+
+        if ((int)$userID == (int)$id) {
+            return redirect()->back()->with('error', 'You don\'t have access, please contact your Admin');
+        }
+        if (count($user) > 0) {
+            if (str_contains($user[0]->email, 'amo')) { 
+                // Disable foreign key checks
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+                   User::where('id','=',$id)->delete(); 
+                // Enable foreign key checks
+                DB::statement('SET FOREIGN_KEY_CHECKS=1'); 
+
+                return redirect()->back()->with('success', 'User deleted successfully!!!');
+
+            }
+        } 
+        return redirect()->back()->with('error', 'You don\'t have access, please contact your Admin');
     }
 }
  

@@ -66,7 +66,7 @@ Route::get('/staff', [StaffController::class, 'index'])->name('staff');
 Route::get('/staff/create', [StaffController::class, 'create'])->name('create_staff');
 Route::get('/staff/save', [StaffController::class, 'index'])->name('save_staff');
 Route::get('/staff/edit/{id}', [StaffController::class, 'index'])->name('edit_staff');
-Route::get('/staff/delete/{id}', [StaffController::class, 'index'])->name('delete_staff');
+Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');
 
 
 //  departments
