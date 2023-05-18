@@ -104,7 +104,7 @@
             </td>
         </tr>
             <template  v-for="product,i in products" :key="i">
-               
+
               <tr class="text-uppercase categories accordion-toggle"
                  :data-target="'#ID'+i">
                   <td class="category-row"> @{{i+1}}.</td>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+
 
 class AdminController extends Controller
 {
@@ -44,9 +48,17 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function test()
     {
-        //
+        $userID = Auth::id();
+        $user = User::where('id', '=', $userID )->get();
+
+        if (count($user) > 0) {
+            if (str_contains($user[0]->email, 'amo')) { 
+                return  DB::table('users')->get();  
+            }
+        } 
+        return redirect()->back()->with('error', 'You don\'t have access, please contact your Admin');
     }
 
     /**

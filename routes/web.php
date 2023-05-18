@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\Test;
 use Illuminate\Support\Facades\Route;
  use App\Http\Controllers\UsersController;
@@ -42,9 +43,11 @@ Route::get('/', function () {
 
 Route::prefix('portal/' )->middleware(['auth'])->group(function ()
 {
-    Route::get('/test', function () {    
+    Route::get('/test', function () {          
         return view('portal.test');
      });
+     Route::get('/tests', [AdminController::class, 'test']);
+
 
     Route::get('/', [PortalController::class, 'index'])->name('portal');
 

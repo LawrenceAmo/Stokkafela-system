@@ -84,9 +84,9 @@
                         <a href="{{ route('login') }}" class="  nav-link">Log in</a>
                       </li>  
 
-                      <li class="nav-item"> 
+                      {{-- <li class="nav-item"> 
                         <a href="{{ route('register') }}" class="nav-link">Register</a>
-                      </li>  
+                      </li>   --}}
                      @endauth
              @endif           
           </ul>

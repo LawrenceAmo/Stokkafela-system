@@ -52,8 +52,8 @@
   <hr>
    --}}
     <div class=" shadow rounded row mb-3 p-2">
-    <div class=" col-md-3  "> 
-      <input type="search" name="" class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
+    <div class=" col-md-3  " > 
+      <input type="search" name="" @disabled(true) class="form-control rounded  " placeholder="Search by product name" id="search" v-model="searchtext" v-on:keyup="searchFun($event)">
     </div>
     <div class="border rounded">
       <div class="form-group rounded overflow-auto   row   p-0 m-0">
@@ -67,7 +67,7 @@
     </div>
     <div class="col-md-4  d-flex justify-content-end">
   
-       <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</a>
+       <button   @disabled(true) class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</button>
     </div>
     </div>
     <div class=" d-flex justify-content-between  rounded w-100 pt-2 m-0">
