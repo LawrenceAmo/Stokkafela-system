@@ -588,6 +588,12 @@ const { createApp } = Vue;
         let first_month = document.getElementById("first_month").value
         let second_month = document.getElementById("second_month").value
         let last_month = document.getElementById("last_month").value
+ 
+          function getMonth(M) {
+            var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var monthIndex = parseInt(m) - 1; // Subtract 1 to match the month index
+            return  monthNames[monthIndex];
+          }
 
         var headers = {
               barcode: "Barcode",
@@ -595,9 +601,9 @@ const { createApp } = Vue;
               avrgcost: "Average Cost",
               sellpinc1: "Selling Price",
               stock_value: "Stock Value",
-              first_month: first_month ,
-              second_month: second_month ,
-              last_month: last_month ,
+              first_month: getMonth(first_month),
+              second_month: getMonth(second_month),
+              last_month: getMonth(last_month),
               nett_sales: "Nett Sales",
               avr_rr: "Average Run Rate",
               days_onhand: "Days onHand",  
@@ -628,10 +634,9 @@ const { createApp } = Vue;
             avr_rr: this.toDecimal(item.items[y].avr_rr).toFixed(2),
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
-            soq:  (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0),
-
-            // item.suggested_order / toDecimal(item.avrgcost
-              
+            soq:  (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
+ 
+                          
           });
             
           }
