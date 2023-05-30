@@ -109,7 +109,7 @@ class StaffController extends Controller
                 DB::statement('SET FOREIGN_KEY_CHECKS=0');
                    User::where('id','=',$id)->delete(); 
                 // Enable foreign key checks
-                DB::statement('SET FOREIGN_KEY_CHECKS=1'); 
+                DB::statement('SET FOREIGN_KEY_CHECKS= 1'); 
 
                 return redirect()->back()->with('success', 'User deleted successfully!!!');
 

@@ -77,6 +77,7 @@ class Maintanance extends Model
                              ->orderBy('date', 'asc')
                             ->get(); 
 
+        // return $stock_analysis;
         $products = DB::table('products')
                         ->where( [['storeID', '=', $storeID]])
                         ->orderBy('onhand', 'DESC')
@@ -92,6 +93,11 @@ class Maintanance extends Model
         function get_nettsales($stock_analysis)
         {
             $codes = []; $reports = []; 
+
+            $first_month = date("m", strtotime("first day of -3 months"));
+            $second_month = date("m", strtotime("last day of -2 months"));
+            $last_month = date("m", strtotime("last day of -1 months"));
+
             // loop, and get total nettsales for each product
             for ($i=0; $i < count( $stock_analysis) ; $i++) { 
                 $code = $stock_analysis[$i]->code;
@@ -102,14 +108,36 @@ class Maintanance extends Model
                     $reports[$code]['nett_sales'] = 0;
                     $reports[ $code ]['department'] = $stock_analysis[$i]->department;
                     $reports[ $code ]['code'] = $code;
-                    // $reports[ $code ]['invoices'] = 0;
-                    // $reports[ $code ]['purchases'] = 0;
-                }
-                if (in_array($code, $codes, true)){
-  
-                $reports[$code]['nett_sales'] +=  toFloat($stock_analysis[$i]->nettSales);
-                // $reports[$code]['invoices'] +=  toFloat($stock_analysis[$i]->nettSales);
-                // $reports[$code]['purchases'] +=  toFloat($stock_analysis[$i]->nettSales);
+                    $reports[ $code ]['total_sales'] = [];
+                    $reports[ $code ]['sales_date'] = [];
+                    $reports[ $code ]['first_month'] = 0;
+                    $reports[ $code ]['second_month'] = 0;
+                    $reports[ $code ]['last_month'] = 0;
+                                        
+                 }
+
+                if (in_array($code, $codes, true)){ 
+
+                    $reports[$code]['nett_sales'] +=  toFloat($stock_analysis[$i]->nettSales);
+                    // $sales_date = array( substr($stock_analysis[$i]->date, 5, 2) => toFloat($stock_analysis[$i]->nettSales));
+                    // (int)date('m', strtotime($stock_analysis[$i]->date)) ,  toFloat($stock_analysis[$i]->nettSales)
+
+                    $sales_date = [];
+                    $sales_date[ date('m', strtotime($stock_analysis[$i]->date))] =  toFloat($stock_analysis[$i]->nettSales);
+                   
+                    if (date('m', strtotime($stock_analysis[$i]->date)) == $first_month) {
+                        $reports[ $code ]['first_month'] = toFloat($stock_analysis[$i]->nettSales);
+                    }
+                    if (date('m', strtotime($stock_analysis[$i]->date)) == $second_month) {
+                        $reports[ $code ]['second_month'] = toFloat($stock_analysis[$i]->nettSales);
+                    }
+                    if (date('m', strtotime($stock_analysis[$i]->date)) == $last_month) {
+                        $reports[ $code ]['last_month'] = toFloat($stock_analysis[$i]->nettSales);
+                    }
+ 
+                    array_push($reports[$code]['total_sales'],  $sales_date   ); 
+                    array_push($reports[$code]['sales_date'],  [date('m', strtotime($stock_analysis[$i]->date)), toFloat($stock_analysis[$i]->nettSales)]   ); 
+
                 } 
             }
             return $reports ;
@@ -117,8 +145,9 @@ class Maintanance extends Model
 
         function combine_stockAndSales($products, $stock_analysis)
         {
-            $get_nettsales = get_nettsales($stock_analysis);
- 
+            $get_nettsales =  get_nettsales($stock_analysis);
+            // return   $stock_analysis;
+            // return   $get_nettsales;
             // loop, and get total nettsales for each product
             for ($i=0; $i < count( $products) ; $i++) { 
                 $code = $products[$i]->barcode;
@@ -127,9 +156,19 @@ class Maintanance extends Model
 
                     $products[$i]->nett_sales = $get_nettsales[$code]['nett_sales'];
                     $products[$i]->department =  $get_nettsales[$code]['department'];
+                    $products[$i]->total_sales =  $get_nettsales[$code]['total_sales'];
+                    $products[$i]->sales_date =  $get_nettsales[$code]['sales_date'];
+                    $products[$i]->first_month =  $get_nettsales[$code]['first_month'];
+                    $products[$i]->second_month =  $get_nettsales[$code]['second_month'];
+                    $products[$i]->last_month =  $get_nettsales[$code]['last_month'];
   
                 }else{
                     $products[$i]->nett_sales = 0;                     
+                    $products[$i]->total_sales = [];                     
+                    $products[$i]->sales_date = [];                     
+                    $products[$i]->first_month = 0;                     
+                    $products[$i]->second_month = 0;                     
+                    $products[$i]->last_month = 0;                     
                }
 
                $products[$i]->avr_rr = $products[$i]->nett_sales / 3;
@@ -138,37 +177,17 @@ class Maintanance extends Model
                $products[$i]->stock_value = $products[$i]->avrgcost * $products[$i]->onhand;
 
                if ($products[$i]->avr_rr != 0) {
-                $products[$i]->days_onhand = ( $products[$i]->stock_value / $products[$i]->avr_rr) * 25;
+                    $products[$i]->days_onhand = ( $products[$i]->stock_value / $products[$i]->avr_rr) * 21;
+                    $products[$i]->suggested_order = toFloat(( 21 - $products[$i]->days_onhand ) * ( toFloat($products[$i]->avr_rr) / 21 ));
+                    $products[$i]->soq = 0;// toFloat( $products[$i]->suggested_order / $products[$i]->avrgcost ) || 0;
                } else {
-                $products[$i]->days_onhand = 0;
+                    $products[$i]->days_onhand = 0;
+                    $products[$i]->suggested_order = 0;
+                    $products[$i]->soq = 0;
                }  
-
-            //    update_stock_analysis_reports::dispatch( $products[$i] );
-
-
-            //    DB::table('stock_analysis_reports')
-            //    ->updateOrInsert(
-            //     ['barcode' => $products[$i]->barcode, 'storeID' => $products[$i]->storeID],
-            //     [
-            //         'barcode' => $products[$i]->barcode,
-            //         'descript' => $products[$i]->descript,
-            //         // 'sellprice1' => $products[$i]->sellprice1,
-            //         'department' => $products[$i]->department,
-            //         'sellpinc1' => $products[$i]->sellpinc1,
-            //         'onhand' => $products[$i]->onhand,
-            //         // 'OnHandAvail' => $products[$i]->OnHandAvail,
-            //         'avrgcost' => $products[$i]->avrgcost,
-            //         'storeID' => $products[$i]->storeID,
-            //         'nett_sales' => $products[$i]->nett_sales,
-            //         'avr_rr' => $products[$i]->avr_rr,
-            //         'stock_value' => $products[$i]->stock_value,
-            //         'days_onhand' => $products[$i]->days_onhand,
-            //     ]);
-            
+ 
             }
-
-            // update_stock_analysis_reports::dispatch( $products );
-
+ 
             return $products ;
         }
         

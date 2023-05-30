@@ -22,7 +22,6 @@ class ReportsController extends Controller
         $analysis = new Maintanance();
 
         return $analysis->stock_analysis($storeID);
-        // return $id;
     }
 
     public function stock_analysis($id)
@@ -33,6 +32,9 @@ class ReportsController extends Controller
         $selected_store = $this->get_store($stores, $storeID); 
         $storeID = $selected_store->storeID;
   
+        // Test
+        $analysis = new Maintanance();
+        // return $analysis->stock_analysis($storeID);
 
         return view('portal.store.store_products')
                 // ->with('products', $products)

@@ -88,10 +88,15 @@
           <th>AVR Cost</th>
           <th>Sell Price</th>
           <th>Stock Value</th>
+          <template v-for="d in last_months">
+            <th>@{{toMonth(d)}}</th>
+          </template>
           <th>Nett Sales</th>
+         
           <th>AVR RR</th>
           <th>DOH</th>
           <th>Suggested Order</th>
+          <th>Suggested Order Qty</th>
           <th>Margin</th>
        </tr>
       </thead>
@@ -113,11 +118,17 @@
                   <td></td>
                   <td></td>
                   <td scope="row" class="category-row">R@{{product.tot_SV.toFixed(2)}}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+
                   <td scope="row" class="category-row">R@{{product.nett_sales.toFixed(2) }}</td>
                   <td scope="row" class="category-row">R@{{(product.avr_rr).toFixed(2)}}</td>
                   <td scope="row" class="category-row" >@{{product.DOH.toFixed(0) }} Days</td>
                   {{-- (averageRunRate * daysOnHand) - currentStockCost --}}
-                  <td scope="row" class="category-row" >R@{{((product.avr_rr * product.DOH) - product.tot_SV).toFixed(0) }}</td>
+                  {{-- <td scope="row" class="category-row" >R@{{(product.suggested_order).toFixed(0) }}</td> --}}
+                  <td></td>
+                  <td></td>
                   <td></td>
               </tr>
               <tr v-for="item,x in product.items"  >                  
@@ -128,10 +139,18 @@
                 <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
                 <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
                 <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
-                <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
+                 
+                  <th >R@{{item.first_month }}</th>
+                  <th >R@{{item.second_month }}</th>
+                  <th >R@{{item.last_month }}</th>
+                  
+                 <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
+
                 <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
-                <td>@{{item.days_onhand.toFixed(0) }} days</td>
-                <td>R@{{((item.avr_rr * item.days_onhand) - item.stock_value).toFixed(0) }}</td>
+                <td class="font-weight-bold">@{{item.days_onhand.toFixed(0) }} days</td>
+                <td>R@{{ item.suggested_order.toFixed(2) }}</td>
+                {{-- item.soq.toFixed(2) --}}
+                <td>@{{ (item.suggested_order / toDecimal(item.avrgcost)).toFixed(0)  }} Units</td>
                 <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
 
               </tr> 
@@ -231,6 +250,9 @@
   </div>
   </main> 
   <input type="hidden" name="" id="selected_store" value="{{$selected_store->storeID}}">
+  <input type="hidden" name="" id="first_month" value="{{date("m", strtotime("last day of -3 month"))}}">
+  <input type="hidden" name="" id="second_month" value="{{date("m", strtotime("last day of -2 month"))}}">
+  <input type="hidden" name="" id="last_month" value="{{date("m", strtotime("last day of -1 month"))}}">
   <script>
 
 const { createApp } = Vue;
@@ -245,27 +267,26 @@ const { createApp } = Vue;
           total_sohv: 0,
           total_oosv: 0,
           total_oosv: 0,
+          last_months: []
         }          
       },
      async created() { 
 
         let selected_store = document.getElementById("selected_store").value ;
         let stock = await  await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
-        products = await stock.data;
+            products = await stock.data;
 
-        // for (let i = 0; i < await array.length; i++) {
-        //   const element = array[i];
-        //   products.total_sv += products.avrgcost * products.onhand 
-          
-        // }
+        let first_month = document.getElementById("first_month").value
+        let second_month = document.getElementById("second_month").value
+        let last_month = document.getElementById("last_month").value
 
-
-        // console.log(products)
+         this.last_months = [ ...[first_month, second_month, last_month]]
+         console.log(products)
+        //  console.log(this.last_months)
+      
         this.raw_products_data = await products
 
-           function compare( a, b ) {
-
-                // console.log(a)
+           function compare( a, b ) { 
 
                     if ( a.descript.toLowerCase() < b.descript.toLowerCase() ){
                       return -1;
@@ -294,9 +315,14 @@ const { createApp } = Vue;
               number = Number.parseFloat(number)
               return number//.toFixed(2); 
           },
+          toMonth: function(m){  
+            var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var monthIndex = parseInt(m) - 1; // Subtract 1 to match the month index
+          return  monthNames[monthIndex];
+        },
           // create categories to display data on table 
           create_categories: function(products){
-            
+
              let categories = []; let categoryIDs = []; let total_sohv = 0;let total_oosv = 0;
               for (let y = 0; y < products.length; y++) {
 
@@ -321,7 +347,7 @@ const { createApp } = Vue;
                   categories[ catID ]['category'] = catID;  
                   categories[ catID ]['nett_sales'] = 0;  
                   categories[ catID ]['avr_rr'] = 0;  
-                  categories[ catID ]['DOHs'] = [];  
+                  categories[ catID ]['suggested_order'] = 0;  
                   categories[ catID ]['DOH'] = 0;  
                 }
                               
@@ -329,13 +355,15 @@ const { createApp } = Vue;
                 categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
                 categories[ catID ]['tot_SV'] += Number(products[y].onhand) * this.toDecimal(products[y].avrgcost);
                 categories[ catID ]['DOH'] = ( this.toDecimal(categories[ catID ]['tot_SV']) / this.toDecimal(categories[ catID ]['avr_rr'])) * 25; //Math.max( ...categories[ catID ]['DOHs'] )  
+                categories[ catID ]['suggested_order'] = (21 - categories[ catID ]['DOH'] ) * (categories[ catID ]['avr_rr'] / 21);  
                 categories[ catID ]['items'].push(products[y]);
 
                 if (isNaN(categories[ catID ]['DOH'])) {
                   categories[ catID ]['DOH'] = 0
-                }                
+                }   
+                // console.log(categories[ catID ]);
               }
-              console.log(total_sohv,total_oosv);
+              // console.log(total_sohv,total_oosv);
               this.total_oosv = total_oosv;
               this.total_sohv = total_sohv;
               // this.total_oosv = total_oosv;
@@ -537,7 +565,7 @@ const { createApp } = Vue;
           // Convert Object to JSON
           var jsonObject = JSON.stringify(items);
           var csv = convertToCSV(jsonObject);
-          var exportedFilenmae = fileTitle + ".xlsx" || "export.xlsx";
+          var exportedFilenmae = fileTitle + ".csv" || "export.csv";
           var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
           if (navigator.msSaveBlob) {
@@ -557,15 +585,24 @@ const { createApp } = Vue;
           }
         } 
 
+        let first_month = document.getElementById("first_month").value
+        let second_month = document.getElementById("second_month").value
+        let last_month = document.getElementById("last_month").value
+
         var headers = {
               barcode: "Barcode",
               descript: "Description",  
               avrgcost: "Average Cost",
               sellpinc1: "Selling Price",
               stock_value: "Stock Value",
+              first_month: first_month ,
+              second_month: second_month ,
+              last_month: last_month ,
               nett_sales: "Nett Sales",
               avr_rr: "Average Run Rate",
               days_onhand: "Days onHand",  
+              suggested_order: "Suggested Order",  
+              soq: "Suggested Order Qty",  
             };
 
         let uid = localStorage.getItem("uid");
@@ -583,9 +620,17 @@ const { createApp } = Vue;
             avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
             sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
             stock_value: this.toDecimal(item.items[y].stock_value).toFixed(2),
+            first_month: this.toDecimal(item.items[y].first_month).toFixed(2),
+            second_month: this.toDecimal(item.items[y].second_month).toFixed(2),
+            last_month: this.toDecimal(item.items[y].last_month).toFixed(2),
+
             nett_sales: this.toDecimal(item.items[y].nett_sales).toFixed(2),
             avr_rr: this.toDecimal(item.items[y].avr_rr).toFixed(2),
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
+            suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
+            soq:  (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0),
+
+            // item.suggested_order / toDecimal(item.avrgcost
               
           });
             

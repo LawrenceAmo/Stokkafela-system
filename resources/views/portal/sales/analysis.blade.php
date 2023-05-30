@@ -412,8 +412,9 @@ const { createApp } = Vue;
             reps[ repID ]['projections'] = reps[ repID ]['current_sales'];  // Do your projections fomular
             reps[ repID ]['required_daily_rr'] = reps[ repID ]['target_amount'] / working_days_monsat;    
 
-            let day = date[0].split('-'); day = Number(day[2])  ;
-            let  sale = this.toDecimal(sales[i].NettSales) + this.toDecimal(sales[i].VAT)
+            let day = date[0].split('-'); 
+                day = Number(day[2]);
+            let sale = this.toDecimal(sales[i].NettSales) + this.toDecimal(sales[i].VAT)
              reps[ repID ]['date_sales'][day] =  sale
             reps[ repID ]['dates'].push(day)  
         }
