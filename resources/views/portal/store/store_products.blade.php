@@ -589,7 +589,7 @@ const { createApp } = Vue;
         let second_month = document.getElementById("second_month").value
         let last_month = document.getElementById("last_month").value
  
-          function getMonth(M) {
+          function getMonth(m) {
             var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var monthIndex = parseInt(m) - 1; // Subtract 1 to match the month index
             return  monthNames[monthIndex];
