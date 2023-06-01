@@ -107,7 +107,7 @@ class SalesController extends Controller
                 $rep_sale = new RepSales();
                 $rep_sale->nettSales = 0;
                 $rep_sale->VAT = 0;
-                $rep_sale->date = $date;
+                $rep_sale->date = $date.'-01';
                 $rep_sale->repID = (int)$allReps[$i]->repID;
                 $rep_sale->save();
             }
