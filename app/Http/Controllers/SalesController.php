@@ -101,17 +101,17 @@ class SalesController extends Controller
                         ->get();
 
         // check if there're sales, if not create sales for all reps (Asume it's the 1st day of the month)
-        // if (count($sales) < 1) {
-        //     $allReps = DB::table('reps')->get('repID');
-        //     for($i = 0; $i < count( $allReps); $i++){
-        //         $rep_sale = new RepSales();
-        //         $rep_sale->nettSales = 0;
-        //         $rep_sale->VAT = 0;
-        //         $rep_sale->date = $date;
-        //         $rep_sale->repID = (int)$allReps[$i]->repID;
-        //         $rep_sale->save();
-        //     }
-        // }
+        if (count($sales) < 1) {
+            $allReps = DB::table('reps')->get('repID');
+            for($i = 0; $i < count( $allReps); $i++){
+                $rep_sale = new RepSales();
+                $rep_sale->nettSales = 0;
+                $rep_sale->VAT = 0;
+                $rep_sale->date = $date;
+                $rep_sale->repID = (int)$allReps[$i]->repID;
+                $rep_sale->save();
+            }
+        }
 
          return view('portal.sales.analysis')
                 ->with('sales', $sales)
@@ -187,7 +187,7 @@ class SalesController extends Controller
             $repID = (int)$repID[0]->repID;
 
             $rep = DB::table('rep_sales')
-                    ->where( [
+                    ->where( [ 
                         ['repID', '=', $repID ],
                         ['date', 'like', $date.'%']
                         ])
