@@ -603,7 +603,6 @@ const { createApp } = Vue;
               descript: "Description",  
               avrgcost: "Average Cost",
               sellpinc1: "Selling Price",
-              // onhand: "On Hand",
               stock_value: "Stock Value",
               first_month: getMonth(first_month),
               second_month: getMonth(second_month),
