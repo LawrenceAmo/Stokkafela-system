@@ -629,7 +629,7 @@ const { createApp } = Vue;
             descript: item.items[y].descript,  
             avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
             sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
-            onHand: item.items[y].onHand,
+            onHand: item.items[y].onhand,
             stock_value: this.toDecimal(item.items[y].stock_value).toFixed(2),
             first_month: this.toDecimal(item.items[y].first_month).toFixed(2),
             second_month: this.toDecimal(item.items[y].second_month).toFixed(2),
@@ -639,9 +639,8 @@ const { createApp } = Vue;
             avr_rr: this.toDecimal(item.items[y].avr_rr).toFixed(2),
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
-            soq:  (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
- 
-                          
+            soq: (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
+                           
           });
             
           }
