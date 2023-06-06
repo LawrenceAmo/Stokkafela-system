@@ -87,6 +87,7 @@
           <th>Description</th>
           <th>AVR Cost</th>
           <th>Sell Price</th>
+          <th>OnHand</th>
           <th>Stock Value</th>
           <template v-for="d in last_months">
             <th>@{{toMonth(d)}}</th>
@@ -117,6 +118,7 @@
                   <td scope="row" class="bg-black   category-row" ><b class="">@{{product.category}}</b></td>
                   <td></td>
                   <td></td>
+                  <td></td>
                   <td scope="row" class="category-row">R@{{product.tot_SV.toFixed(2)}}</td>
                   <td></td>
                   <td></td>
@@ -138,6 +140,7 @@
                 <td>@{{item.descript}}</td>
                 <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
                 <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
+                <td>@{{item.onhand}}</td>
                 <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
                  
                   <th >R@{{item.first_month }}</th>
@@ -600,6 +603,7 @@ const { createApp } = Vue;
               descript: "Description",  
               avrgcost: "Average Cost",
               sellpinc1: "Selling Price",
+              onHand: "On Hand",
               stock_value: "Stock Value",
               first_month: getMonth(first_month),
               second_month: getMonth(second_month),
@@ -625,6 +629,7 @@ const { createApp } = Vue;
             descript: item.items[y].descript,  
             avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
             sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
+            onHand: item.items[y].onHand,
             stock_value: this.toDecimal(item.items[y].stock_value).toFixed(2),
             first_month: this.toDecimal(item.items[y].first_month).toFixed(2),
             second_month: this.toDecimal(item.items[y].second_month).toFixed(2),
