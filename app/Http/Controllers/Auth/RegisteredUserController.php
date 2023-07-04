@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View 
      */
     public function create()
     {

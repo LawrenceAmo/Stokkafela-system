@@ -188,7 +188,8 @@
             </main>
         {{-- </div> --}}
         {{-- All the js files --}}
-
+<script>
+</script>
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
@@ -199,9 +200,7 @@
         {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script> --}}
 
         {{-- <script src="{{ asset('mdb/js/mdb.min.js') }}"></script> --}}
-        <script>
-          // console.log("Amo dash")
-        </script>
+        
     </body>
 </html>
  

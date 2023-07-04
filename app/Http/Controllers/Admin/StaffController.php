@@ -47,9 +47,17 @@ class StaffController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function save_staff(Request $request)
     {
-        
+
+        return $request;
+ 
+        $user = new User();
+        $user->first_name = $request->name;
+        $user->last_name = $request->address;
+        $user->email = (int)$request->store;
+        $user->save();
+
     }
 
     /**
@@ -94,7 +102,7 @@ class StaffController extends Controller
      */
     public function delete_staff($id)
     {
-        // return $id;
+
         $userID = Auth::id();
         $user = User::where('id', '=', $userID )->get();
 
