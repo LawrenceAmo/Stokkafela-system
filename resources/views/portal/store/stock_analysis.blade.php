@@ -14,7 +14,7 @@
   
          table  { border-collapse: collapse; width: 100% !important; }
         th, td { padding: 8px 16px; }
-   
+    
     </style>
      <main class="m-0  px-4 pb-5 pt-3 w-100" id="app" v-cloak>
     

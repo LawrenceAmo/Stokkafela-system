@@ -13,7 +13,7 @@ use App\Models\MiniStatistics;
 
 use function PHPUnit\Framework\isEmpty;
 
-class StoreController extends Controller
+class StoreController extends Controller 
 { 
     private function userID(){
         return Auth::id();

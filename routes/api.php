@@ -23,9 +23,10 @@ Route::get('/', function () {
 // {
 
     // Products
+    Route::get('/mabebeza/products',[ProductController::class, 'get_mabebeza_stock'])->name('get_mabebeza_stock');
     Route::get('products',[ProductController::class, 'get_products'])->name('get_products');
     Route::get('/product/top_products', [ProductController::class, 'get_top_products'])->name('get_top_products');
-
+// 
 
     // Sales
     Route::get('sales',[SalesController::class, 'get_sales'])->name('get_sales');

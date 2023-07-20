@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
-{
-    
+{    
     public function get_products()
     {
         // $auth = new Api_authenticate();
@@ -24,6 +23,30 @@ class ProductController extends Controller
                     ->leftJoin('stores','stores.storeID','=','products.storeID')
                     ->get();
         return $products;
+    }
+
+    // ////////////
+    public function get_mabebeza_stock()
+    { 
+        $stores = DB::table('stores')->where('name', 'LIKE', '%abebeza%')->get();
+        for ($i=0; $i < count( $stores); $i++) { 
+           if ( strpos($stores[$i]->name, 'embisa') || strpos($stores[$i]->name, 'ega') ) {
+             $mabebeza_tembisa_storeID =  $stores[$i]->storeID;
+           }
+           if ( strpos($stores[$i]->name, 'mbanani') || strpos($stores[$i]->name, 'doc') ) {
+              $mabebeza_bambanani_storeID =  $stores[$i]->storeID;
+           }
+        }
+
+        $tembisa = DB::table('products')
+                        ->where('storeID', $mabebeza_tembisa_storeID)
+                        ->get();
+
+        $bambanani = DB::table('products')
+                        ->where('storeID', $mabebeza_bambanani_storeID)
+                        ->get();
+
+        return [ 'tembisa' => $tembisa, 'bambanani' => $bambanani ]; 
     }
 
     public function get_top_products()
