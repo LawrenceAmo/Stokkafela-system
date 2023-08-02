@@ -94,7 +94,7 @@
   <div class="ow border rounded p-3 w-100">
 <p class="font-weight-bold h4">
  Top 10 perfoming Products
-</p>
+</p> 
 <table class="table table-striped table-inverse table-responsive"  style="height: 500px;">
   <thead class="thead-inverse">
       <tr>
@@ -106,7 +106,7 @@
           <th>Item Value</th>
           <th>On Hand</th>
           <th>Margin</th>
-           <th>Store Name</th>
+          <th>Store Name</th>
           <th>Created At</th>
        </tr>
       </thead>
@@ -126,6 +126,12 @@
               <td v-if="product.onhand < 1 " class="text-danger font-weight-bold">@{{product.onhand}}</td>
               <td v-else class="text-success font-weight-bold">@{{product.onhand}}</td>
              
+              <td>R@{{toDecimal(product.sellpinc1)}}</td>
+              <td>R@{{toDecimal(product.sellpinc1)}}</td>
+              <td>R@{{toDecimal(product.sellpinc1)}}</td>
+              <td>R@{{toDecimal(product.sellpinc1)}}</td>
+
+
               <td class="text-success">@{{ toDecimal( 100 - (toDecimal(product.avrgcost ) / toDecimal(product.sellpinc1)  * 100 )) }}%</td>
               <td>@{{product.name}}</td>
               <td>@{{product.created_at}}</td>                  

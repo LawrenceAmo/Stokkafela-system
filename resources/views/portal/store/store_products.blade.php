@@ -88,6 +88,12 @@
           <th>AVR Cost</th>
           <th>Sell Price</th>
           <th>OnHand</th>
+          
+          <th>Physical Count</th> 
+          <th>Variance</th>
+          <th>Physical count value</th>
+          <th>Stock Value Variance</th>
+
           <th>Stock Value</th>
           <template v-for="d in last_months">
             <th>@{{toMonth(d)}}</th>
@@ -98,6 +104,8 @@
           <th>DOH</th>
           <th>Suggested Order</th>
           <th>Suggested Order Qty</th>
+          <th>Sku Rank %</th>
+          <th>Cumulative contribution</th>
           <th>Margin</th>
        </tr>
       </thead>
@@ -119,6 +127,10 @@
                   <td></td>
                   <td></td>
                   <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td scope="row" class="category-row">R@{{product.tot_SV.toFixed(2)}}</td>
                   <td></td>
                   <td></td>
@@ -132,6 +144,8 @@
                   <td></td>
                   <td></td>
                   <td></td>
+                  <td></td>
+                  <td></td>
               </tr>
               <tr v-for="item,x in product.items"  >                  
  
@@ -141,7 +155,13 @@
                 <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
                 <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
                 <td>@{{item.onhand}}</td>
-                <td>R@{{toDecimal(item.stock_value.toFixed(2))}}</td>
+
+                <td>0</td>
+                <td>@{{ 0 - item.onhand}}</td>
+                <td>0</td>
+                <td>@{{ 0 - toDecimal(item.stock_value.toFixed(2)) }}</td>
+
+                <td>R@{{ toDecimal(item.stock_value.toFixed(2)) }}</td>
                  
                   <th >R@{{item.first_month }}</th>
                   <th >R@{{item.second_month }}</th>
@@ -151,9 +171,12 @@
 
                 <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
                 <td class="font-weight-bold">@{{item.days_onhand.toFixed(0) }} days</td>
-                <td>R@{{ item.suggested_order.toFixed(2) }}</td>
-                {{-- item.soq.toFixed(2) --}}
+                <td>R@{{ item.suggested_order.toFixed(2) }}</td> 
                 <td>@{{ (item.suggested_order / toDecimal(item.avrgcost)).toFixed(0)  }} Units</td>
+
+                <td>@{{ ( total_nettsales / item.nett_sales).toFixed(1) }}%</td> 
+                <td>@{{ ( (total_nettsales / item.nett_sales) * 100).toFixed(1) }}%</td> 
+
                 <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
 
               </tr> 
@@ -270,7 +293,8 @@ const { createApp } = Vue;
           total_sohv: 0,
           total_oosv: 0,
           total_oosv: 0,
-          last_months: []
+          last_months: [],
+          total_nettsales: 0,
         }          
       },
      async created() { 
@@ -326,7 +350,7 @@ const { createApp } = Vue;
           // create categories to display data on table 
           create_categories: function(products){
 
-             let categories = []; let categoryIDs = []; let total_sohv = 0;let total_oosv = 0;
+             let categories = []; let categoryIDs = []; let total_sohv = 0;let total_oosv = 0; let total_nettsales = 0;
               for (let y = 0; y < products.length; y++) {
 
                 // if (products[y].onhand > 0) {
@@ -363,9 +387,11 @@ const { createApp } = Vue;
 
                 if (isNaN(categories[ catID ]['DOH'])) {
                   categories[ catID ]['DOH'] = 0
-                }   
+                }  
+                total_nettsales +=  categories[ catID ]['nett_sales'];
                 // console.log(categories[ catID ]);
               }
+              this.total_nettsales = total_nettsales;
               // console.log(total_sohv,total_oosv);
               this.total_oosv = total_oosv;
               this.total_sohv = total_sohv;

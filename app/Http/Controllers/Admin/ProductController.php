@@ -100,20 +100,5 @@ class ProductController extends Controller
         }
         return redirect()->back()->with('success', 'Uploading products... Please refresh to see updates!!!');
     } 
-   
-    public function edit($id)
-    {
-        //
-    }
- 
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-  
-    public function destroy($id)
-    {
-        //
-    }
+    
 }
