@@ -378,6 +378,7 @@ const { createApp } = Vue;
                   categories[ catID ]['DOH'] = 0;  
                 }
                               
+                total_nettsales +=  this.toDecimal(products[y].nett_sales);
                 categories[ catID ]['nett_sales'] += this.toDecimal(products[y].nett_sales);  
                 categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
                 categories[ catID ]['tot_SV'] += Number(products[y].onhand) * this.toDecimal(products[y].avrgcost);
@@ -388,11 +389,13 @@ const { createApp } = Vue;
                 if (isNaN(categories[ catID ]['DOH'])) {
                   categories[ catID ]['DOH'] = 0
                 }  
-                total_nettsales +=  categories[ catID ]['nett_sales'];
-                // console.log(categories[ catID ]);
+                console.log(products[y].nett_sales);
+                // console.log(total_nettsales);
               }
               this.total_nettsales = total_nettsales;
-              // console.log(total_sohv,total_oosv);
+              console.log(total_nettsales);
+              // console.log(total_nettsales);
+              // console.log(total_nettsales);
               this.total_oosv = total_oosv;
               this.total_sohv = total_sohv;
               // this.total_oosv = total_oosv;
@@ -680,7 +683,7 @@ const { createApp } = Vue;
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
             soq: (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
-            sr: 0,
+            sr: this.total_nettsales/item.items[y].nett_sales,
             cc: 0,
 
           });
