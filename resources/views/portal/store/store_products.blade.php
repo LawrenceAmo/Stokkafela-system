@@ -663,7 +663,7 @@ const { createApp } = Vue;
 
             itemsFormatted.push({
             barcode: "'"+item.items[y].barcode+"",
-            descript: item.items[y].descript,
+            descript: "'"+item.items[y].descript+"",
             avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
             sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
 
@@ -683,7 +683,7 @@ const { createApp } = Vue;
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
             soq: (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
-            sr: this.total_nettsales/item.items[y].nett_sales,
+            sr: 0,//this.total_nettsales/item.items[y].nett_sales,
             cc: 0,
 
           });
