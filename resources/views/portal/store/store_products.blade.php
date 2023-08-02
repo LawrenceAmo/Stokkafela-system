@@ -661,6 +661,12 @@ const { createApp } = Vue;
 
           for (let y = 0; y < item.items.length; y++) {
 
+            // calculate soq and remove errors 
+            let soqv = (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0);
+            if (isNaN(soq) || isFinite(soq)) {
+              soqv = 0;
+            }
+
             itemsFormatted.push({
             barcode: "'"+item.items[y].barcode+"",
             descript: "'"+item.items[y].descript+"",
@@ -682,7 +688,7 @@ const { createApp } = Vue;
             avr_rr: this.toDecimal(item.items[y].avr_rr).toFixed(2),
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
-            soq: (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
+            soq: soqv,
             sr: 0,//this.total_nettsales/item.items[y].nett_sales,
             cc: 0,
 
