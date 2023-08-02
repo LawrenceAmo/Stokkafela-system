@@ -104,8 +104,8 @@
           <th>DOH</th>
           <th>Suggested Order</th>
           <th>Suggested Order Qty</th>
-          <th>Sku Rank %</th>
-          <th>Cumulative contribution</th>
+          {{-- <th>Sku Rank %</th>
+          <th>Cumulative contribution</th> --}}
           <th>Margin</th>
        </tr>
       </thead>
@@ -144,8 +144,8 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td></td>
-                  <td></td>
+                  {{-- <td></td>
+                  <td></td> --}}
               </tr>
               <tr v-for="item,x in product.items"  >                  
  
@@ -174,8 +174,8 @@
                 <td>R@{{ item.suggested_order.toFixed(2) }}</td> 
                 <td>@{{ (item.suggested_order / toDecimal(item.avrgcost)).toFixed(0)  }} Units</td>
 
-                <td>@{{ ( total_nettsales / item.nett_sales).toFixed(1) }}%</td> 
-                <td>@{{ ( (total_nettsales / item.nett_sales) * 100).toFixed(1) }}%</td> 
+                {{-- <td>@{{ ( total_nettsales / item.nett_sales).toFixed(1) }}%</td> 
+                <td>@{{ ( (total_nettsales / item.nett_sales) * 100).toFixed(1) }}%</td>  --}}
 
                 <td class="text-success">@{{ toDecimal( 100 - (toDecimal(item.avrgcost ) / toDecimal(item.sellpinc1)  * 100 )).toFixed(2) }}%</td>           
 
@@ -629,7 +629,13 @@ const { createApp } = Vue;
               descript: "Description",  
               avrgcost: "Average Cost",
               sellpinc1: "Selling Price",
+ 
               onhand: "On Hand",
+              physical_count: "Physical Count",
+              variance: "Variance",
+              pcv: "Physical count value",
+              svv: "Stock Value Variance",
+
               stock_value: "Stock Value",
               first_month: getMonth(first_month),
               second_month: getMonth(second_month),
@@ -639,6 +645,8 @@ const { createApp } = Vue;
               days_onhand: "Days onHand",  
               suggested_order: "Suggested Order",  
               soq: "Suggested Order Qty",  
+              sr: "Sku Rank %",  
+              cc: "Cumulative contribution",  
             };
 
         let uid = localStorage.getItem("uid");
@@ -655,7 +663,13 @@ const { createApp } = Vue;
             descript: item.items[y].descript,
             avrgcost: this.toDecimal(item.items[y].avrgcost).toFixed(2),
             sellpinc1: this.toDecimal(item.items[y].sellpinc1).toFixed(2),
+
             onhand: item.items[y].onhand,
+            physical_count: 0,
+            variance: (0 - item.items[y].onhand),
+            pcv: 0,
+            svv: (0 - item.items[y].stock_value),
+
             stock_value: this.toDecimal(item.items[y].stock_value).toFixed(2),
             first_month: this.toDecimal(item.items[y].first_month).toFixed(2),
             second_month: this.toDecimal(item.items[y].second_month).toFixed(2),
@@ -666,6 +680,8 @@ const { createApp } = Vue;
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
             soq: (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0)  || 0,
+            sr: 0,
+            cc: 0,
 
           });
 
