@@ -663,7 +663,7 @@ const { createApp } = Vue;
 
             // calculate soq and remove errors 
             let soqv = (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0);
-            if (isNaN(soq) || isFinite(soq)) {
+            if (isNaN(soqv) || isFinite(soqv)) {
               soqv = 0;
             }
 
