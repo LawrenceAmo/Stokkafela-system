@@ -69,6 +69,7 @@
   </div>
   <div class="col-md-6  d-flex justify-content-end">
 
+    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-success" @click="get_csv_test()">download test</a>
     <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-success" @click="clear_filters()">clear All Filters</a>
     <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</a>
   </div>
@@ -279,6 +280,7 @@
   <input type="hidden" name="" id="first_month" value="{{date("m", strtotime("last day of -3 month"))}}">
   <input type="hidden" name="" id="second_month" value="{{date("m", strtotime("last day of -2 month"))}}">
   <input type="hidden" name="" id="last_month" value="{{date("m", strtotime("last day of -1 month"))}}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
   <script>
 
 const { createApp } = Vue;
@@ -308,7 +310,7 @@ const { createApp } = Vue;
         let last_month = document.getElementById("last_month").value
 
          this.last_months = [ ...[first_month, second_month, last_month]]
-         console.log(products)
+        //  console.log(products)
         //  console.log(this.last_months)
       
         this.raw_products_data = await products
@@ -389,11 +391,11 @@ const { createApp } = Vue;
                 if (isNaN(categories[ catID ]['DOH'])) {
                   categories[ catID ]['DOH'] = 0
                 }  
-                console.log(products[y].nett_sales);
+                // console.log(products[y].nett_sales);
                 // console.log(total_nettsales);
               }
               this.total_nettsales = total_nettsales;
-              console.log(total_nettsales);
+              // console.log(total_nettsales);
               // console.log(total_nettsales);
               // console.log(total_nettsales);
               this.total_oosv = total_oosv;
@@ -528,7 +530,27 @@ const { createApp } = Vue;
               this.products = products; 
           },
           //  slow_moving_item
+          get_csv_test: function(){   // Not yet done
+            let dataDB = this.raw_products_data;
+            let data = []
 
+            for (let i = 0; i < dataDB.length; i++) {
+              let item  = [{
+                  Barcode: dataDB[i].barcode,
+                  Description: dataDB[i].descript,
+                  'Cost Price': dataDB[i].avrgcost,
+              }]
+
+              data.push(item)               
+            } 
+
+            // const workbook = XLSX.utils.book_new();
+            // const worksheet = XLSX.utils.json_to_sheet(data);
+            // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            // XLSX.writeFile(workbook, 'example11.xlsx');
+            console.log("Amo Amo Amo")
+            console.log(data)
+          },
           filter_doh_perproduct: function(filter){
             let products = this.raw_products_data;
             let doh = this.doh_search;
@@ -663,10 +685,7 @@ const { createApp } = Vue;
 
             // calculate soq and remove errors 
             let soqv = (item.items[y].suggested_order / this.toDecimal(item.items[y].avrgcost)).toFixed(0);
-            // if (isNaN(soqv) || isFinite(soqv)) {
-            //   soqv = 0;
-            // }
-
+            
             itemsFormatted.push({
             barcode: "'"+item.items[y].barcode+"",
             descript: "'"+item.items[y].descript+"",
@@ -689,20 +708,14 @@ const { createApp } = Vue;
             days_onhand: this.toDecimal(item.items[y].days_onhand).toFixed(0),
             suggested_order: this.toDecimal(item.items[y].suggested_order).toFixed(0),
             soq: soqv,
-            sr: 0,//this.total_nettsales/item.items[y].nett_sales,
+            sr: 0, 
             cc: 0,
-
           });
-
-          }
-          
-        });
- 
-         var fileTitle = "Stokkafela"; // or 'my-unique-title'
-
+          }          
+        }); 
+         var fileTitle = "Stokkafela";  
         exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
       } 
-
       }
  }).mount("#app");
  

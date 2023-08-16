@@ -17,6 +17,7 @@ use App\Http\Controllers\MaintananceController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TargetsController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\DB; 
 
 /*
@@ -143,7 +144,8 @@ Route::post('/roles/save', [RoleController::class, 'save_role'])->name('save_rol
 
 });
  
- 
+Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');
+
 require __DIR__.'/auth.php';    // Routes for Auth
 
 
