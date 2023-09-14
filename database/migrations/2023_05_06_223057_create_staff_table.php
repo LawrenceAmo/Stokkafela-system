@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('gender')->nullable();
+            // $table->string('gender')->nullable();
             $table->string('descript')->nullable();
             $table->text('address')->nullable(); 
             $table->foreignId('storeID')->constrained('stores', 'storeID')->onDelete('cascade');
