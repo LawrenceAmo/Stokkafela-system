@@ -36,9 +36,7 @@ class RepsController extends Controller
     public function create_rep(Request $request)
     { 
         $request->validate([
-            'first_name' => 'required|string',
-            // 'last_name' => 'required|string',
-            // 'rep_number' => 'required',
+            'first_name' => 'required|string', 
             'destributor' => 'required',             
         ]); 
        
@@ -46,36 +44,34 @@ class RepsController extends Controller
         ->where([ ['first_name', $request->first_name], ['destributorID', $request->destributor] ])
         ->exists();
 
+        // Check if the rep already exist
         if ($rep) {
             return redirect()->back()->with("error", "The Rep ".$request->first_name." with Rep Number: ".$request->rep_number." already exists!!!");
         }
 
         $last_name = $request->last_name;   
         $rep_number = $request->rep_number;  
+        $belong_to_stokkafela = (boolean)$request->belong_to_stokkafela;  
 
-        if (!$last_name) {
-            $last_name = '';
-        }
-        
-        if (!$rep_number) {
-            $rep_number = 0;
-        }
+        if (!$last_name)  { $last_name = ''; }        
+        if (!$rep_number) { $rep_number = 0; }
 
         $store = DB::table('destributors')
         ->where('destributorID', $request->destributor) 
         ->get();
- 
+
         $rep = new Reps();
         $rep->first_name = $request->first_name;
         $rep->last_name = $last_name;
         $rep->rep_number = $rep_number;
+        $rep->belong_to_stokkafela = $belong_to_stokkafela;
         $rep->storeID = (int)$store[0]->storeID;
         $rep->destributorID = (int)$request->destributor;
         $rep->save();
 
         return redirect()->back()->with('success', 'Rep: '.$request->first_name.' with Rep number: '.$request->rep_number.' was created successfully');
     }
-
+ 
     
     public function update_rep($id, $delete = false)
     {
@@ -103,6 +99,7 @@ class RepsController extends Controller
  
         $last_name = $request->last_name;   
         $rep_number = $request->rep_number;  
+        $belong_to_stokkafela = (boolean)$request->belong_to_stokkafela;
 
         if (!$last_name) {
             $last_name = '';
@@ -118,6 +115,7 @@ class RepsController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $last_name,
                 'rep_number' => $rep_number,
+                'belong_to_stokkafela' => $belong_to_stokkafela,
                 'destributorID' => $request->destributor,                 
             ]);
  
@@ -141,3 +139,5 @@ class RepsController extends Controller
         return redirect('/portal/debtors')->with('success', 'Rep was deleted successfully');
     }
 }
+
+ 

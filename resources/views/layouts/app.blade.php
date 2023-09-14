@@ -104,16 +104,11 @@
               href="{{ route("staff")}}"
               class="list-group-item list-group-item-action py-2 ripple"
               ><i class="fa fa-users fa-x2 "></i><span>Staff</span></a
-            > 
-              {{-- </div>
-            </div> --}}
-               
-            {{-- <a
-              href="get_help.html"
+            >
+            <a href="{{ route("spaza_shops")}}"
               class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fas fa-info-circle "></i><span>Find Help</span></a
-            > --}}
-
+              ><i class="fa fa-building fa-x2 "></i><span>Spaza Shops</span></a> 
+              
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple"
               >

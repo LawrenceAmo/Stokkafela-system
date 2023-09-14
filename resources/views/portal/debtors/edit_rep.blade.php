@@ -24,6 +24,13 @@
                   <label for="">Rep Number</label>
                   <input type="number"   class="form-control" name="rep_number" value="{{ $rep->rep_number}}" placeholder="Enter Rep Number" id="products_file" >
                 </div>
+ 
+                 <div class="form-check py-3">
+                   <label class="form-check-label">
+                     <input type="checkbox" class="form-check-input" name="belong_to_stokkafela" id="" value="checkedValue" {{ $rep->belong_to_stokkafela ? 'checked' : '' }}>
+                     Rep Belong to Stokkafela?
+                   </label>
+                 </div>
                 <div class="form-group">
                   <label for="">Select Destributer</label>
                   <select class="form-control" name="destributor" required>

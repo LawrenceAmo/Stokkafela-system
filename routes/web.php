@@ -16,6 +16,7 @@ use App\Http\Controllers\RepsController;
 use App\Http\Controllers\MaintananceController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SpazaShopsController;
 use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\DB; 
@@ -119,10 +120,9 @@ Route::post('/debtors/destributor/save', [DestributorsController::class, 'save_d
 Route::POST('/debtors/rep/create', [RepsController::class, 'create_rep'])->name('create_rep');
 Route::get('/debtors/rep/update/{id}/{delete?}', [RepsController::class, 'update_rep'])->name('update_rep');
 Route::post('/debtors/rep/save', [RepsController::class, 'save_rep'])->name('save_rep');
+Route::post('/debtors/rep/upload', [RepsController::class, 'upload_rep'])->name('upload_rep');
 Route::get('/debtors/rep/delete/{id}', [RepsController::class, 'delete_rep'])->name('delete_rep');
-
-// 
-
+ 
 //  Targets
 // Route::get('/targets', [RepsController::class, 'index'])->name('debtors');
 // Route::get('/sales/create', [SalesController::class, 'create'])->name('create_sales');
@@ -135,13 +135,21 @@ Route::post('/targets/rep/save', [TargetsController::class, 'save_rep_target'])-
 
 
 //  Job Roles and Titles
-Route::post('/roles/create', [RoleController::class, 'create_role'])->name('create_role');
-// Route::get('/product/create', [ProductController::class, 'create'])->name('create_product');
-// .Route::POST('/product/save', [ProductController::class, 'save'])->name('save_product');
+Route::post('/roles/create', [RoleController::class, 'create_role'])->name('create_role'); 
 Route::post('/roles/delete/{id}', [RoleController::class, 'destroy'])->name('delete_role');
 Route::get('/roles/update/{id}', [RoleController::class, 'update_role'])->name('update_role');
 Route::post('/roles/save', [RoleController::class, 'save_role'])->name('save_role');
 
+
+//      Spaza Shops
+Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
+Route::post('/spaza/shops/save', [SpazaShopsController::class, 'save_spaza_shops'])->name('save_spaza_shops');
+Route::post('/spaza/shop/update', [SpazaShopsController::class, 'update_spaza_shop'])->name('update_spaza_shop');
+Route::get('/spaza/shop/{id}', [SpazaShopsController::class, 'spaza_shop_view'])->name('spaza_shop_view');
+Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop_delete'])->name('spaza_shop_delete');
+// Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
+
+// spaza_shop_delete
 });
  
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');

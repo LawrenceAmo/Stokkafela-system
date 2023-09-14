@@ -9,7 +9,7 @@ class PortalController extends Controller
 { 
     public function index(Request $request)
     {  
-        return redirect('/portal/sales/analysis');
+        return redirect('/portal/analysis/stock/0');
 
         // Check user filter, if not set, set filter request values to default
         if($request>isEmpty() || !$request->from || !$request->to ){
@@ -50,17 +50,4 @@ class PortalController extends Controller
 
 
 ///////////////////////////////////////////////////////////////////////////////
-
-            // $salesdata = DB::table('stores')
-            //                 ->leftjoin('products', 'stores.storeID', '=', 'products.storeID')
-            //                 // ->join('sales', 'stores.storeID', '=', 'sales.storeID')
-            //                 ->whereIn('products.storeID', array_column($stores->toArray(), 'storeID'))
-            //                 // ->where( [['sales.from', '>=', $from], ['sales.to', '<=', $to],
-            //                         // ['storeID', '=', $storeID]
-            //                         // ])
-            //                 //  ->orderBy('from', 'asc')
-            //                 // ->limit(30000)
-            //                 ->get();
-                                   
-            // $sales = array_sum( array_column($salesdata->toArray(), 'sales') );
-            // $nettsales = array_sum( array_column($salesdata->toArray(), 'nettSales') );
+ 

@@ -76,20 +76,16 @@ class ProductController extends Controller
 
         return view('portal.products.create') ; //
     }
-
     
     public function save(Request $request)
     {
-
         $request->validate([
             'store' => 'required',                  
             'products_file' => 'required',                  
          ]);
  
-        $data = Excel::toArray(new CSVImport, request()->file('products_file'));       
-
+        $data = Excel::toArray(new CSVImport, request()->file('products_file'));
         $userID =  Auth::id();
-
         $product = new Product();
         $import_product = $product->import_products_csv($data, ['storeID' => $request->store, 'userID' => $userID]);
 

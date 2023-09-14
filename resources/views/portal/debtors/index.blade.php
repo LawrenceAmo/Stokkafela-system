@@ -100,19 +100,25 @@
             <div class="modal-body">
                 <div class="">
                     <div class="form-group">
-                      <label for="">First Name</label>
-                      <input type="text"   class="form-control" name="first_name" placeholder="Enter First Name" id="products_file" >
+                      <label >First Name</label>
+                      <input type="text"   class="form-control" name="first_name" placeholder="Enter First Name"   >
                     </div>
                     <div class="form-group">
-                      <label for="">Last Name</label>
-                      <input type="text"   class="form-control" name="last_name" placeholder="Enter Last Name" id="products_file" >
+                      <label >Last Name</label>
+                      <input type="text"   class="form-control" name="last_name" placeholder="Enter Last Name"   >
                     </div>
                     <div class="form-group">
-                      <label for="">Rep Number</label>
-                      <input type="number"   class="form-control" name="rep_number" placeholder="Enter Rep Number" id="products_file" >
+                      <label >Rep Number</label>
+                      <input type="number"   class="form-control" name="rep_number" placeholder="Enter Rep Number"   >
                     </div>
                     <div class="form-group">
-                      <label for="">Select Destributer</label>
+                      <label >
+                      <input type="checkbox"   class=" " name="belong_to_stokkafela"    >
+                        Belong to Stokkafela 
+                      </label>
+                    </div>
+                    <div class="form-group">
+                      <label >Select Destributer</label>
                       <select class="form-control" name="destributor" required>
                         <option class="" @disabled(true) selected>Select Destributor</option>
                         @foreach ($destributors as $destributor)
@@ -129,6 +135,7 @@
         </form>
     </div>
 </div>
+ 
 
 {{-- ////////////////////////// DESTRIBUTION CENTERS --}}
 <div class="modal fade" id="create_new_destributor" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
