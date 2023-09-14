@@ -71,6 +71,38 @@ class SpazaShopsController extends Controller
         return redirect()->back()->with('success', 'The shop: "'.$request->name.'"  was created successfully!!!');
     }
 
+    public function upload_spaza_shops(Request $request)
+    {
+         $request->validate([
+            'file' => 'required|file',                  
+          ]);
+ 
+          // Check if the shop name already exists in the database
+        // $shop = SpazaShops::where('name', $request->name)->first();
+
+        return redirect()->back()->with('error', 'This feature is not yet available!!!');
+
+        // if ($shop) {
+        //     return redirect()->back()->with('error', 'This shop: "'.$request->name.'"  already exists.!!!');
+        // }
+  
+         // Create the shop
+        $shop = new SpazaShops();
+        $shop->name = $request->name;
+        $shop->repID = $request->rep;
+        $shop->address = $request->address;
+        $shop->lat = $request->lat;
+        $shop->lng = $request->lng;
+ 
+        try {
+            $shop->save();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while creating the shop.');
+        }
+ 
+        return redirect()->back()->with('success', 'The shop: "'.$request->name.'"  was created successfully!!!');
+    }
+
     /**
      * Display the specified resource.
      *

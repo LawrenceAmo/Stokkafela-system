@@ -144,6 +144,7 @@ Route::post('/roles/save', [RoleController::class, 'save_role'])->name('save_rol
 //      Spaza Shops
 Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
 Route::post('/spaza/shops/save', [SpazaShopsController::class, 'save_spaza_shops'])->name('save_spaza_shops');
+Route::post('/spaza/shops/upload', [SpazaShopsController::class, 'upload_spaza_shops'])->name('upload_spaza_shops');
 Route::post('/spaza/shop/update', [SpazaShopsController::class, 'update_spaza_shop'])->name('update_spaza_shop');
 Route::get('/spaza/shop/{id}', [SpazaShopsController::class, 'spaza_shop_view'])->name('spaza_shop_view');
 Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop_delete'])->name('spaza_shop_delete');

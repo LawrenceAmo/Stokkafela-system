@@ -1,7 +1,39 @@
 <x-app-layout>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <main class="m-0  px-4 py-5   w-100" id="app">
+    <main class="m-0  px-4 pb-5 pt-3   w-100" id="app">
       
+        <div class=" card mb-3 border rounded p-3 w-100 table-responsive">
+            <div class="row">
+                <div class="col-3">
+                    <div class="border rounded p-0 p-3 d-flex flex-column justify-content-center">
+                        <p class=" font-weight-bold  m-0 d-flex justify-content-around"><span>Total Shops:</span> <span class=" ">@{{shopsDB.length}}</span></p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
+                        <p class=" font-weight-bold  m-0">
+                            <a  class="btn btn-primary rounded btn-sm  m-0 font-weight-bold" data-toggle="modal" data-target="#create_new_store"> <i class="fa fa-plus" aria-hidden="true"></i> add new Shop</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
+                        <p class=" font-weight-bold  m-0">   
+                            <a  class="btn btn-info rounded btn-sm  m-0 font-weight-bold" data-toggle="modal" data-target="#upload_bulk_store"> <i class="fa fa-cloud"  ></i> Upload bulk Shops</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
+                        <p class=" font-weight-bold  m-0">
+                            <a @click="download_data()"  class="btn btn-success rounded btn-sm m-0 font-weight-bold" ><i class="fa fa-download"></i> download  </a> 
+                        </p>
+                    </div>
+                </div>
+                      
+              
+            </div>
+        </div>
    
     <div class="card border rounded p-3 w-100 table-responsive">
         <div class="row mx-0 animated fadeInDown">
@@ -10,19 +42,15 @@
             </div>
          </div> 
 <div class="font-weight-bold h4 row">
-    <div class="col-md-2 p-0 m-0">
+    <div class="col-md-3 p-0 m-0">
         <span class="  "> Spaza Shops  </span>
     </div>
-    <div class="   col-md-6 p-0 m-0  ">
+    <div class="   col-md-9 p-0 m-0   pr-3">
         <div class="form-group   p-0 m-0">
            <input type="text" class="form-control" v-model="searchtext" v-on:keyup="SearchShop()" placeholder="Search Shop by name">
         </div>
     </div>
-    <div class=" col-md-4 p-0 m-0 d-flex  ">
-    <a  class="btn btn-info rounded btn-sm  " data-toggle="modal" data-target="#create_new_store"> <i class="fa fa-plus" aria-hidden="true"></i> new Shop</a>
-    <a @click="download_data()"  class="btn btn-success rounded btn-sm" ><i class="fa fa-download"></i> download  </a> 
-    </div>
-</div>
+ </div>
  <?php $i = 1 ?>
 <table class="table table-striped w-auto p-0 " >
     <thead class=" m-0 p-0">
@@ -62,8 +90,7 @@
     @endif --}}
  
     </div>
-
-    {{-- /////////////////////   MODAL START  ///////////////////////// --}}
+     {{-- /////////////////////   MODAL START  ///////////////////////// --}}
 
     <div class="modal fade" id="create_new_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -116,6 +143,37 @@
             </form>
         </div>
     </div>
+
+        {{-- /////////////////////   MODAL START Upload  ///////////////////////// --}}
+
+        <div class="modal fade" id="upload_bulk_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form action="{{ route('upload_spaza_shops') }}" enctype="multipart/form-data" method="post" class="modal-content">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload New Spaza Shops </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                              
+                            <div class="form-group">
+                                <label for="">Upload Shops File</label>
+                                <input type="file" class="form-control" name="file" placeholder="Enter Store Address" >
+                                <small class="text-muted">Only upload excel files</small>
+                            </div>                        
+                           
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success btn-sm">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
     <script> 
 
@@ -205,11 +263,14 @@
             let data = []
 
             for (let i = 0; i < dataDB.length; i++) {
+                let rep_name = (dataDB[i].first_name || "") + " " + (dataDB[i].last_name || "");
               let item  = {
-                  Name: dataDB[i].name,
-                  Address: dataDB[i].address,
+                  'Shop Name': dataDB[i].name,
+                  'Rep Name': rep_name,
                   Latitude: dataDB[i].lat,
                   Longitude: dataDB[i].lng,
+                  Address: dataDB[i].address,
+                  
                 }
               data.push(item)               
             } 
