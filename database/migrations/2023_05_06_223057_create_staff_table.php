@@ -16,15 +16,14 @@ return new class extends Migration
         Schema::create('staff', function (Blueprint $table) {
             $table->bigIncrements('staffID')->index();
             $table->string('staff_number')->index();
-            $table->json('id_type')->default('id');
+            $table->boolean('SAID')->default(true);
             $table->string('id_number')->nullable();
             $table->string('gender')->nullable();
-            // $table->string('phone')->nullable();
-            // $table->string('email')->nullable();
-            // $table->string('gender')->nullable();
-            // $table->integer('rep_number')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('gender')->nullable();
             $table->string('descript')->nullable();
-            // $table->text('address')->nullable(); 
+            $table->text('address')->nullable(); 
             $table->foreignId('storeID')->constrained('stores', 'storeID')->onDelete('cascade');
             $table->foreignId('userID')->constrained('users', 'id')->onDelete('cascade');
             $table->foreignId('departmentID')->constrained('departments', 'departmentID')->onDelete('cascade');
