@@ -1,5 +1,16 @@
 <x-app-layout>
+    <style>
+      .tableFixHead          { overflow: auto !important;    }
+      .tableFixHead table{
+        height: 500px !important;
+      }
+      .tableFixHead thead th { position: sticky !important; top: 0 !important; z-index: 1 !important;background-color: rgb(37, 37, 37)  !important; }
+      #map {
+           height: 400px;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
     <main class="m-0  px-4 pb-5 pt-3   w-100" id="app">
       
         <div class=" card mb-3 border rounded p-3 w-100 table-responsive">
@@ -51,10 +62,10 @@
         </div>
     </div>
  </div>
- <?php $i = 1 ?>
-<table class="table table-striped w-auto p-0 " >
-    <thead class=" m-0 p-0">
-        <tr class="border font-weight-bold shadow bg-dark text-light rounded"  >
+ <div class="tableFixHead">
+    <table class="table table-striped table-inverse table-responsive " >
+    <thead class="">
+         <tr class="border font-weight-bold shadow bg-dark text-light rounded"  >
             <th>#</th>
             <th>Photo</th>
             <th>Shop Name</th>
@@ -83,11 +94,17 @@
                       
         </tbody>
     </table>
-    {{-- @if (count($stores) <= 0)
-        <i class="font-weight-bold grey-text h3 text-center">
-            No Data Available...
-        </i>
-    @endif --}}
+ </div>
+ {{-- //////////////////////////////////////////////////////// --}}
+ <hr>
+ <div class="">
+    <div class="border rounded p-3">
+
+        <div class="" id="map">
+
+        </div>
+    </div>
+ </div>
  
     </div>
      {{-- /////////////////////   MODAL START  ///////////////////////// --}}
@@ -174,7 +191,14 @@
                 </form>
             </div>
         </div>
+
+        
     </main>
+
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7uUbl0Ol0kXBam07UPsjThrxL18qoVzA&callback=initMap&v=weekly"
+    defer ></script>
+  
     <script> 
 
      
@@ -192,12 +216,11 @@
           }          
         },
        async created() {
-        const shops = @json($shops);
-        this.shops = [ ...shops ]
-        this.shopsDB = [ ...shops ]
-        console.log(shops) 
-  
-       
+            const shops = @json($shops);
+            this.shops = [ ...shops ]
+            this.shopsDB = [ ...shops ]
+            console.log(shops)       
+            this.map();
         },
         methods:
         {
@@ -299,31 +322,81 @@
                       }       
                       return 1; 
                   }, 
-        download_data: function(){   // Not yet done
-            let dataDB = this.shopsDB;
-            let data = []
+            download_data: function(){   // Not yet done
+                let dataDB = this.shopsDB;
+                let data = []
 
-            for (let i = 0; i < dataDB.length; i++) {
-                let rep_name = (dataDB[i].first_name || "") + " " + (dataDB[i].last_name || "");
-              let item  = {
-                  'Shop Name': dataDB[i].name,
-                  'Rep Name': rep_name,
-                  Latitude: dataDB[i].lat,
-                  Longitude: dataDB[i].lng,
-                  Address: dataDB[i].address,
-                  
-                }
-              data.push(item)               
-            } 
+                for (let i = 0; i < dataDB.length; i++) {
+                    let rep_name = (dataDB[i].first_name || "") + " " + (dataDB[i].last_name || "");
+                let item  = {
+                    'Shop Name': dataDB[i].name,
+                    'Rep Name': rep_name,
+                    Latitude: dataDB[i].lat,
+                    Longitude: dataDB[i].lng,
+                    Address: dataDB[i].address,
+                    
+                    }
+                data.push(item)               
+                } 
 
-            const workbook = XLSX.utils.book_new();
-            const worksheet = XLSX.utils.json_to_sheet(data);
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Spaza Shops DataBase');
-            XLSX.writeFile(workbook, 'SpazaShopsDB.xlsx');
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.json_to_sheet(data);
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Spaza Shops DataBase');
+                XLSX.writeFile(workbook, 'SpazaShopsDB.xlsx');
              console.log(data)
           },     
+          map: function(){
+            function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 11,
+            center: { lng: 28.112411, lat: -25.981459 },
+            mapTypeId: "terrain",
+            });
+
+            let coord = [ ...@json($shops) ];  
+            
+            for (let i = 0; i < coord.length; i++) {
+
+                let mt = { lng: parseFloat(coord[i]['lng']), lat: parseFloat(coord[i]['lat']) };  //  
+ 
+                console.log(coord[i])
+                    const mtm = new google.maps.Marker({
+                    position: mt,
+                    map: map,
+                    title: coord[i]['name']
+                    });
+                   
+            }
+            
+            // Define the LatLng coordinates for the polygon's path.
+            const triangleCoords = [
+            { lng: 28.253860, lat: -26.039158 },   //tembisa
+            { lng: 28.233604, lat: -25.922497 },   // olif 
+            { lng: 28.103484, lat: -25.890379 },   // oliv
+            { lng: 27.991027, lat: -25.928719 },   //diepsloot   
+            { lng: 27.913627, lat: -26.025276 },   //cosmo
+            { lng: 27.999801, lat: -26.033297 },   // 4way
+            { lng: 28.089065, lat: -26.051496 },   // woodmed
+            { lng: 28.253860, lat: -26.039158 },   // tembisa
+            ]; 
+            // Construct the polygon.
+            const bermudaTriangle = new google.maps.Polygon({
+            paths: triangleCoords,
+            strokeColor: "#642c94",
+            strokeOpacity: 0.01,
+            strokeWeight: 2,
+            fillColor: "#dd99b0",
+            fillOpacity: 0.10,
+            });
+            bermudaTriangle.setMap(map);
+        }
+        window.initMap = initMap;
+          }
         }
    }).mount("#app");
  
+//    /////////////////////////////////////////////////////////////////
+
+
     </script>
 </x-app-layout>
