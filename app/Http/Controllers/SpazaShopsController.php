@@ -125,7 +125,11 @@ class SpazaShopsController extends Controller
  
         //   convert excel to array
           $data = Excel::toArray(new CSVImport, request()->file('file')); 
-          $data = $data[0];      
+          $data = $data[0];   
+          
+          if (!strstr( $data[0][0], 'NAME') || !strstr( $data[0][1], 'REP') || !strstr( $data[0][2], 'LOCATION')) {
+            return redirect()->back()->with('error', 'This Excel contains incorrect columns correct format(NAME 	REP	LOCATION)!!!');
+          }
 
         //   manipulate and clean data
         $num_of_successful_shops_created = 0;  $total_shops = 0;
