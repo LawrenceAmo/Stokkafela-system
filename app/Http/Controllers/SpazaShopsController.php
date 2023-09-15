@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CSVImport;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class SpazaShopsController extends Controller
 {
@@ -45,12 +48,14 @@ class SpazaShopsController extends Controller
             'address' => 'required',                  
          ]);
  
-          // Check if the shop name already exists in the database
-        // $shop = SpazaShops::where('name', $request->name)->first();
+          // Check if the shop already exists in the database
+        $shop = SpazaShops::where('name', $request->name)
+                            ->where('address', $request->address)
+                            ->first();
 
-        // if ($shop) {
-        //     return redirect()->back()->with('error', 'This shop: "'.$request->name.'"  already exists.!!!');
-        // }
+        if ($shop) {
+            return redirect()->back()->with('error', 'This shop: "'.$request->name.'" with that address already exists.!!!');
+        }
  
         // function that create a uniq name and store the img to storage
         $image_name = $this->upload_shop_image( $request->photo );
@@ -75,32 +80,32 @@ class SpazaShopsController extends Controller
 
     public function convertCoordinatesToGoogleMapsURL($coordinates) {
         // Extract latitude and longitude from the input string
-    preg_match('/(\d+)°(\d+)\'([\d\.]+)"(\w+)\s+(\d+)°(\d+)\'([\d\.]+)"(\w+)/', $coordinates, $matches);
+        preg_match('/(\d+)°(\d+)\'([\d\.]+)"(\w+)\s+(\d+)°(\d+)\'([\d\.]+)"(\w+)/', $coordinates, $matches);
 
-        if (count($matches) < 9) {
-            return null; // Invalid input format
-        }
-        // Reformat latitude and longitude
-        $latitude_degrees = $matches[1];
-        $latitude_minutes = $matches[2];
-        $latitude_seconds = $matches[3];
-        $latitude_direction = $matches[4];
+            if (count($matches) < 9) {
+                return null; // Invalid input format
+            }
+            // Reformat latitude and longitude
+            $latitude_degrees = $matches[1];
+            $latitude_minutes = $matches[2];
+            $latitude_seconds = $matches[3];
+            $latitude_direction = $matches[4];
 
-        $longitude_degrees = $matches[5];
-        $longitude_minutes = $matches[6];
-        $longitude_seconds = $matches[7];
-        $longitude_direction = $matches[8];
+            $longitude_degrees = $matches[5];
+            $longitude_minutes = $matches[6];
+            $longitude_seconds = $matches[7];
+            $longitude_direction = $matches[8];
 
-        $latitude = "{$latitude_degrees}°{$latitude_minutes}'{$latitude_seconds}\"{$latitude_direction}";
-        $longitude = "{$longitude_degrees}°{$longitude_minutes}'{$longitude_seconds}\"{$longitude_direction}";
+            $latitude = "{$latitude_degrees}°{$latitude_minutes}'{$latitude_seconds}\"{$latitude_direction}";
+            $longitude = "{$longitude_degrees}°{$longitude_minutes}'{$longitude_seconds}\"{$longitude_direction}";
 
-        // Construct the Google Maps URL
-        $url = "https://www.google.com/maps/place/{$latitude}+{$longitude}/@{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds},{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds},17z/data=!3m1!4b1!4m4!3m3!8m2!3d{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds}!4d{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds}?hl=en&entry=ttu";
+            // Construct the Google Maps URL
+            $url = "https://www.google.com/maps/place/{$latitude}+{$longitude}/@{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds},{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds},17z/data=!3m1!4b1!4m4!3m3!8m2!3d{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds}!4d{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds}?hl=en&entry=ttu";
 
-        $lat = '-'.$latitude_degrees.'.'.$latitude_minutes.''.$latitude_seconds;
-        $lng = $longitude_degrees.'.'.$longitude_minutes.''.$longitude_seconds;
+            $lat = '-'.$latitude_degrees.'.'.$latitude_minutes.''.$latitude_seconds;
+            $lng = $longitude_degrees.'.'.$longitude_minutes.''.$longitude_seconds;
 
-        return [ 'url' => $url, 'lat' => $lat, 'lng' => $lng];
+            return [ 'url' => $url, 'lat' => $lat, 'lng' => $lng];
     }
 
     public function upload_spaza_shops(Request $request)
@@ -108,13 +113,27 @@ class SpazaShopsController extends Controller
          $request->validate([
             'file' => 'required|file',                  
           ]);
+
+          $userID = Auth::id();
+          $user = User::where('id', '=', $userID )->get();
+  
+          if (count($user) <= 0) {
+              if (!str_contains($user[0]->email, 'amo')) {
+                return redirect()->back()->with('error', 'You don\'t have access to this function!!!');
+              }
+            }
  
         //   convert excel to array
           $data = Excel::toArray(new CSVImport, request()->file('file')); 
           $data = $data[0];      
 
         //   manipulate and clean data
-          for ($i=1; $i < count($data) ; $i++) { 
+        $num_of_successful_shops_created = 0;  $total_shops = 0;
+          for ($i=1; $i < count($data) ; $i++) {
+            $total_shops++; 
+
+            ini_set('max_execution_time', 300);  // Set to 5 minutes (300 seconds) or as needed
+            ini_set('memory_limit', '256M');     // Set to 256MB or as needed
 
             // rename the keys to human readable format
             $data[$i]['shop'] = $data[$i][0];       unset($data[$i][0]);
@@ -146,33 +165,45 @@ class SpazaShopsController extends Controller
                 $data[$i]['lat'] = $matches1[1];
                 $data[$i]['lng'] = $matches1[2];
             }
+ 
+            $shop = SpazaShops::where('name', $data[$i]['shop'])
+                                ->where('address',  $data[$i]['address'])
+                                ->first();
+
+            // if shop with the same name and address exist then skip/continue
+            if ($shop) {  continue;   }
+
+            $repName = explode(' ', $data[$i]['rep']); // get the first name of the rep
+
+            $rep = Reps::where('first_name', $repName[0])
+                            ->where('belong_to_stokkafela', true)
+                            ->first();
+
+            // check if the current shop from DB exist
+            if ($rep) {
+                $data[$i]['repID'] =  $rep->repID;
+
+                // Create the shop
+                $shop = new SpazaShops();
+                $shop->name =  $data[$i]['shop'];
+                $shop->repID =  $data[$i]['repID'];
+                $shop->address =  $data[$i]['address'];
+                $shop->lat =  $data[$i]['lat'];
+                $shop->lng =  $data[$i]['lng']; // comment
+                $shop->comment = 1; // 
+
+                try {
+                    $shop->save();
+                    $num_of_successful_shops_created++;
+                } catch (\Exception $e) {
+                    // return redirect()->back()->with('error', 'An error occurred while creating the shop.');
+                }
+
+            }
+      
           }
-          // Check if the shop name already exists in the database
-        // $shop = SpazaShops::where('name', $request->name)->first();
 
-        return $data;
-        return $data[10][2];
-        return redirect()->back()->with('error', 'This feature is not yet available!!!');
-
-        // if ($shop) {
-        //     return redirect()->back()->with('error', 'This shop: "'.$request->name.'"  already exists.!!!');
-        // }
-  
-         // Create the shop
-        $shop = new SpazaShops();
-        $shop->name = $request->name;
-        $shop->repID = $request->rep;
-        $shop->address = $request->address;
-        $shop->lat = $request->lat;
-        $shop->lng = $request->lng;
- 
-        try {
-            $shop->save();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while creating the shop.');
-        }
- 
-        return redirect()->back()->with('success', 'The shop: "'.$request->name.'"  was created successfully!!!');
+        return redirect()->back()->with('success', $num_of_successful_shops_created.' of '.$total_shops.' shops were created successfully!!!');
     }
 
     /**
