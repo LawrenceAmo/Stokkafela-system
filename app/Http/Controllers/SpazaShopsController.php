@@ -46,11 +46,11 @@ class SpazaShopsController extends Controller
          ]);
  
           // Check if the shop name already exists in the database
-        $shop = SpazaShops::where('name', $request->name)->first();
+        // $shop = SpazaShops::where('name', $request->name)->first();
 
-        if ($shop) {
-            return redirect()->back()->with('error', 'This shop: "'.$request->name.'"  already exists.!!!');
-        }
+        // if ($shop) {
+        //     return redirect()->back()->with('error', 'This shop: "'.$request->name.'"  already exists.!!!');
+        // }
  
         // function that create a uniq name and store the img to storage
         $image_name = $this->upload_shop_image( $request->photo );
