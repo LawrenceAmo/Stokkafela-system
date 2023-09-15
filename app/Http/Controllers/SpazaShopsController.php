@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\SpazaShops;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CSVImport;
 
 class SpazaShopsController extends Controller
 {
@@ -71,15 +73,85 @@ class SpazaShopsController extends Controller
         return redirect()->back()->with('success', 'The shop: "'.$request->name.'"  was created successfully!!!');
     }
 
+    public function convertCoordinatesToGoogleMapsURL($coordinates) {
+        // Extract latitude and longitude from the input string
+    preg_match('/(\d+)°(\d+)\'([\d\.]+)"(\w+)\s+(\d+)°(\d+)\'([\d\.]+)"(\w+)/', $coordinates, $matches);
+
+        if (count($matches) < 9) {
+            return null; // Invalid input format
+        }
+        // Reformat latitude and longitude
+        $latitude_degrees = $matches[1];
+        $latitude_minutes = $matches[2];
+        $latitude_seconds = $matches[3];
+        $latitude_direction = $matches[4];
+
+        $longitude_degrees = $matches[5];
+        $longitude_minutes = $matches[6];
+        $longitude_seconds = $matches[7];
+        $longitude_direction = $matches[8];
+
+        $latitude = "{$latitude_degrees}°{$latitude_minutes}'{$latitude_seconds}\"{$latitude_direction}";
+        $longitude = "{$longitude_degrees}°{$longitude_minutes}'{$longitude_seconds}\"{$longitude_direction}";
+
+        // Construct the Google Maps URL
+        $url = "https://www.google.com/maps/place/{$latitude}+{$longitude}/@{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds},{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds},17z/data=!3m1!4b1!4m4!3m3!8m2!3d{$latitude_degrees}.{$latitude_minutes}{$latitude_seconds}!4d{$longitude_degrees}.{$longitude_minutes}{$longitude_seconds}?hl=en&entry=ttu";
+
+        $lat = '-'.$latitude_degrees.'.'.$latitude_minutes.''.$latitude_seconds;
+        $lng = $longitude_degrees.'.'.$longitude_minutes.''.$longitude_seconds;
+
+        return [ 'url' => $url, 'lat' => $lat, 'lng' => $lng];
+    }
+
     public function upload_spaza_shops(Request $request)
     {
          $request->validate([
             'file' => 'required|file',                  
           ]);
  
+        //   convert excel to array
+          $data = Excel::toArray(new CSVImport, request()->file('file')); 
+          $data = $data[0];      
+
+        //   manipulate and clean data
+          for ($i=1; $i < count($data) ; $i++) { 
+
+            // rename the keys to human readable format
+            $data[$i]['shop'] = $data[$i][0];       unset($data[$i][0]);
+            $data[$i]['rep'] = $data[$i][1];        unset($data[$i][1]);
+            $data[$i]['address'] = $data[$i][2];    unset($data[$i][2]);
+
+            $url = $data[$i]['address'];
+            // get coordinates
+            preg_match('/q=(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches);    // for short url e.g ....q=....
+            preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+),/', $url, $matches1);   // for long url e.g ....@....
+
+            //   check if the url have  - Google Maps in it then extract data I want (reformated url, lat, lng)
+            if (strstr($data[$i]['address'], '- Google Maps')) {
+               $coordinates = str_replace('- Google Maps','', $data[$i]['address']);  // get only coordinates             
+               $data[$i]['address'] = $this->convertCoordinatesToGoogleMapsURL( $coordinates )['url'];
+              
+               $data[$i]['lat'] = $this->convertCoordinatesToGoogleMapsURL( $coordinates )['lat'];
+               $data[$i]['lng'] = $this->convertCoordinatesToGoogleMapsURL( $coordinates )['lng'];
+
+            //    get coordinates for short urls
+            }elseif(count($matches) === 3){
+
+                $data[$i]['lat'] = $matches[1];
+                $data[$i]['lng'] = $matches[2];
+
+            //    get coordinates for long urls
+            }elseif(count($matches1) === 3){
+
+                $data[$i]['lat'] = $matches1[1];
+                $data[$i]['lng'] = $matches1[2];
+            }
+          }
           // Check if the shop name already exists in the database
         // $shop = SpazaShops::where('name', $request->name)->first();
 
+        return $data;
+        return $data[10][2];
         return redirect()->back()->with('error', 'This feature is not yet available!!!');
 
         // if ($shop) {

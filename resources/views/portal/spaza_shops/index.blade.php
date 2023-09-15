@@ -203,15 +203,56 @@
         {
             handleAddressChange: function(){
                 let googleMapsUrl = this.address
-                let regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
-
+                let regexLong = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+                let regexShort = /q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+ 
                 // Extract coordinates using the regular expression
-                let matches = googleMapsUrl.match(regex);                
-                if (matches && matches.length === 3) {
-                    this.lat = parseFloat(matches[1]);
-                    this.lng = parseFloat(matches[2]);  
+                let longURL = googleMapsUrl.match(regexLong);                
+                let shortURL = googleMapsUrl.match(regexShort);
+                
+                if (googleMapsUrl.includes("- Google Maps")) {
+                    googleMapsUrl.replace(/- Google Maps/g, '')
+                 
+                    this.address = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['url'];
+                    this.lng = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['lng'];
+                    this.lat = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['lat'];
+
+                }else if (longURL && longURL.length === 3) {
+                    this.lat = parseFloat(longURL[1]);
+                    this.lng = parseFloat(longURL[2]);  
+                }else if(shortURL && shortURL.length === 3){
+                    this.lat = parseFloat(shortURL[1]);
+                    this.lng = parseFloat(shortURL[2]); 
                 }
             },   
+             convertCoordinatesToGoogleMapsURL: function(coordinates) {
+                const regex = /(\d+)°(\d+)'([\d.]+)"(\w+)\s+(\d+)°(\d+)'([\d.]+)"(\w+)/;
+                const matches = coordinates.match(regex);
+
+                if (!matches || matches.length < 9) {
+                    return null; // Invalid input format
+                }
+
+                const latitude_degrees = matches[1];
+                const latitude_minutes = matches[2];
+                const latitude_seconds = matches[3];
+                const latitude_direction = matches[4];
+
+                const longitude_degrees = matches[5];
+                const longitude_minutes = matches[6];
+                const longitude_seconds = matches[7];
+                const longitude_direction = matches[8];
+
+                const latitude = `${latitude_degrees}°${latitude_minutes}'${latitude_seconds}"${latitude_direction}`;
+                const longitude = `${longitude_degrees}°${longitude_minutes}'${longitude_seconds}"${longitude_direction}`;
+
+                const url = `https://www.google.com/maps/place/${latitude}+${longitude}/@${latitude_degrees}.${latitude_minutes}${latitude_seconds},${longitude_degrees}.${longitude_minutes}${longitude_seconds},17z/data=!3m1!4b1!4m4!3m3!8m2!3d${latitude_degrees}.${latitude_minutes}${latitude_seconds}!4d${longitude_degrees}.${longitude_minutes}${longitude_seconds}?hl=en&entry=ttu`;
+
+                const lat = `-${latitude_degrees}.${latitude_minutes}${latitude_seconds}`;
+                const lng = `${longitude_degrees}.${longitude_minutes}${longitude_seconds}`;
+
+                return { url, lat, lng };
+            },
             shopImg: function (val) {
                 return `{{ asset('storage/spazashops/${val}')}}`;
             },    
