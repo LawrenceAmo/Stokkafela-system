@@ -14,7 +14,7 @@
 
        table  { border-collapse: collapse; width: 100% !important; }
       th, td { padding: 8px 16px; }
- 
+  
   </style>
    <main class="m-0  px-4 pb-5 pt-3 w-100" id="app" v-cloak>
   
@@ -150,8 +150,8 @@
               </tr>
               <tr v-for="item,x in product.items"  >                  
  
-                <td> @{{x+1}}</td>
-                <td> @{{item.barcode}}</td>
+                <td>@{{x+1}}</td>
+                <td>@{{item.barcode}}</td>
                 <td>@{{item.descript}}</td>
                 <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
                 <td>R@{{toDecimal(item.sellpinc1).toFixed(2)}}</td>
@@ -164,16 +164,16 @@
 
                 <td>R@{{ toDecimal(item.stock_value.toFixed(2)) }}</td>
                  
-                  <th >R@{{item.first_month }}</th>
-                  <th >R@{{item.second_month }}</th>
-                  <th >R@{{item.last_month }}</th>
+                <th >R@{{item.first_month }}</th>
+                <th >R@{{item.second_month }}</th>
+                <th >R@{{item.last_month }}</th>
                   
                  <td>R@{{toDecimal(item.nett_sales.toFixed(2))}}</td>
 
                 <td>R@{{toDecimal(item.avr_rr.toFixed(2))}}</td>
                 <td class="font-weight-bold">@{{item.days_onhand.toFixed(0) }} days</td>
                 <td>R@{{ item.suggested_order.toFixed(2) }}</td> 
-                <td>@{{ (item.suggested_order / toDecimal(item.avrgcost)).toFixed(0)  }} Units</td>
+                <td>@{{ (!isNaN(((item.suggested_order / toDecimal(item.avrgcost)).toFixed(0))) ? ((item.suggested_order / toDecimal(item.avrgcost)).toFixed(0)) : 0) }} Units</td>
 
                 {{-- <td>@{{ ( total_nettsales / item.nett_sales).toFixed(1) }}%</td> 
                 <td>@{{ ( (total_nettsales / item.nett_sales) * 100).toFixed(1) }}%</td>  --}}
@@ -379,24 +379,21 @@ const { createApp } = Vue;
                   categories[ catID ]['suggested_order'] = 0;  
                   categories[ catID ]['DOH'] = 0;  
                 }
-                              
+
                 total_nettsales +=  this.toDecimal(products[y].nett_sales);
                 categories[ catID ]['nett_sales'] += this.toDecimal(products[y].nett_sales);  
                 categories[ catID ]['avr_rr'] = this.toDecimal(categories[ catID ]['nett_sales']) / 3;  
                 categories[ catID ]['tot_SV'] += Number(products[y].onhand) * this.toDecimal(products[y].avrgcost);
                 categories[ catID ]['DOH'] = ( this.toDecimal(categories[ catID ]['tot_SV']) / this.toDecimal(categories[ catID ]['avr_rr'])) * 25; //Math.max( ...categories[ catID ]['DOHs'] )  
                 categories[ catID ]['suggested_order'] = (21 - categories[ catID ]['DOH'] ) * (categories[ catID ]['avr_rr'] / 21);  
+                // categories[ catID ]['suggested_order'] = (21 - categories[ catID ]['DOH'] ) * (categories[ catID ]['avr_rr'] / 21);  
                 categories[ catID ]['items'].push(products[y]);
 
                 if (isNaN(categories[ catID ]['DOH'])) {
                   categories[ catID ]['DOH'] = 0
-                }  
-                // console.log(products[y].nett_sales);
-                // console.log(total_nettsales);
+                } 
               }
-              this.total_nettsales = total_nettsales;
-              // console.log(total_nettsales);
-              // console.log(total_nettsales);
+              this.total_nettsales = total_nettsales; 
               // console.log(total_nettsales);
               this.total_oosv = total_oosv;
               this.total_sohv = total_sohv;
@@ -531,25 +528,85 @@ const { createApp } = Vue;
           },
           //  slow_moving_item
           get_csv_test: function(){   // Not yet done
-            let dataDB = this.raw_products_data;
+            let dataDB = this.products;
             let data = []
 
-            for (let i = 0; i < dataDB.length; i++) {
-              let item  = [{
-                  Barcode: dataDB[i].barcode,
-                  Description: dataDB[i].descript,
-                  'Cost Price': dataDB[i].avrgcost,
-              }]
+          let first_month = document.getElementById("first_month").value
+          let second_month = document.getElementById("second_month").value
+          let last_month = document.getElementById("last_month").value
 
-              data.push(item)               
-            } 
+          function getMonth(m) {
+              var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              var monthIndex = parseInt(m) - 1; // Subtract 1 to match the month index
+              return  monthNames[monthIndex];
+            }
 
-            // const workbook = XLSX.utils.book_new();
-            // const worksheet = XLSX.utils.json_to_sheet(data);
-            // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+          first_month = getMonth(first_month);
+          second_month = getMonth(second_month);
+          last_month = getMonth(last_month);
+   
+             for (let x = 0; x < dataDB.length; x++) {
+
+              let item = dataDB[x].items;
+              
+              for (let i = 0; i < item.length; i++) {
+                  let product  = {}
+                  product['Barcode'] = item[i].barcode
+                  product['Description'] = item[i].descript
+                     product['Cost Price'] = parseFloat(item[i].avrgcost).toFixed(2)
+                     product['Selling Price'] = parseFloat(item[i].sellpinc1).toFixed(2)
+                     product['OnHand'] =  item[i].onhand
+                     product['Physical Count'] =  0
+                     product['Variance'] =  { f: 'F2-E2', t: 'n' } 
+                     product['Physical Count Value'] =  0
+                     product['Stock Value Variance'] =  parseFloat((0 - item[i].stock_value)).toFixed(2)    
+                     product['Stock Value Variance'] =  (0 - item[i].stock_value)    
+                     product['Stock Value'] = parseFloat(item[i].stock_value).toFixed(2)
+                     product[first_month] = item[i].first_month
+                     product[second_month] = parseFloat(item[i].second_month).toFixed(2)
+                     product[last_month] = parseFloat(item[i].last_month).toFixed(2)
+                     product['Total 3 Month Sales'] = parseFloat(item[i].nett_sales).toFixed(2)
+                     product['Average Run Rate'] = parseFloat(item[i].avr_rr).toFixed(2)
+                     product['Days onHand'] =  item[i].days_onhand
+                     product['Suggested Order Value'] = parseFloat(item[i].suggested_order).toFixed(2)
+                     product['Suggested Order Qty'] = !isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
+                     product['Sku Rank %'] = { f: 'N2/N$2', t: 'e' }                        
+                     product['Cumulative contribution'] = 0
+                // soq: soqv,
+                // sr: 0, 
+                // cc: 0,
+                  // };
+                  
+              // product[first_month] = product['first_month'];
+              // product[second_month] = product['second_month'];
+              // product[last_month] = product['last_month'];
+              // delete product['first_month'];
+              // delete product['second_month'];
+              // delete product['last_month'];
+                  data.push(product)               
+
+                }
+
+
+            }
+   
+            let workbook = XLSX.utils.book_new();
+            let worksheet = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'DOH');
             // XLSX.writeFile(workbook, 'example11.xlsx');
-            console.log("Amo Amo Amo")
+
+            try {
+                XLSX.writeFile(workbook, 'example11.xlsx');
+                console.log('File successfully written.');
+            } catch (error) {
+                console.error('Error writing the file:', error);
+            }
+
+
+            console.log(dataDB)
             console.log(data)
+            // console.log(workbook)
+            // console.log(worksheet)
           },
           filter_doh_perproduct: function(filter){
             let products = this.raw_products_data;
