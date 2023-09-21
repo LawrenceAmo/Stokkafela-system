@@ -297,6 +297,7 @@ const { createApp } = Vue;
           total_oosv: 0,
           last_months: [],
           total_nettsales: 0,
+          store_name: '',
         }          
       },
      async created() { 
@@ -333,6 +334,8 @@ const { createApp } = Vue;
           this.products = [ ...Object.values(categories) ]  
           this.productsDB = [ ...Object.values(categories) ]  
           // console.log(this.productsDB);
+
+          this.store_name = '{{$selected_store->name}}';
 
       },
       methods:
@@ -541,6 +544,7 @@ const { createApp } = Vue;
               return  monthNames[monthIndex];
             }
 
+          let last_month_num = parseInt(last_month);
           first_month = getMonth(first_month);
           second_month = getMonth(second_month);
           last_month = getMonth(last_month);
@@ -548,55 +552,61 @@ const { createApp } = Vue;
              for (let x = 0; x < dataDB.length; x++) {
 
               let item = dataDB[x].items;
-              
               for (let i = 0; i < item.length; i++) {
                   let product  = {}
                   product['Barcode'] = item[i].barcode
                   product['Description'] = item[i].descript
-                     product['Cost Price'] = parseFloat(item[i].avrgcost).toFixed(2)
-                     product['Selling Price'] = parseFloat(item[i].sellpinc1).toFixed(2)
-                     product['OnHand'] =  item[i].onhand
-                     product['Physical Count'] =  0
-                     product['Variance'] =  { f: 'F2-E2', t: 'n' } 
-                     product['Physical Count Value'] =  0
-                     product['Stock Value Variance'] =  parseFloat((0 - item[i].stock_value)).toFixed(2)    
-                     product['Stock Value Variance'] =  (0 - item[i].stock_value)    
-                     product['Stock Value'] = parseFloat(item[i].stock_value).toFixed(2)
-                     product[first_month] = item[i].first_month
-                     product[second_month] = parseFloat(item[i].second_month).toFixed(2)
-                     product[last_month] = parseFloat(item[i].last_month).toFixed(2)
-                     product['Total 3 Month Sales'] = parseFloat(item[i].nett_sales).toFixed(2)
-                     product['Average Run Rate'] = parseFloat(item[i].avr_rr).toFixed(2)
-                     product['Days onHand'] =  item[i].days_onhand
-                     product['Suggested Order Value'] = parseFloat(item[i].suggested_order).toFixed(2)
-                     product['Suggested Order Qty'] = !isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
-                     product['Sku Rank %'] = { f: 'N2/N$2', t: 'e' }                        
-                     product['Cumulative contribution'] = 0
-                // soq: soqv,
-                // sr: 0, 
-                // cc: 0,
-                  // };
-                  
-              // product[first_month] = product['first_month'];
-              // product[second_month] = product['second_month'];
-              // product[last_month] = product['last_month'];
-              // delete product['first_month'];
-              // delete product['second_month'];
-              // delete product['last_month'];
+                  product['Cost Price'] = { f: 'ROUND('+item[i].avrgcost+',2)' , t: 'n' } 
+                  product['Selling Price'] =  { f: 'ROUND('+item[i].sellpinc1+',2)' , t: 'n' }  
+                  product['OnHand'] =  item[i].onhand
+                  product['Physical Count'] =  0
+                  product['Variance'] =  { f: 'F2-E2', t: 'n' } 
+                  product['Physical Count Value'] =  { f: 'F2*C2', t: 'n' }
+                  product['Stock Value Variance'] =  { f: 'G2*C2', t: 'n' }             //parseFloat((0 - item[i].stock_value)).toFixed(2)    
+                  product['Stock Value'] = { f: 'E2*C2', t: 'n' }                       //parseFloat(item[i].stock_value).toFixed(2)
+                  product[first_month] =  { f: 'ROUND('+item[i].first_month+',2)' , t: 'n' }  
+                  product[second_month] =  { f: 'ROUND('+item[i].second_month+',2)' , t: 'n' }  
+                  product[last_month] =  { f: 'ROUND('+item[i].last_month+',2)' , t: 'n' } 
+                  product['Total 3 Month Sales'] = { f: 'K2+L2+M2', t: 'n' } 
+                  product['Average Run Rate'] = { f: 'IFERROR(ROUND((N2/3),2),0)', t: 'n' }                     //parseFloat(item[i].avr_rr).toFixed(2)
+                  product['Days onHand'] =   { f: 'IFERROR(ROUND(((J2/O2)*30.5),0),0)', t: 'n' }                  //item[i].days_onhand 
+                  product['Suggested Order Value'] = { f: 'IFERROR(ROUND((21-P2)*(O2/21),2),0)', t: 'n' }          //parseFloat(item[i].suggested_order).toFixed(2)
+                  product['Suggested Order Qty'] = { f: 'IFERROR(ROUND((Q2/C2),0),0)', t: 'n' }         //!isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
+                  product['Sku Rank %'] = { f: 'IFERROR(ROUND((N3/N$2),2),0)', t: 'e' }  
+                  product['Cumulative contribution'] = { f: 'S3+T2', t: 'e' }  
+
+                  // worksheet['D1'].t = 'n';
                   data.push(product)               
 
                 }
-
-
+ 
             }
    
             let workbook = XLSX.utils.book_new();
-            let worksheet = XLSX.utils.json_to_sheet(data);
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'DOH');
-            // XLSX.writeFile(workbook, 'example11.xlsx');
+            let worksheet = XLSX.utils.json_to_sheet(data);   
+            
+            
 
-            try {
-                XLSX.writeFile(workbook, 'example11.xlsx');
+            // Set the column width for columns A and B
+            const columnWidths = { A: 15, B: 40 }; // Adjust widths as needed
+            worksheet['!cols'] = [];
+            Object.keys(columnWidths).forEach(col => {
+              worksheet['!cols'].push({ wch: columnWidths[col] });
+            });
+
+            // Apply bold and text wrapping for the entire row (columns A to T)
+             for (let col = 0; col < 21; col++) {
+              const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });  // Cell reference for the cell in the row
+              worksheet[cellRef] = worksheet[cellRef] || { s: {} };
+              worksheet[cellRef].s =  { font: { bold: true }, alignment: { wrapText: true } };
+            }
+ 
+            let worksheet2 = XLSX.utils.json_to_sheet([]);
+            XLSX.utils.book_append_sheet(workbook, worksheet, ' {{date("j")}} '+getMonth(last_month_num+1)+' DOH');
+            XLSX.utils.book_append_sheet(workbook, worksheet2, 'Guide');
+  
+             try {
+                XLSX.writeFile(workbook, this.store_name+' {{date("j")}} '+getMonth(last_month_num+1)+' DOH .xlsx');
                 console.log('File successfully written.');
             } catch (error) {
                 console.error('Error writing the file:', error);
@@ -606,7 +616,6 @@ const { createApp } = Vue;
             console.log(dataDB)
             console.log(data)
             // console.log(workbook)
-            // console.log(worksheet)
           },
           filter_doh_perproduct: function(filter){
             let products = this.raw_products_data;

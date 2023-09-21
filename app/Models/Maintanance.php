@@ -184,8 +184,7 @@ class Maintanance extends Model
                     $products[$i]->days_onhand = 0;
                     $products[$i]->suggested_order = 0;
                     $products[$i]->soq = 0;
-               }  
- 
+               } 
             }
  
             return $products ;
