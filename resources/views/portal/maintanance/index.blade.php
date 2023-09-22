@@ -1,6 +1,12 @@
 <x-app-layout>
 
 <main class="m-0  px-4 py-5   w-100" id="app">
+    <div class="row p-3">
+        <div class="col-12 border rounded shadow">
+            <div v-if="loading"><p class="text-center h5">Please wait!!!...</p></div>
+            <div class="text-center" v-else><span class="font-weight-bold">@{{jobs}}</span> tasks on queue. You can download DOH once there are no tasks on queue</div>
+        </div>
+    </div>
     <div class="row mx-0 animated fadeInDown">
         <div class="col-12 text-center p-0 m-0">
             <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
@@ -173,9 +179,9 @@
                       <label for="">Select Store</label>
                       <select class="form-control" name="store" required>
                         <option class="" @disabled(true) selected>Select Store</option>
-                        {{-- @foreach ($stores as $store)
+                        @foreach ($stores as $store)
                             <option value="{{$store->storeID}}">{{$store->name}}</option>
-                        @endforeach --}}
+                        @endforeach
                       </select>
                     </div>
                 </div>
@@ -259,14 +265,24 @@
     const { createApp } = Vue;
          createApp({
             data() {
-              return {
-            
-                dailyTotals: [], 
-                 
+              return { 
+                dailyTotals: [],
+                jobs: 0,                 
+                loading: true,                 
               }          
             },
            async created() { 
-                   
+                   setInterval( async () => {
+                    let jobs = await axios.get('{{route("get_jobs")}}'); 
+                       jobs = await jobs.data
+                       this.jobs = await jobs
+                   }, 5000);
+
+                   setTimeout(() => {
+                    this.loading = false;
+                   }, 5100);
+                       console.log(await jobs)
+
             },
            methods:{ 
             isDailyTotals(val){

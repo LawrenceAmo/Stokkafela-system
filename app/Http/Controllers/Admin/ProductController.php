@@ -94,7 +94,7 @@ class ProductController extends Controller
         if (!$import_product) {
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload products file!!!');
         }
-        return redirect()->back()->with('success', 'Uploading products... Please refresh to see updates!!!');
+        return redirect()->back()->with('success', 'Uploading products on queue...');
     } 
     
 }

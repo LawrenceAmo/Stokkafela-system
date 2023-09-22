@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\MaintananceController;
 use App\Http\Controllers\SalesController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ Route::get('/', function () {
  
     // Sales
     Route::get('sales',[SalesController::class, 'get_sales'])->name('get_sales');
+    Route::get('queue/jobs',[MaintananceController::class, 'get_jobs'])->name('get_jobs');
     Route::get('get_stock_analysis/{id}',[ReportsController::class, 'get_stock_analysis'])->name('get_stock_analysis');
 
 Route::get('/', [PortalController::class, 'get_all_stores_data'])->name('get_all_stores_data'); // test

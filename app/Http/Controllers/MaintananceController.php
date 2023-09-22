@@ -95,9 +95,10 @@ class MaintananceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get_jobs()
     {
-        //
+        $jobs = DB::table('jobs')->count();
+        return $jobs;
     }
 
     /**
