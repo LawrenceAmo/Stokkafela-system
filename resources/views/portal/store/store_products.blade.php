@@ -275,6 +275,29 @@
   <div class="card rounded p-3 text-center">
     <a class="btn btn-sm rounded btn-outline-deep-purple" href="{{ route('stock_mabebeza', [$store->storeID] ) }}">Mabebeza MM</a>
   </div>
+  {{-- ////////////////////////////////////////////////////////////////////// --}}
+  <!-- Modal -->
+  <div class="modal fade"   id="ship_to_modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         
+        <div class="modal-body">
+         <div class="d-flex justify-content-between  ">
+          <p class="">Your download was successful!!!...</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+         </div>
+         <div class=" w-100">
+          <small>
+            Please refer to the notes on the second sheet for more information and guidance on how to apply formulas.
+          </small>
+        </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
   </main> 
   <input type="hidden" name="" id="selected_store" value="{{$selected_store->storeID}}">
   <input type="hidden" name="" id="first_month" value="{{date("m", strtotime("last day of -3 month"))}}">
@@ -567,25 +590,20 @@ const { createApp } = Vue;
                   product[first_month] =  { f: 'ROUND('+item[i].first_month+',2)' , t: 'n' }  
                   product[second_month] =  { f: 'ROUND('+item[i].second_month+',2)' , t: 'n' }  
                   product[last_month] =  { f: 'ROUND('+item[i].last_month+',2)' , t: 'n' } 
-                  product['Total 3 Month Sales'] = { f: 'K2+L2+M2', t: 'n' } 
+                  product['Total 3 Month Sales'] = { f: '(K2+L2+M2)', t: 'n' } 
                   product['Average Run Rate'] = { f: 'IFERROR(ROUND((N2/3),2),0)', t: 'n' }                     //parseFloat(item[i].avr_rr).toFixed(2)
                   product['Days onHand'] =   { f: 'IFERROR(ROUND(((J2/O2)*30.5),0),0)', t: 'n' }                  //item[i].days_onhand 
                   product['Suggested Order Value'] = { f: 'IFERROR(ROUND((21-P2)*(O2/21),2),0)', t: 'n' }          //parseFloat(item[i].suggested_order).toFixed(2)
                   product['Suggested Order Qty'] = { f: 'IFERROR(ROUND((Q2/C2),0),0)', t: 'n' }         //!isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
                   product['Sku Rank %'] = { f: 'IFERROR(ROUND((N3/N$2),2),0)', t: 'e' }  
-                  product['Cumulative contribution'] = { f: 'S3+T2', t: 'e' }  
+                  product['Cumulative Contribution'] = { f: 'S3+T2', t: 'e' }  
 
-                  // worksheet['D1'].t = 'n';
-                  data.push(product)               
-
-                }
- 
+                 data.push(product)               
+                } 
             }
-   
+
             let workbook = XLSX.utils.book_new();
-            let worksheet = XLSX.utils.json_to_sheet(data);   
-            
-            
+            let worksheet = XLSX.utils.json_to_sheet(data);  
 
             // Set the column width for columns A and B
             const columnWidths = { A: 15, B: 40 }; // Adjust widths as needed
@@ -600,22 +618,24 @@ const { createApp } = Vue;
               worksheet[cellRef] = worksheet[cellRef] || { s: {} };
               worksheet[cellRef].s =  { font: { bold: true }, alignment: { wrapText: true } };
             }
- 
+
+            // /////////////////////////////////
+            let notes = ''
+
             let worksheet2 = XLSX.utils.json_to_sheet([]);
             XLSX.utils.book_append_sheet(workbook, worksheet, ' {{date("j")}} '+getMonth(last_month_num+1)+' DOH');
-            XLSX.utils.book_append_sheet(workbook, worksheet2, 'Guide');
-  
-             try {
+            XLSX.utils.book_append_sheet(workbook, worksheet2, 'Notes');
+
+            try {
                 XLSX.writeFile(workbook, this.store_name+' {{date("j")}} '+getMonth(last_month_num+1)+' DOH .xlsx');
+                $('#ship_to_modal').modal('show');
                 console.log('File successfully written.');
             } catch (error) {
                 console.error('Error writing the file:', error);
             }
 
-
             console.log(dataDB)
             console.log(data)
-            // console.log(workbook)
           },
           filter_doh_perproduct: function(filter){
             let products = this.raw_products_data;
