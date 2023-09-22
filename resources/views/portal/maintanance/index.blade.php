@@ -4,7 +4,7 @@
     <div class="row p-3">
         <div class="col-12 border rounded shadow">
             <div v-if="loading"><p class="text-center h5">Please wait!!!...</p></div>
-            <div class="text-center" v-else><span class="font-weight-bold">@{{jobs}}</span> tasks on queue. You can download DOH once there are no tasks on queue</div>
+            <div class="text-center font-weight-bold" v-else><span class="h5 font-weight-bold">@{{jobs}}</span> tasks on queue. You can download DOH once there are no tasks on queue</div>
         </div>
     </div>
     <div class="row mx-0 animated fadeInDown">
@@ -63,6 +63,16 @@
             </div> 
         </form>
     </section>
+    <hr>
+    <section class="card rounded p-2">
+             <div class="col">
+                <p class="font-weight-bold ">Start background Tasks</p>
+                <div class="border rounded text-center">
+                    {{-- <input type="date" class="form-control" name="date" id="" placeholder="Please enter the date"> --}}
+                    <button   @click="queue_jobs_start()" class="btn btn-info rounded btn-sm">Start background Tasks</button>
+                </div>
+            </div> 
+     </section>
  
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
@@ -281,10 +291,18 @@
                    setTimeout(() => {
                     this.loading = false;
                    }, 5100);
-                       console.log(await jobs)
+                    //    console.log(await jobs)
 
             },
            methods:{ 
+            queue_jobs_start: async function(){
+                let jobs = await axios.get('{{route("queue_jobs_start")}}'); 
+                    jobs = await jobs.data
+                    console.log(await jobs)
+
+                    alert(await jobs)
+
+            },
             isDailyTotals(val){
                   let date = document.getElementById("date")
                   let buttons = document.getElementById("buttons")
@@ -300,5 +318,12 @@
            }
        }).mount("#app");
      
+//        $(document).ready(function() {
+//     $('#start-queue-btn').click(function() {
+//         $.get('/start-queue', function(data) {
+//             alert(data);  // Show the response message
+//         });
+//     });
+// });
     </script>
 </x-app-layout>

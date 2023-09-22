@@ -107,9 +107,12 @@ class MaintananceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function queue_jobs_start()
     {
-        //
+        // Run the queue worker in the background
+        exec('php artisan queue:work > /dev/null 2>&1 &');
+
+        return "Queue worker started!";
     }
 
     /**
