@@ -56,9 +56,9 @@
 
                 @endif
 
-                 <a class="underline text-sm text-gray-600 hover:text-gray-900 small text-dark" href="{{ route('register') }}">
+                 {{-- <a class="underline text-sm text-gray-600 hover:text-gray-900 small text-dark" href="{{ route('register') }}">
                         {{ __('Don\'t have an aacount?') }}
-                    </a>
+                    </a> --}}
                
               </div>
             </div>

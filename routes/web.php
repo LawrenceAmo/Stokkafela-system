@@ -19,6 +19,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SpazaShopsController;
 use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\StoreLocationsController;
 use Illuminate\Support\Facades\DB; 
 
 /*
@@ -78,8 +79,13 @@ Route::get('/departments/delete/{id}', [DepartmentsController::class, 'delete'])
 Route::get('/departments/edit/{id}', [DepartmentsController::class, 'edit'])->name('edit_department');
 Route::post('/departments/save', [DepartmentsController::class, 'save'])->name('save_department');
 
+// Store Lovations
+Route::get('/store/locations', [StoreLocationsController::class, 'index'])->name('store_locations');
+Route::get('/store/locations/edit/{id}', [StoreLocationsController::class, 'edit'])->name('store_location_update');
+Route::post('/store/location/save', [StoreLocationsController::class, 'save_store_locations'])->name('save_store_locations');
+Route::post('/store/location/update', [StoreLocationsController::class, 'update_store_location'])->name('update_store_location');
 
-// Store
+ // Store
 Route::get('/stores', [StoreController::class, 'index'])->name('stores');
 Route::get('/store/{id?}', [StoreController::class, 'show'])->name('store');
 Route::get('/store/create', [StoreController::class, 'create'])->name('create_store');
@@ -150,7 +156,7 @@ Route::get('/spaza/shop/{id}', [SpazaShopsController::class, 'spaza_shop_view'])
 Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop_delete'])->name('spaza_shop_delete');
 // Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
 
-// spaza_shop_delete
+
 });
  
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');

@@ -1,8 +1,8 @@
   
 <div class="m-md-5 pt-2 px-md-5">
-   <div class="card mt-5">
-     <div class="row p-3">
-        <div class="col-md-6   " style="border-right: 1px solid grey">
+   <div class=" mt-5">
+     <div class="row d-flex justify-content-center p-3">
+        <div class="col-md-6 d-none  " style="border-right: 1px solid grey">
 
             <div class="d-flex   justify-content-center ">
                 <div class="   text-center">
@@ -19,9 +19,9 @@
             </div>
 
         </div>
-         <div class="col-md-6  ">
+         <div class="col-md-6 card ">
 
-            <div class=" d-flex   border-danger p-0  justify-content-center">
+            <div class=" d-flex   border-danger p-3  justify-content-center">
                  <div class="   w-75 ">
                     <h4 class=" ">{{ $logo }}</h4>
                     <p class="  ">

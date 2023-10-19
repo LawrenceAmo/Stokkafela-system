@@ -29,14 +29,15 @@
       z-index: 1;
       background-color: whitesmoke
     }
+    
    </style>
     </head>
     <body>
       
       <nav id="navbar-scroll" class="  navbar navbar-expand-lg navbar-light top-navbar   " style="">
-      <div class="container">
+      <div class="container  ">
         <!-- Brand -->
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand  " href="/">
        
           <img
             alt="fadaeco"
@@ -47,8 +48,8 @@
           />
         </a>
         <!-- Toggler -->
-        <button
-          class="navbar-toggler"
+        {{-- <button
+          class="navbar-toggler d-none"
           type="button"
           data-toggle="collapse"
           data-target="#navbarCollapse"
@@ -57,40 +58,22 @@
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> --}}
         <!-- Collapse -->
-        <div class="collapse navbar-collapse  d-flex justify-content-end" id="navbarCollapse">
-          <ul class="navbar-nav mt-4 mt-lg-0 ml-auto ">
-            <li class="nav-item dropdown dropdown-animate" data-toggle="hover">
-            
-            </li>
-            {{-- <li class="nav-item">
-              <a class="nav-link" href="index.html#services">Services</a>
-            </li>    <li class="nav-item">
-              <a class="nav-link" href="index.html#ecommerce">Pricing</a>
-            </li>
-            <li class="nav-item  ">
-              <a class="nav-link" href="contact.html">Contact</a>
-            </li> --}}
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="about.html">About Us</a>
-            </li> -->
-            
- @if (Route::has('login'))
+        <div class="    d-flex justify-content-end" id="navbarCollapse">
+          <ul class="navbar-nav   mt-lg-0 ml-auto ">
+              
+             @if (Route::has('login'))
                      @auth
-                        <li class="nav-item"><a href="{{ url('/portal') }}" class=" nav-link">My Portal</a> </li>  
+                        <li class="nav-item"><a href="{{ url('/portal') }}" class=" text-dark nav-link">My Portal</a> </li>  
                     @else
                       <li class="nav-item    ">
-                        <a href="{{ route('login') }}" class="  nav-link">Log in</a>
+                        <a href="{{ route('login') }}" class=" text-dark font-weight-bold nav-link">Log in</a>
                       </li>  
-
-                      {{-- <li class="nav-item"> 
-                        <a href="{{ route('register') }}" class="nav-link">Register</a>
-                      </li>   --}}
+ 
                      @endauth
              @endif           
-          </ul>
-          
+          </ul>          
         </div>
       </div>
       </nav>
@@ -102,52 +85,33 @@
         <!-- SVG shape -->
   
         <!-- Footer -->
-        <div class="container " style="color: aliceblue;">       
-           <div class="row align-items-center justify-content-md-between pb-3">
-            <div class="col-md-6">
+        <div class="container my-0 py-0" style="color: aliceblue;">       
+           <div class="row align-items-center justify-content-md-between py-2">
+            <div class="col-md-12">
               <div
-                class="copyright text-sm font-weight-bold text-center text-md-left"
+                class="copyright text-sm font-weight-bold  py-auto text-center  "
               >
-                &copy; 2022
+                &copy; 2023
                 <a
                   href="https://stokkafela.com"
-                  class="font-weight-bold"
+                  class="font-weight-bold text-light"
                   target="_blank"
-                  >Stokkafela Systems</a
+                  >Stokkafela Cash & Carry</a
                 >. All rights reserved
               </div>
             </div>
-            <div class="col-md-6">
-              <ul
-                class="nav justify-content-center justify-content-md-end mt-3 mt-md-0"
-              >
-                <li class="nav-item">
-                  <a
-                    class="nav-link font-italic"
-                    href="terms-and-conditions.html"
-                  >
-                    Terms &nbsp;and &nbsp;Conditions
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link font-italic" href="privacy-policy.html">
-                    Privacy
-                  </a>
-                </li>
-                <!-- <li class="nav-item">
-                  <a class="nav-link" href="#"> Cookies </a>
-                </li> -->
-              </ul>
-            </div>
+             
           </div>
         </div>
       </div>
     </footer>
-    <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
-
-    <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
-    <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+        <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
+            <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/axios.js') }}"></script>
+    
+        <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
     </body>
 </html>

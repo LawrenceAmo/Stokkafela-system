@@ -4,7 +4,7 @@
       .tableFixHead table{
         height: 500px !important;
       }
-      .tableFixHead thead th { position: sticky !important; top: 0 !important; z-index: 1 !important;background-color: rgb(37, 37, 37)  !important; }
+      .tableFixHead thead th { position: sticky !important; top: 0 !important; z-index: 0 !important;background-color: rgb(37, 37, 37)  !important; }
       #map {
            height: 400px;
         }
@@ -12,36 +12,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
     <main class="m-0  px-4 pb-5 pt-3   w-100" id="app">
-      
+
         <div class=" card mb-3 border rounded p-3 w-100 table-responsive">
             <div class="row">
-                <div class="col-md-3 text-center">
+                <div class="col-md-4  ">
                     <div class="border rounded p-0 p-3 d-flex flex-column justify-content-center">
-                        <p class=" font-weight-bold  m-0 d-flex justify-content-around"><span>Total Shops:</span> <span class=" ">@{{shopsDB.length}}</span></p>
+                        <p class=" font-weight-bold  m-0 d-flex justify-content-around"><span>Total Store Locations:</span> <span class=" pl-3">@{{storesDB.length}}</span></p>
                     </div>
                 </div>
-                <div class="col-md-3 text-center">
-                    <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
-                        <p class=" font-weight-bold  m-0">
-                            <a  class="btn btn-primary rounded btn-sm  m-0 font-weight-bold" data-toggle="modal" data-target="#create_new_store"> <i class="fa fa-plus" aria-hidden="true"></i> add new Shop</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-3 text-center">
+                <div class="col-md-3   text-center">
+                    
+                </div> 
+                {{-- <div class="  ">
                     <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
                         <p class=" font-weight-bold  m-0">   
                             <a  class="btn btn-info rounded btn-sm  m-0 font-weight-bold" data-toggle="modal" data-target="#upload_bulk_store"> <i class="fa fa-cloud"  ></i> Upload bulk Shops</a>
                         </p>
                     </div>
-                </div>
-                <div class="col-md-3 text-center">
+                </div> --}}
+                <div class="col-md-5   d-flex   justify-content-around">
+                    <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
+                        <p class=" font-weight-bold  m-0">
+                            <a  class="btn btn-primary rounded btn-sm  m-0 font-weight-bold" data-toggle="modal" data-target="#create_new_store"> <i class="fa fa-plus" aria-hidden="true"></i> add new Store Location</a>
+                        </p>
+                    </div>
                     <div class="  rounded p-0 p-3 d-flex flex-column justify-content-center">
                         <p class=" font-weight-bold  m-0">
                             <a @click="download_data()"  class="btn btn-success rounded btn-sm m-0 font-weight-bold" ><i class="fa fa-download"></i> download  </a> 
                         </p>
                     </div>
-                </div>
-                      
+                </div>       
               
             </div>
         </div>
@@ -53,49 +53,98 @@
             </div>
          </div> 
 <div class="font-weight-bold h4 row">
-    <div class="col-md-3 p-0 m-0">
-        <span class="  "> Spaza Shops  </span>
+    <div class="col-md-3 pl-3 m-0">
+        <span class="  "> Store Locations  </span>
     </div>
-    <div class="   col-md-9 p-0 m-0   pr-3">
+    {{-- <div class="   col-md-9 p-0 m-0   pr-3">
         <div class="form-group   p-0 m-0">
            <input type="text" class="form-control" v-model="searchtext" v-on:keyup="SearchShop()" placeholder="Search Shop by name">
         </div>
-    </div>
+    </div> --}}
  </div>
- <div class="tableFixHead">
-    <table class="table table-striped table-inverse table-responsive " >
+ <div class="tableFixHead ">
+    <table class="table table-striped table-inverse    table-responsive w-100" >
     <thead class="">
-         <tr class="border font-weight-bold shadow bg-dark text-light rounded"  >
+         <tr class="  font-weight-bold shadow bg-dark text-light rounded w-100"  >
             <th>#</th>
             <th>Photo</th>
-            <th>Shop Name</th>
-            <th>Rep Name</th>
-            <th>Address</th>
-            <th>Coordinates</th>
-            <th>Action</th>
+            <th>Store Name</th>
+             <th>Physical Address</th>
+             <th>Google Map Link</th>
+             <th>Geo Coordinates</th>
+             <th>Action</th>
         </tr>
         </thead> 
         <tbody>
-            <tr v-for="shop,i in shops">
+            <tr v-for="store,i in stores" class="w-100">
                 <td> @{{i+1}} </td>
                 <td class="  p-0">
-                    <img :src="shopImg(shop.photo)" height="50" class="  p-0 rounded m-0" alt="">
+                    <img :src="storeImg(store.photo)" height="50" class="  p-0 rounded m-0" alt="">
                 </td>
-                <td> @{{ shop.name }} </td>
-                <td> @{{ shop.first_name }} @{{ shop.last_name }} </td>
-                <td :title="shop.address"><u > <a target="blank" :href="shop.address" class="text-info">Shop address</a> </u></td>
-                <td> @{{ shop.lat }} &nbsp; @{{ shop.lng }} </td>
+                <td> @{{ store.name }} </td>
+                <td :title="store.address"> <a target="blank" :href="store.address" class="text-dark">@{{store.address}}</a> </td>
+                <td :title="store.address"> <a target="blank" :href="store.map_link" class="text-dark">Google Map Link</a> </td>
+                <td> @{{ store.lat }} &nbsp; @{{ store.lng }} </td>
                  
                   <td class="text-center">
-                    <a data-href='{{ route('spaza_shop_view', ['spaza_shopID']) }}' @click="shopViewUrl(shop.spaza_shopID )" id="shopViewUrl" class="px-1 text-info c-pointer"><i class="fas fa-pencil-alt  "></i></a> |
-                     <a data-href='{{ route('spaza_shop_delete', ['spaza_shopID']) }}' @click="shopDeleteUrl(shop.spaza_shopID )" id="shopDeleteUrl" class="px-1 text-danger c-pointer"><i class="fas fa-trash-alt    "></i></a> 
+                    <a data-href='{{ route('store_location_update', ['store_locationID']) }}' @click="storeViewUrl(store.store_locationID )" id="storeViewUrl" class="px-1 text-info c-pointer"><i class="fas fa-pencil-alt  "></i></a> 
+                     {{-- <a data-href='{{ route('store_location_update', ['store_locationID']) }}' @click="storeDeleteUrl(store.store_locationID )" id="storeDeleteUrl" class="px-1 text-danger c-pointer"><i class="fas fa-trash-alt    "></i></a>  --}}
                     </td>
-             </tr>
-                      
+             </tr>                      
         </tbody>
     </table>
  </div>
  {{-- //////////////////////////////////////////////////////// --}}
+  {{-- /////////////////////   MODAL START  ///////////////////////// --}}
+
+  <div class="modal fade" id="create_new_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {{--  --}}
+        <form action="{{ route('save_store_locations') }}" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Store Location </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <div class="form-group">
+                      <label for="">Store Name</label>
+                      <input type="text" class="form-control" name="name" placeholder="Enter Store Name" >
+                    </div>
+                    <div class="form-group">
+                        <label for="">Physical Address</label>
+                        <input type="text" v-model="address"  class="form-control" name="address" placeholder="Enter Store Physical Address" >
+                    </div>
+                    <div class="form-group">
+                        <label for="">Google Map Address Link</label>
+                        <input type="text" v-model="map_link" @input="handleAddressChange" class="form-control" name="map_link" placeholder="Enter Store Google Map Address Link" >
+                    </div>
+                     
+                    <div class="form-group">
+                      <label for="">Store Coordinates (optional)</label>
+                      <div class="w-100 d-flex">
+                        <input type="text" v-model="lat" class="form-control w-50" name="lat" placeholder="Latitude" >
+                        <input type="text" v-model="lng" class="form-control w-50" name="lng" placeholder="Longitude" >
+                      </div>
+                      <small class="text-muted">e.g 'Stokkafela Tembisa' / 'Mabebeza Bambanani'</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Store Photo</label>
+                        <input type="file" class="form-control" name="photo" >
+                    </div>                        
+                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
  <hr>
  <div class="">
     <div class="border rounded p-3">
@@ -107,92 +156,7 @@
  </div>
  
     </div>
-     {{-- /////////////////////   MODAL START  ///////////////////////// --}}
-
-    <div class="modal fade" id="create_new_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <form action="{{ route('save_spaza_shops') }}" enctype="multipart/form-data" method="post" class="modal-content">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Create New Spaza Shop </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    <div class="">
-                        <div class="form-group">
-                          <label for="">Shop Name</label>
-                          <input type="text" class="form-control" name="name" placeholder="Enter Store Name" >
-                        </div>
-                        <div class="form-group">
-                            <label for="">Address</label>
-                            <input type="text" v-model="address" @input="handleAddressChange" class="form-control" name="address" placeholder="Enter Store Address" >
-                        </div>
-                        <div class="form-group">
-                          <label for="">Select Rep</label>
-                          <select class="form-control" name="rep" id="">
-                            <option selected disabled>Select Rep</option>
-                           @foreach ($reps as $rep)
-                           <option class="" value="{{ $rep->repID}}">{{ $rep->first_name}} {{ $rep->last_name}}</option>
-                           @endforeach 
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Shop Coordinates (optional)</label>
-                          <div class="w-100 d-flex">
-                            <input type="text" v-model="lat" class="form-control w-50" name="lat" placeholder="Latitude" >
-                            <input type="text" v-model="lng" class="form-control w-50" name="lng" placeholder="Longitude" >
-                          </div>
-                          <small class="text-muted">e.g 'Stokkafela Tembisa' / 'Mabebeza Bambanani'</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Shop Photo</label>
-                            <input type="file" class="form-control" name="photo" placeholder="Enter Store Address" >
-                        </div>                        
-                       
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success btn-sm">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-        {{-- /////////////////////   MODAL START Upload  ///////////////////////// --}}
-
-        <div class="modal fade" id="upload_bulk_store" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('upload_spaza_shops') }}" enctype="multipart/form-data" method="post" class="modal-content">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title">Upload New Spaza Shops </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="">
-                              
-                            <div class="form-group">
-                                <label for="">Upload Shops File</label>
-                                <input type="file" class="form-control" name="file" placeholder="Enter Store Address" >
-                                <small class="text-muted">Only upload excel files</small>
-                            </div>                        
-                           
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success btn-sm">Upload</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        
+   
     </main>
 
     <script
@@ -206,26 +170,70 @@
       createApp({
         data() {
           return { 
-            shops: [],
-            shopsDB: [], 
+            stores: [],
+            storesDB: [], 
             searchtext: "",
             lat: "", 
             lng: "", 
             address: "", 
             doh_search: "", 
+            map_link: "",
           }          
         },
        async created() {
-            const shops = @json($shops);
-            this.shops = [ ...shops ]
-            this.shopsDB = [ ...shops ]
-            console.log(shops)       
+        let store_locations = @json($stores);
+        console.log(store_locations)
+            const stores = [
+                {
+                    'name': "Stokkafela Tembisa",
+                    'address': '4165 Cameroune Street Tembisa 1666',
+                    'lnglat': {
+                        lat: 1111111111,
+                        lng: 0000000000,
+                    }
+                },
+                {
+                    'name': "Stokkafela DOC",
+                    'address': '4165 Cameroune Street Tembisa 1666',
+                    'lnglat': {
+                        lat: 1111111111,
+                        lng: 0000000000,
+                    }
+                },
+                {
+                    'name': "Stokkafela Mabopane",
+                    'address': '4165 Cameroune Street Tembisa 1666',
+                    'lnglat': {
+                        lat: 1111111111,
+                        lng: 0000000000,
+                    } 
+                },
+                {
+                    'name': "Mabebeza Tembisa",
+                    'address': 'Shop 32B Mega Mart, Cnr Olifantsfontein & Algeria road, Tswelopele Tembisa',
+                    'lnglat': {
+                        lat: 1111111111,
+                        lng: 0000000000,
+                    }
+                },
+                {
+                    'name': "Mabebeza Bambanani",
+                    'address': '4165 Cameroune Street Tembisa 1666',
+                    'lnglat': {
+                        lat: 1111111111,
+                        lng: 0000000000,
+                    }
+                },
+            ];
+            this.stores = [ ...store_locations ]
+            this.storesDB = [ ...store_locations ]
+            console.log(stores)       
             this.map();
         },
         methods:
         {
             handleAddressChange: function(){
-                let googleMapsUrl = this.address
+                let googleMapsUrl = this.map_link
                 let regexLong = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
                 let regexShort = /q=(-?\d+\.\d+),(-?\d+\.\d+)/;
  
@@ -236,7 +244,7 @@
                 if (googleMapsUrl.includes("- Google Maps")) {
                     googleMapsUrl.replace(/- Google Maps/g, '')
                  
-                    this.address = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['url'];
+                    this.map_link = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['url'];
                     this.lng = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['lng'];
                     this.lat = this.convertCoordinatesToGoogleMapsURL(googleMapsUrl)['lat'];
 
@@ -248,7 +256,7 @@
                     this.lng = parseFloat(shortURL[2]); 
                 }
             },   
-             convertCoordinatesToGoogleMapsURL: function(coordinates) {
+            convertCoordinatesToGoogleMapsURL: function(coordinates) {
                 const regex = /(\d+)°(\d+)'([\d.]+)"(\w+)\s+(\d+)°(\d+)'([\d.]+)"(\w+)/;
                 const matches = coordinates.match(regex);
 
@@ -276,8 +284,8 @@
 
                 return { url, lat, lng };
             },
-            shopImg: function (val) {
-                return `{{ asset('storage/spazashops/${val}')}}`;
+            storeImg: function (val) {
+                return `{{ asset('storage/spazastores/${val}')}}`;
             },    
             titleCase: function(str) {
                 var splitStr = str.toLowerCase().split(' ');
@@ -288,14 +296,14 @@
                 // Directly return the joined string
                 return splitStr.join(' '); 
             },
-            shopViewUrl: function(val){
-                var link = document.getElementById('shopViewUrl');
+            storeViewUrl: function(val){
+                var link = document.getElementById('storeViewUrl');
                 var href = link.getAttribute('data-href');
-                href = href.replace('spaza_shopID', val)
+                href = href.replace('store_locationID', val)
                 location.href = href
                 // console.log(href)
             },
-            shopDeleteUrl: function(val){
+            storeDeleteUrl: function(val){
                 var link = document.getElementById('shopDeleteUrl');
                 var href = link.getAttribute('data-href');
                 href = href.replace('spaza_shopID', val)
@@ -303,27 +311,27 @@
                 // console.log(href)
             },     
             SearchShop: function( ) {
-                      let shopsDB = this.shopsDB;
+                      let storesDB = this.storesDB;
                       let searchWords = this.searchtext.toLowerCase();
                       searchWords = searchWords.split(/\s+/); // Split by whitespace
                       this.shops = [];
                       console.log(searchWords)
 
                       if (searchWords[0].length < 1) {
-                          this.shops = [ ...shopsDB ]
+                          this.shops = [ ...storesDB ]
                           return false;
                       } 
-                      for (let i = 0; i < shopsDB.length; i++) {
-                          let productName = shopsDB[i].name.toLowerCase();                          
+                      for (let i = 0; i < storesDB.length; i++) {
+                          let productName = storesDB[i].name.toLowerCase();                          
                           // Use every() to check if all search words are present in the product name
                           if (searchWords.every(word => productName.includes(word))) {
-                              this.shops.push(shopsDB[i]);
+                              this.shops.push(storesDB[i]);
                           }
                       }       
                       return 1; 
                   }, 
             download_data: function(){   // Not yet done
-                let dataDB = this.shopsDB;
+                let dataDB = this.storesDB;
                 let data = []
 
                 for (let i = 0; i < dataDB.length; i++) {
@@ -342,7 +350,7 @@
                 const workbook = XLSX.utils.book_new();
                 const worksheet = XLSX.utils.json_to_sheet(data);
                 XLSX.utils.book_append_sheet(workbook, worksheet, 'Spaza Shops DataBase');
-                XLSX.writeFile(workbook, 'SpazaShopsDB.xlsx');
+                XLSX.writeFile(workbook, 'SpazastoresDB.xlsx');
              console.log(data)
           },     
           map: function(){
@@ -353,19 +361,17 @@
             mapTypeId: "terrain",
             });
 
-            let coord = [ ...@json($shops) ];  
+            let coord = [];  
             
             for (let i = 0; i < coord.length; i++) {
 
-                let mt = { lng: parseFloat(coord[i]['lng']), lat: parseFloat(coord[i]['lat']) };  //  
- 
+                let mt = { lng: parseFloat(coord[i]['lng']), lat: parseFloat(coord[i]['lat']) };  // 
                 console.log(coord[i])
                     const mtm = new google.maps.Marker({
                     position: mt,
                     map: map,
                     title: coord[i]['name']
                     });
-                   
             }
             
             // Define the LatLng coordinates for the polygon's path.
