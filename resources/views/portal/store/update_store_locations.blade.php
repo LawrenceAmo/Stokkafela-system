@@ -56,7 +56,11 @@
     <div class="col-md-6">
 
         <div class="d-flex justify-content-center">
-            <img src="{{ asset('storage/stores/'.$store->photo) }}" class="w-75 rounded p-1 border shadow" alt="">
+            @if ($store->photo)
+            <img src="{{ asset('storage/stores/'.$store->photo) }}" class="w-75  rounded p-1 border shadow" alt="">
+            @else
+            <img src="{{ asset('/no-image-placeholder.svg') }}" class="w-50  rounded p-1 border shadow" width="200" alt="">
+            @endif
         </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\StoreLocations;
+use Illuminate\Support\Facades\Storage;
 
 class StoreLocationsController extends Controller
 {
@@ -145,7 +146,7 @@ class StoreLocationsController extends Controller
             $uniqName = md5($filename)."".uniqid($filename, true);      // create a uniq name
             $filename = "st".md5($uniqName)."ore".$ext;             //  add prefix and sufix to the file name
 
-            $image->storeAs('store/',"$filename",'public');        // store file
+            $image->storeAs('stores/',"$filename",'public');        // store file
 
         return $filename;
     }
