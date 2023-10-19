@@ -78,9 +78,15 @@
         <tbody>
             <tr v-for="store,i in stores" class="w-100">
                 <td> @{{i+1}} </td>
-                <td class="  p-0">
-                    <img :src="storeImg(store.photo)" height="50" class="  p-0 rounded m-0" alt="">
+                <td class=" p-0  text-center  py-auto px-auto" >
+                    <div v-if="store.photo != 0">
+                        <img :src="storeImg(store.photo)" height="50" class="p-0 rounded m-0" alt="">
+                    </div>
+                    <div class="my-3" v-else>
+                        <span class="text-muted"><i>No Image</i></span>
+                    </div>
                 </td>
+                 
                 <td> @{{ store.name }} </td>
                 <td :title="store.address"> <a target="blank" :href="store.address" class="text-dark">@{{store.address}}</a> </td>
                 <td :title="store.address"> <a target="blank" :href="store.map_link" class="text-dark">Google Map Link</a> </td>
@@ -181,9 +187,7 @@
           }          
         },
        async created() {
-        let store_locations = @json($stores);
-        console.log(store_locations)
-           
+            let store_locations = @json($stores);
             this.stores = [ ...store_locations ]
             this.storesDB = [ ...store_locations ]
             console.log(store_locations)       
@@ -260,7 +264,6 @@
                 var href = link.getAttribute('data-href');
                 href = href.replace('store_locationID', val)
                 location.href = href
-                // console.log(href)
             },
             storeDeleteUrl: function(val){
                 var link = document.getElementById('shopDeleteUrl');
@@ -274,7 +277,6 @@
                       let searchWords = this.searchtext.toLowerCase();
                       searchWords = searchWords.split(/\s+/); // Split by whitespace
                       this.shops = [];
-                      console.log(searchWords)
 
                       if (searchWords[0].length < 1) {
                           this.shops = [ ...storesDB ]
@@ -321,8 +323,7 @@
             });
 
              let coord = [ ...@json($stores) ];  
-             console.log(coord)  
-            
+             
             for (let i = 0; i < coord.length; i++) {
 
                 let mt = { lng: parseFloat(coord[i]['lng']), lat: parseFloat(coord[i]['lat']) };  // 
@@ -359,10 +360,6 @@
         window.initMap = initMap;
           }
         }
-   }).mount("#app");
- 
-//    /////////////////////////////////////////////////////////////////
-
-
+   }).mount("#app"); 
     </script>
 </x-app-layout>
