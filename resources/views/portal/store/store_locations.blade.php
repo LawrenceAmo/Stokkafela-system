@@ -183,51 +183,10 @@
        async created() {
         let store_locations = @json($stores);
         console.log(store_locations)
-            const stores = [
-                {
-                    'name': "Stokkafela Tembisa",
-                    'address': '4165 Cameroune Street Tembisa 1666',
-                    'lnglat': {
-                        lat: 1111111111,
-                        lng: 0000000000,
-                    }
-                },
-                {
-                    'name': "Stokkafela DOC",
-                    'address': '4165 Cameroune Street Tembisa 1666',
-                    'lnglat': {
-                        lat: 1111111111,
-                        lng: 0000000000,
-                    }
-                },
-                {
-                    'name': "Stokkafela Mabopane",
-                    'address': '4165 Cameroune Street Tembisa 1666',
-                    'lnglat': {
-                        lat: 1111111111,
-                        lng: 0000000000,
-                    } 
-                },
-                {
-                    'name': "Mabebeza Tembisa",
-                    'address': 'Shop 32B Mega Mart, Cnr Olifantsfontein & Algeria road, Tswelopele Tembisa',
-                    'lnglat': {
-                        lat: 1111111111,
-                        lng: 0000000000,
-                    }
-                },
-                {
-                    'name': "Mabebeza Bambanani",
-                    'address': '4165 Cameroune Street Tembisa 1666',
-                    'lnglat': {
-                        lat: 1111111111,
-                        lng: 0000000000,
-                    }
-                },
-            ];
+           
             this.stores = [ ...store_locations ]
             this.storesDB = [ ...store_locations ]
-            console.log(stores)       
+            console.log(store_locations)       
             this.map();
         },
         methods:
@@ -356,12 +315,13 @@
           map: function(){
             function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 11,
-            center: { lng: 28.112411, lat: -25.981459 },
+            zoom: 10,
+             center: { lng: 28.202125, lat: -25.839784 },
             mapTypeId: "terrain",
             });
 
-            let coord = [];  
+             let coord = [ ...@json($stores) ];  
+             console.log(coord)  
             
             for (let i = 0; i < coord.length; i++) {
 
