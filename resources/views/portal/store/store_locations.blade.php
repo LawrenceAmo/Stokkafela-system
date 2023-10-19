@@ -244,7 +244,7 @@
                 return { url, lat, lng };
             },
             storeImg: function (val) {
-                return `{{ asset('storage/spazastores/${val}')}}`;
+                return `{{ asset('storage/stores/${val}')}}`;
             },    
             titleCase: function(str) {
                 var splitStr = str.toLowerCase().split(' ');
@@ -315,7 +315,7 @@
           map: function(){
             function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 10,
+            zoom: 9,
              center: { lng: 28.202125, lat: -25.839784 },
             mapTypeId: "terrain",
             });
@@ -330,7 +330,7 @@
                     const mtm = new google.maps.Marker({
                     position: mt,
                     map: map,
-                    title: coord[i]['name']
+                    title: coord[i]['name']+" - "+coord[i].address
                     });
             }
             
