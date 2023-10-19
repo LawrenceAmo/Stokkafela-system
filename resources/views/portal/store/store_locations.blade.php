@@ -331,6 +331,19 @@
                     const mtm = new google.maps.Marker({
                     position: mt,
                     map: map,
+                    label: {
+                        text: coord[i]['name'],
+                        color: 'BLUE', // Label text color
+                        fontSize: '12px', // Label font size
+                        fontWeight: 'bold', // Label font weight
+                    },
+                    // icon: {
+                    //     path: google.maps.SymbolPath.CIRCLE, // You can use a different symbol or image
+                    //     fillColor: 'GREEN', // Marker fill color
+                    //     fillOpacity: 1, // Opacity of the fill color
+                    //     strokeWeight: 0, // Border width
+                    //     scale: 10, // Marker size
+                    // },
                     title: coord[i]['name']+" - "+coord[i].address
                     });
             }
