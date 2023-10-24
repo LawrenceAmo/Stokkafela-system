@@ -331,12 +331,14 @@
                     const mtm = new google.maps.Marker({
                     position: mt,
                     map: map,
-                    // label: {
-                    //     text: coord[i]['name'],
-                    //     color: 'BLUE', // Label text color
-                    //     fontSize: '12px', // Label font size
-                    //     fontWeight: 'bold', // Label font weight
-                    // },
+                    label: {
+                        text: coord[i]['name'],
+                        color: 'BLUE', // Label text color
+                        fontSize: '12px', // Label font size
+                        fontWeight: 'bold', // Label font weight
+                        textAlign: 'right', // Align text to the right
+                        labelAnchor: new google.maps.Point(10, 0), // Position the label to the right of the marker
+                    },
                     // icon: {
                     //     path: google.maps.SymbolPath.CIRCLE, // You can use a different symbol or image
                     //     fillColor: 'GREEN', // Marker fill color
