@@ -134,10 +134,10 @@ class ShoppingController extends Controller
         ];
 
         // Staff Email
-        // Mail::to($user_info['email'])->send(new StaffOrderMail($user_info, $order));
+        Mail::to($user_info['email'])->send(new StaffOrderMail($user_info, $order));
 
         // Admin Email
-        // Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($user_info, $order));
+        Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($user_info, $order));
 
              return true; 
     }
