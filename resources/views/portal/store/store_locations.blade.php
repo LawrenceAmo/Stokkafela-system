@@ -322,8 +322,8 @@
             mapTypeId: "terrain",
             });
 
-             let coord = [ ...@json($stores) ];  
-             
+            let coord = [ ...@json($stores) ];  
+
             for (let i = 0; i < coord.length; i++) {
 
                 let mt = { lng: parseFloat(coord[i]['lng']), lat: parseFloat(coord[i]['lat']) };  // 

@@ -7,79 +7,90 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Auth_token;
+use App\Models\Contacts;
+use App\Models\Login;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class StaffController extends Controller
 {
-    
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-       $staffs = DB::table('users')->get();      
-        return view('portal.staff.index', ['miniStats'=> $this->get_mini_stats()])->with('staffs', $staffs);
+       $staffs = DB::table('users')
+                ->leftjoin('user_roles', 'user_roles.userID', '=', 'users.id')
+                ->leftjoin('roles', 'roles.roleID', '=', 'user_roles.roleID')
+                ->leftjoin('departments', 'departments.departmentID', '=', 'roles.departmentID')
+                ->select('users.*', 'roles.*', 'user_roles.*', 'departments.name as department_name')
+                ->get();      
+
+       return view('portal.staff.index')->with('staffs', $staffs);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
         $departments = DB::table('departments')
         ->join('roles','departments.departmentID','=','roles.departmentID')
-        // ->where('stores.storeID', '=', $id)
         ->get();
         $stores = DB::table('stores')->get();      
 
-        // return $stores;
-        return view('portal.staff.create', ['departments' => $departments, 'stores' => $stores ]);
+       return view('portal.staff.create', ['departments' => $departments, 'stores' => $stores ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function save_staff(Request $request)
     {
-
-        return $request;
+        $request->validate([
+            'first_name'  => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
  
-        $user = new User();
-        $user->first_name = $request->name;
-        $user->last_name = $request->address;
-        $user->email = (int)$request->store;
-        $user->save();
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name, 
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+        ]);
 
+        Contacts::create([ 'userID' => $user->id, ]);
+
+        $login = new Login(); // show that user logged in
+        $login->email = $request->email;
+        $login->status = true;  // successfully registered and logged in.
+ 
+        $token = new Auth_token();
+        $token->authenticated = false;
+        $token->userID = $user->id;
+        $token->save();
+
+        event(new Registered($user)); 
+        return redirect()->route('staff')->with('success', 'User created successfully');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show($id)
     {
-        //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function edit($id)
     {
-        //
+
+        $user = User::where('id',(int)$id)
+                    ->leftjoin('contacts', 'contacts.userID', '=', 'users.id')
+                    ->leftjoin('user_roles', 'user_roles.userID', '=', 'users.id')
+                    ->leftjoin('roles', 'roles.roleID', '=', 'user_roles.roleID')
+                    ->leftjoin('departments', 'departments.departmentID', '=', 'roles.departmentID')
+                    ->first();
+                    
+        $roles = DB::table('roles')->get();
+
+        return view('portal.staff.update')->with('user', $user)->with('roles', $roles);
     }
 
     /**
@@ -89,17 +100,43 @@ class StaffController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update_staff_profile(Request $request)
     {
-        //
+        User::where('id', (int)$request->id)
+        ->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name, 
+            'email' => $request->email,
+            'phone' => $request->phone,
+         ]);
+
+         DB::table('contacts')
+         ->where('userID', (int)$request->id)
+        ->update([
+            'street' => $request->street,
+            'suburb' => $request->suburb, 
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'zip_code' => $request->zip_code,
+            'phone' => $request->phone,
+         ]);
+
+         $role_status = (Boolean)$request->role_status;
+
+         DB::table('user_roles')
+            ->updateOrInsert(
+                ['userID' => (int)$request->id], // Unique identifier column and value
+                [
+                    'userID' => (int)$request->id,
+                    'roleID' => (int)$request->role,
+                    'role_status' =>  $role_status,
+                    'updated_at' => now(),
+                ]);
+
+        return redirect()->back()->with('success', 'User data updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function delete_staff($id)
     {
 

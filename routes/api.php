@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\MaintananceController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\ShoppingController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,10 @@ Route::get('/', function () {
 Route::get('/', [PortalController::class, 'get_all_stores_data'])->name('get_all_stores_data'); // test
 
 // });
+
+// Staff Shopping
+Route::post('/shopping/cart/save', [ShoppingController::class, 'staff_save_order'])->name('staff_save_order');
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

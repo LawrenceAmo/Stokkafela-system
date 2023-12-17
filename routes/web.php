@@ -15,7 +15,8 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
 use App\Http\Controllers\PositionController;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoleController; 
+use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\SpazaShopsController;
 use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
@@ -68,8 +69,20 @@ Route::post('/profile/delete', [UsersController::class, 'create'])->name('delete
 Route::get('/staff', [StaffController::class, 'index'])->name('staff');
 Route::get('/staff/create', [StaffController::class, 'create'])->name('create_staff');
 Route::post('/staff/save', [StaffController::class, 'save_staff'])->name('save_staff');
-Route::get('/staff/edit/{id}', [StaffController::class, 'index'])->name('edit_staff');
+Route::get('/staff/edit/{id}', [StaffController::class, 'edit'])->name('edit_staff');
 Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');
+Route::post('/staff/update/save', [StaffController::class, 'update_staff_profile'])->name('update_staff_profile');
+
+
+// Staff Shopping
+Route::get('/shopping', [ShoppingController::class, 'index'])->name('shopping');
+Route::get('/shopping/staff/thank-you', [ShoppingController::class, 'staff_order_thank_you'])->name('staff_order_thank_you');
+Route::get('/shopping/cart/create', [ShoppingController::class, 'create_cart'])->name('create_cart');
+Route::get('/shopping/order/items/{orderID}', [ShoppingController::class, 'staff_ordered_items'])->name('staff_ordered_items');
+// Route::post('/shopping/cart/save', [ShoppingController::class, 'staff_save_order'])->name('staff_save_order');
+// Route::get('/staff/edit/{id}', [StaffController::class, 'edit'])->name('edit_staff');
+// Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');
+// Route::post('/staff/update/save', [StaffController::class, 'update_staff_profile'])->name('update_staff_profile');
 
 
 //  departments
@@ -138,8 +151,7 @@ Route::get('/targets/rep/update/{id}', [TargetsController::class, 'update_rep_ta
 Route::post('/targets/rep/save', [TargetsController::class, 'save_rep_target'])->name('save_rep_target');
 // Route::get('/sales/analysis', [SalesController::class, 'sales_analysis'])->name('sales_analysis');
 
-
-
+ 
 //  Job Roles and Titles
 Route::post('/roles/create', [RoleController::class, 'create_role'])->name('create_role'); 
 Route::post('/roles/delete/{id}', [RoleController::class, 'destroy'])->name('delete_role');
@@ -155,8 +167,7 @@ Route::post('/spaza/shop/update', [SpazaShopsController::class, 'update_spaza_sh
 Route::get('/spaza/shop/{id}', [SpazaShopsController::class, 'spaza_shop_view'])->name('spaza_shop_view');
 Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop_delete'])->name('spaza_shop_delete');
 // Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
-
-
+ 
 });
  
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');

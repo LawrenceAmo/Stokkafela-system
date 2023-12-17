@@ -75,7 +75,7 @@ class StoreController extends Controller
         $store->trading_name = $request->trading_name;
         $store->slogan = $request->slogan;
         $store->discription = $request->description;
-        $store->planID = 1;
+        // $store->planID = 1;
         $store->userID = Auth::id();
         $store->save();
  
@@ -88,7 +88,6 @@ class StoreController extends Controller
     public function show(Request $request, $id = 0)
     { 
         $id == true ? $storeID = $id : $storeID = 0;
-
         // Check user filter, if not set, set filter request values to default
         if($request>isEmpty() || !$request->from || !$request->to || !$request->store){
             $from = date_sub(now(), date_interval_create_from_date_string("30 days"));   // get last 30 days date
@@ -132,11 +131,10 @@ class StoreController extends Controller
                 $storeID
             ]
         );
-        
+
         // Get only codes
         $codes = array_column($sales, 'barcode'); 
         $top_products = DB::table('products')->whereIn('barcode', $codes)->limit(10)->get();
-        // //////////////////////
 
         return view('portal.store.store')
                 ->with('salesdata', $salesdata)
@@ -148,27 +146,18 @@ class StoreController extends Controller
                 ->with('nettsales', $nettsales)
                 ->with('products', $products)
                 ->with('top_products', $top_products);
-                
     }
 
-   
     public function edit($id)
     {
         $store = DB::table('stores')
                     ->join('contacts','stores.storeID','=','contacts.storeID')
                     ->where('stores.storeID', '=', $id)
                     ->get();
-        // return $store;
         return view('portal.store.update')->with('store',$store[0]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function update(Request $request)
     {
         // return $request;
@@ -181,7 +170,6 @@ class StoreController extends Controller
   
          DB::table('stores')
                 ->where('storeID', $request->storeID)  // find your user by their email
-                // ->where('userID', Auth::id())  // find your user by their email
                 ->limit(1)  // optional - to ensure only one record is updated.
                 ->update([
                     'name' => $request->name,
@@ -191,7 +179,6 @@ class StoreController extends Controller
                 ]); 
                 
          DB::table('contacts')
-                    // ->where('userID', Auth::id())  // find your user by their email
                     ->where('storeID', $request->storeID)  // find your user by their email
                     ->where('store', true)  // find your user by their email
                     ->limit(1)   
@@ -216,8 +203,7 @@ class StoreController extends Controller
      */ 
     public function destroy($id)
     {
-        // return $id;
-        DB::table('stores')
+         DB::table('stores')
             ->join('contacts','stores.storeID','=','contacts.storeID')
             ->where('stores.storeID', '=', $id)
             ->delete();

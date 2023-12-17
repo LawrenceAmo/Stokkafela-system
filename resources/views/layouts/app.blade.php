@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Stokkafela Systems') }}</title>
-
+ 
 <link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
 <link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
@@ -30,92 +30,78 @@
       >
         <div class="position-sticky ">
           <div class="list-group list-group-flush mx-3 mt-1 pt-1">
-            <a
-              href="{{route('portal')}}"
+            <a href="{{route('portal')}}"
               class="list-group-item list-group-item-action py-2 ripple " 
-              aria-current="true"
-            >
+              aria-current="true">
               <i class="fa fa-tachometer-alt fa-fw h6"></i><span>Dashboard</span>
-            </a>
-             
-          <a
-          href="{{route('profile')}}"
-          class="list-group-item list-group-item-action py-2 ripple "
-          aria-current="true"
-        >
-          <i class="fas fa-user-alt fa-fw "></i><span>My Profile</span>
-        </a> 
-            <a
-              href="{{ route("stores")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-            >
-              <i class="fa fa-building"></i>
-              <span>Stores</span>
             </a> 
-            <a
-            href="{{route('stock_analysis', [0])}}"
+
+              <a class="list-group-item list-group-item-action py-2 mb-0 ripple " data-toggle="collapse" href="#users_nav_btn" role="button" aria-expanded="false" aria-controls="users_nav_btn">
+                <span> <i class="fa fa-users fa-fw "></i>  Users </span> <span class="float-right"> <i class="fa fa-angle-down    "></i> </span>
+              </a>             
+            <div class="collapse" id="users_nav_btn">
+              <div class=" ml-3 border-left pl-2 ">
+                <a href="{{route('profile')}}"
+                  class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0 "
+                  aria-current="true">
+                  <span>My Profile</span>
+                </a>
+                <a href="{{ route("staff")}}"
+                  class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0"
+                  ><span>Staff</span></a>
+              </div>
+            </div>
+
+            <a class="list-group-item list-group-item-action py-2 mb-0 ripple " data-toggle="collapse" href="#stores_nav_btn" role="button" aria-expanded="false" aria-controls="stores_nav_btn">
+              <i class="fas fa-building fa-fw "></i>  Stores <span class="  float-right d-flex justify-content-between text-right  "> <i class="fa fa-angle-down      "></i> </span>
+            </a>
+            <div class="collapse" id="stores_nav_btn">
+              <div class=" ml-3 border-left pl-2 ">
+
+                <a href="{{ route("stores")}}"
+                  class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0"
+                  ><span>Stores</span></a>
+                <a href="{{ route("spaza_shops")}}"
+                class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0" 
+                ><span>Spaza Shops</span></a> 
+  
+                <a href="{{ route("store_locations")}}"
+                class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0"
+                ><span>Store Locations</span></a>
+
+              </div>
+            </div>
+            
+            <a href="{{route('stock_analysis', [0])}}"
             class="list-group-item list-group-item-action py-2 ripple "
-            aria-current="true"
-          >
-            <i class="fa fa-chart-pie fa-fw "></i><span>Stock Reports</span>
-          </a>
-            {{-- <a
-              href="{{ route("products")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-            >
-              <i class="fa fa-shopping-basket "></i>
-              <span>Products</span>
-            </a> --}}
-            <a
-              href="{{ route("sales")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-            >
+            aria-current="true">
+            <i class="fa fa-chart-pie fa-fw "></i><span>DOH Reports</span>
+          </a>         
+            <a href="{{ route("sales")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-chart-bar"></i>
               <span>Sales</span>
             </a>
-            <a
-              href="{{ route("maintanance")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-            >
+            <a href="{{ route("shopping")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
+              <i class="fa fa-shopping-cart"></i>
+              <span>Shopping</span>
+            </a>
+            <a href="{{ route("maintanance")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-bars"></i>
               <span>Maintanance</span>
             </a>
              
-            <a
-              href="{{ route("debtors")}}"
+            <a href="{{ route("debtors")}}"
               class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-users fa-x2 "></i><span>Debtors</span></a
-            >
-            {{-- <div class="dropdown" >
-              <button class="list-group-item list-group-item-action text-white border-0  dropdown-toggle"  type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false" style="background-color: transparent;">
-                  <i class="fa fa-users fa-x2 "></i>   Human Resource
-                  </button>
-                   dropdown-item text-dark bg-light
- dropdown-item text-dark bg-light
-              <div class="dropdown-menu bg-light" aria-labelledby="triggerId"> --}}
-                   <a
-              href="{{ route("departments")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-            >
+              ><i class="fa fa-users fa-x2 "></i><span>Debtors</span></a>            
+            <a href="{{ route("departments")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-bars "></i><span>Departments</span>
-            </a>
-            <a
-              href="{{ route("staff")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-users fa-x2 "></i><span>Staff</span></a
-            >
-            <a href="{{ route("spaza_shops")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-building fa-x2 "></i><span>Spaza Shops</span></a> 
-
-              <a href="{{ route("store_locations")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-building fa-x2 "></i><span>Store Locations</span></a> 
-
+            </a>     
             <form action="{{ route('logout') }}" method="POST"
-               class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple"
-              >
+               class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple">
               @csrf
               <label for="logout" class="c-pointer">
                 <i class="fas fa-door-open "></i><span>Log out</span>

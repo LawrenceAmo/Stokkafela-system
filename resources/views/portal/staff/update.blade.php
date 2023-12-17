@@ -5,17 +5,14 @@
         <div class="col-12 text-center p-0 m-0">
             <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
         </div>
-     </div> 
-
-         <form method="POST"action="{{ route('update_profile')}}"
-          class="form-container shadow-2xl bg-white border rounded p-3 mb-5 w-100"
-        >
-        @csrf
-          
-          <div class="row m-0   ">
-            <div class="col-md-6 py-2  ">
-              <div class="form-group">
-                <label for="">First Name</label>
+     </div>
+         <form method="POST"action="{{ route('update_staff_profile') }}"
+          class="form-container card  p-3 border rounded">
+        @csrf          
+          <div class="row  m-0     ">
+            <div class="col-md-6  w-100  "> 
+                <div class="form-group">
+                  <label for="">First Name</label>
                 <input
                   type="text"
                   class="form-control"
@@ -23,9 +20,9 @@
                   value="{{$user->first_name}}"
                    placeholder="First Name"
                 />
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 py-2">
+             <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Last Name</label>
                 <input
@@ -38,8 +35,8 @@
               </div>
             </div>
           </div>
-          <div class="row m-0 ">
-            <div class="col-md-6 py-2 ">
+          <div class="row m-0 w-100   ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Email Address</label>
                 <input
@@ -51,25 +48,10 @@
                   aria-describedby="emailHelpId"
                   placeholder="example@domain.com"
                 />
-                 
+
               </div>
             </div>
-            <div class="col-md-6 py-2 ">
-              <div class="form-group">
-                <label for="">Enter your Password to update</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  name="password"
-                  autocomplete="off"
-                  value="" 
-                  placeholder="Enter strong password"
-                />
-               </div>
-            </div>
-          </div>
-          <div class="row m-0 ">
-            <div class="col-md-6 py-2 ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Phone Number</label>
                 <input
@@ -81,107 +63,150 @@
                 />
               </div>
             </div>
-            <div class="col-md-6 py-2 ">
-              {{-- --}} 
-            </div>
           </div>
-          <div class="row m-0  border-top mt-3">
+       
+          <div class="row m-0 w-100     -top mt-3">
             <div class="d-flex flex-column w-100">
          
 
               <h3>Address</h3>
             </div>
           </div>
-          <div class="row m-0 ">
-            <div class="col-md-6 py-2 ">
+          <div class="row m-0 w-100   ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Street Address</label>
                 <input
                   type="text"
                   class="form-control"
                   name="street"
-                  value="{{$contacts->street}}"
+                  value="{{$user->street}}"
                    placeholder="street name and number"
                 />
               </div>
             </div>
-            <div class="col-md-6 py-2 ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Suburb</label>
                 <input
                   type="text"
                   class="form-control"
                   name="suburb"
-                  value="{{$contacts->suburb}}"
+                  value="{{$user->suburb}}"
                    placeholder="Enter your surbub"
                 />
               </div>
             </div>
           </div>
-          <div class="row m-0 ">
-            <div class="col-md-6 py-2 ">
+          <div class="row m-0 w-100   ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">City</label>
                 <input
                   type="text"
                   class="form-control"
                   name="city"
-                  value="{{$contacts->city}}"
+                  value="{{$user->city}}"
                   placeholder="Enter your City"
                 />
               </div>
             </div>
-            <div class="col-md-6 py-2 ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Province</label>
                 <input
                   type="text"
                   class="form-control"
-                  name="pronvince"
-                  value="{{$contacts->state}}"
+                  name="state"
+                  value="{{$user->state}}"
                   placeholder="Enter Province"
                 />
               </div>
             </div>
           </div>
-          <div class="row m-0 ">
-            <div class="col-md-6 py-2 ">
+          <div class="row m-0 w-100   ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Country</label>
                 <input
                   type="text"
                   class="form-control"
                   name="country"
-                  value="{{$contacts->country}}"
+                  value="{{$user->country}}"
                   placeholder="Enter your Country"
                 />
               </div>
             </div>
-            <div class="col-md-6 py-2 ">
+            <div class="col-md-6  ">
               <div class="form-group">
                 <label for="">Zip Code</label>
                 <input
                   type="number"
                   class="form-control"
                   name="zip_code"
-                  value="{{$contacts->zip_code}}"
+                  value="{{$user->zip_code}}"
                   placeholder="Enter your zip code"
                 />
               </div>
             </div>
           </div>
-          <div class="row m-0  justify-content-center">
+          <div class="">
+               <div class="py-3">
+      <p class="h5">Job Description</p>
+    </div>
+    <hr>
+ 
+    <div class="row">     
+      <div class="col-md-6"     > <div class="form-outline mb-4">
+          <div class="form-group">
+            <label for="">Select Role / Job Title</label>
+            <select class="form-control" name="role" id="">
+              <option @disabled(true) @selected(true)>Select Job Title</option>          
+              @foreach ($roles as $role)
+                @if ($user->roleID === $role->roleID)
+                  <option value="{{$role->roleID}}" @selected(true)>{{$role->role_title}}</option>
+                @endif
+                @if ($user->roleID != $role->roleID)
+                  <option value="{{$role->roleID}}">{{$role->role_title}}</option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6"   >   <div class="form-outline mb-4">
+        <div class="form-group">
+          <label for="">Staff Employment Status?</label>
+          <select class="form-control" name="role_status" id="">
+        
+            @if ($user->role_status)
+                <option value="1" selected>Active</option>
+                <option value="">Inactive</option>
+            @else
+                <option value="" >Inactive</option>
+                <option value="1">Active</option>
+            @endif 
+        </select>
+       </div>
+      </div>  
+    </div>
+    </div>
+
+      <div class="form-outline mb-4">
+      <label class="form-label" for="form6Example7">Additional information</label>
+      <textarea class="form-control" id="form6Example7" name="comments" rows="4"></textarea>
+    </div>
+          </div>
+          <div class="row m-0 w-100    justify-content-center">
             <div class="w-100">
               <button
                 type="submit"
-                 
-                class="btn btn-dark w-100 rounded"
-                
-              >
+                class="btn btn-dark w-100 rounded">
                 Update Your info
               </button>
             </div>
           </div>
+          <input type="hidden" name="id" value="{{ $user->id }}" id="">
         </form>
      </main>
 </x-app-layout>

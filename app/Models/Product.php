@@ -18,11 +18,11 @@ class Product extends Model
     {
         $data = $data[0];
         $products = [];
-        $header = ['BARCODE', 'DESCRIPT', 'SELLPINC1', 'AVRGCOST', 'ONHAND'];
+        $header = ['CODE', 'DESCRIPT', 'SELLPINC1', 'AVRGCOST', 'ONHAND'];
         array_push($products, $header); // push only the headers first
 
         // get index of wanted data/field
-        $BARCODE = array_search('BARCODE', $data[0]);
+        $BARCODE = array_search('CODE', $data[0]);
         $DESCRIPT = array_search('DESCRIPT', $data[0]);
         $AVRGCOST = array_search('AVRGCOST', $data[0]);
         $SELLPINC1 = array_search('SELLPINC1', $data[0]);
@@ -37,10 +37,10 @@ class Product extends Model
                 ];
 
                 if(
-                    !$index['barcode'] &&
+                    !$index['barcode']  &&
                     !$index['descript'] &&
                     !$index['avrgcost'] &&
-                    !$index['onhand'] &&
+                    !$index['onhand']   &&
                     !$index['sellpinc1'] 
                   )
                 {
