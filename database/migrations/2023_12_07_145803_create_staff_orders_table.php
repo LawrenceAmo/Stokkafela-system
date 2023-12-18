@@ -23,7 +23,6 @@ return new class extends Migration
             $table->decimal('total_price', $total = 8, $places = 2)->default(0);
             $table->text('comments')->nullable();
             $table->foreignId('userID')->constrained('users', 'id')->onDelete('cascade');
-            // $table->foreignId('productID')->constrained('products', 'productID')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

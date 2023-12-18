@@ -88,8 +88,7 @@
           <th>Description</th>
           <th>AVR Cost</th>
           <th>Sell Price</th>
-          <th>OnHand</th>
-          
+          <th>OnHand</th>          
           <th>Physical Count</th> 
           <th>Variance</th>
           <th>Physical count value</th>

@@ -16,7 +16,7 @@
         <tr class="border font-weight-bold shadow bg-dark text-light rounded"  >
             <th>#</th>
             <th class="" >Full Names</th>
-            <th>Phone</th>
+            {{-- <th>Phone</th> --}}
             <th>Email</th>
             <th>Department</th>
             <th>Role</th>
@@ -30,7 +30,7 @@
              <tr> 
                 <td scope="row">{{$i}}</td>
                 <td>{{$staff->first_name}} {{$staff->last_name}}</td>
-                <td title="{{$staff->email}}"> {{$staff->phone}}</td> 
+                {{-- <td title="{{$staff->email}}"> {{$staff->phone}}</td>  --}}
                 <td >{{$staff->email}}</td>
                 <td>{{$staff->department_name}}</td> 
                 <td >{{$staff->role_title}}</td>

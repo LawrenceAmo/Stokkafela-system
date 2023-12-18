@@ -73,7 +73,6 @@ Route::get('/staff/edit/{id}', [StaffController::class, 'edit'])->name('edit_sta
 Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');
 Route::post('/staff/update/save', [StaffController::class, 'update_staff_profile'])->name('update_staff_profile');
 
-
 // Staff Shopping
 Route::get('/shopping', [ShoppingController::class, 'index'])->name('shopping');
 Route::get('/shopping/admin', [ShoppingController::class, 'index_admin'])->name('shopping_admin');
@@ -84,7 +83,6 @@ Route::get('/shopping/order/items/{orderID}', [ShoppingController::class, 'staff
 // Route::get('/staff/edit/{id}', [StaffController::class, 'edit'])->name('edit_staff');
 // Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');
 // Route::post('/staff/update/save', [StaffController::class, 'update_staff_profile'])->name('update_staff_profile');
-
 
 //  departments
 Route::get('/departments', [DepartmentsController::class, 'index'])->name('departments');

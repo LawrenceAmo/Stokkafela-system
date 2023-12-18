@@ -173,7 +173,7 @@
                 $('#update_order').modal('show');
             },
             save_updated_order: function(order_number){
-               // let data = await axios.post(' ', {data: items} );  
+               let data = await axios.post(' ', {data: items} );  
                     // data = await data.status
                     // if (data.status === 200) {
                     //     this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
