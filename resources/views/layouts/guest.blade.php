@@ -80,7 +80,7 @@
         <div class="  text-gray font-weight-normal antialiased">
             {{ $slot }}
         </div>
-          <footer class="position-relative" id="footer-main pt-0">
+          <footer class="border w-100" style="position: absolute; bottom:0px !important;" id="footer-main pt-0">
       <div class="footer pt-lg-7 footer-dark bg-dark">
         <!-- SVG shape -->
   

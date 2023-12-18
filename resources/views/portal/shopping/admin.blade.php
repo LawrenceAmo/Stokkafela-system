@@ -26,11 +26,12 @@
                 </div>
                 <div class=" ">
                     Total Spent: R@{{order_info.total_price}}
-                </div>               
+                </div>
+                {{-- <div class=" ">
+                    Total Qty: @{{order_info.total_qty}}
+                </div> --}}
                 <div class=" ">
                     <a href="{{ route('create_cart') }}" class="btn btn-sm rounded btn-dark">create order</a>
-                
-                    <a href="{{ route('shopping_admin') }}" class="btn btn-sm rounded btn-dark">Admin</a>
                 </div>
             </div>
         </div>         
@@ -58,6 +59,8 @@
             <tr class="bg-purple text-light">
                 <th>#</th>
                 <th>Order Number</th>
+                <th>Staff Names</th>
+                {{-- <th>Status</th> --}}
                 <th>Status</th>
                 <th>Order Sent</th>
                 <th>Total Qty</th>                
@@ -72,9 +75,12 @@
                      <td>
                         @{{order.order_number}} 
                      </td>
+                     <td>
+                        @{{order.names}}
+                    </td>
                    <td>
                         @{{order.status}}
-                    </td>
+                    </td>                   
                     <td >
                         <div class="text-success" v-if="order.ordered">Yes</div>
                         <div class="text-danger" v-else>No</div>
@@ -88,7 +94,7 @@
                     <td>
                         @{{order.created_at}}
                     </td>
-                    <td class="c-pointer" @click="orderUrl(order.staff_orderID)">
+                    <td class="c-pointer" @click="update_order(order)">
                         <i class="fa fa-eye text-info" aria-hidden="true"></i> 
                     </td>
                  </tr>  
@@ -97,21 +103,28 @@
     <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="orders.length < 1">No Orders available</div>
 </div>
     </div>
-
-    <!-- Modal --> 
-    <div class="modal fade" id="modelID" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  
+    <!-- Modal -->
+    <div class="modal fade" id="update_order" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                @csrf
-                <div class="modal-header ">
-                    <h5 class="modal-title">@{{msg}}</h5>
-                        <button type="button" class="close border-0 bg-white rounded text-danger " data-dismiss="modal" aria-label="Close">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Orders: @{{update_order_info.order_number}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>  
+                </div>
+                <div class="modal-body">
+                    Body
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
             </div>
-        </div> 
+        </div>
     </div>
+ 
     <a href="" data-href="{{route('staff_ordered_items', ['orderID'])}}" id="orderUrl" class="d-none"></a>
 
      </main>
@@ -121,24 +134,27 @@
       createApp({
         data() {
           return {
-             orders: [],
-             order_info: [],
-
+            orders: [],
+            ordersDB: [],
+            order_info: [],
             promotion_items: [],           
             searchorderText: '',
             msg: '',
             total_cart: 0,
+            update_order_info: [],
            };
         },
         async created(){
             let orders = @json($orders);
             console.log(orders)
             this.orders = orders;
+            this.ordersDB = orders;
 
             let total_price = 0;    let total_orders = 0;
             for (let i = 0; i < orders.length; i++) {
                 total_price += parseFloat(orders[i].total_price)
-                total_orders += 1                
+                total_orders += 1;
+                orders[i].names = orders[i].first_name+" "+orders[i].last_name   
             }
 
             let order_info = {
@@ -148,19 +164,27 @@
         };
         this.order_info = order_info
             console.log(order_info)
-
-        
+            console.log(orders) 
         },
         methods: {
-            orderUrl: function(val){
-                var link = document.getElementById('orderUrl');
-                var href = link.getAttribute('data-href');
-                href = href.replace('orderID', val)
-                location.href = href
+            update_order: function(val){
+              console.log(val)
+            this.update_order_info = val;
+                $('#update_order').modal('show');
+            },
+            save_updated_order: function(order_number){
+               // let data = await axios.post(' ', {data: items} );  
+                    // data = await data.status
+                    // if (data.status === 200) {
+                    //     this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
+                    //     setTimeout(() => {
+                    //         location.reload();
+                    //     }, 5000);
+                    // }                 
             },
             updateQty: function(){
                 this.cart_total()
-            },
+            },            
             cart_total: function(){
                 let cart = this.cart;
                 let itemIDs = this.promotion_items;
@@ -175,15 +199,7 @@
             save_added_items: async function(){
                 let itemIDs = this.promotion_items;
                 let items = this.products;
-                // let data = await axios.post(' ', {data: items} );  
-                    // data = await data.status
-                    // if (data.status === 200) {
-                    //     this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
-                    //     $('#modelID').modal('show');
-                    //     setTimeout(() => {
-                    //         location.reload();
-                    //     }, 5000);
-                    // }
+                 
                 let filteredProducts = items.filter(product => itemIDs.includes(product.productID));
 
                 this.cart = [ ...filteredProducts ]
@@ -208,7 +224,6 @@
                 }
                 return product;
                 });
-
             },
             addItemDB: function(itemID, type){
                 if (type) {
@@ -224,22 +239,23 @@
                 } 
                 this.cart_total()
             },
+            // search an order by order number
             SearchProducts: function(event) {
-                      let allProducts = this.products;
+                      let allOrders = this.ordersDB;
                       let searchWords = this.searchProductsText.toLowerCase().split(/\s+/); // Split by whitespace
 
-                      this.products = [];
+                      this.orders = [];
                       if (searchWords[0].length < 1) {
-                          this.products = [ ...allProducts ]
+                          this.orders = [ ...allOrders ]
                           return false;
                       } 
                       console.log(searchWords)
 
-                      for (let i = 0; i < allProducts.length; i++) {
-                          let productName = allProducts[i].name.toLowerCase();
+                      for (let i = 0; i < allOrders.length; i++) {
+                          let orderName = allOrders[i].order_number.toLowerCase();
                           // Use every() to check if all search words are present in the product name
-                          if (searchWords.every(word => productName.includes(word))) {
-                              this.products.push(allProducts[i]);
+                          if (searchWords.every(word => orderName.includes(word))) {
+                              this.orders.push(allOrders[i]);
                           }
                       }   
                       return false; 

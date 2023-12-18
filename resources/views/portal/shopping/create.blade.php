@@ -50,7 +50,12 @@
         <span class="h5   py-3 px-3">Total Cart: R
             <b>@{{ total_cart }}</b>
         </span>
-        <button class="btn btn-info rounded btn-sm mx-2" data-toggle="modal" data-target="#modelId" >preview order</button>
+        <div class="">
+            <a href="{{ route('shopping') }}" class="btn btn-sm rounded btn-outline-success">Back to orders</a>
+        </div>
+        <div class="">
+            <button class="btn btn-info rounded btn-sm " data-toggle="modal" data-target="#modelId" >preview order</button>
+        </div>
     </div>
 </div>
  <div class="tableFixHead" style="height: 500px;">

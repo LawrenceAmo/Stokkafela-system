@@ -76,6 +76,7 @@ Route::post('/staff/update/save', [StaffController::class, 'update_staff_profile
 
 // Staff Shopping
 Route::get('/shopping', [ShoppingController::class, 'index'])->name('shopping');
+Route::get('/shopping/admin', [ShoppingController::class, 'index_admin'])->name('shopping_admin');
 Route::get('/shopping/staff/thank-you', [ShoppingController::class, 'staff_order_thank_you'])->name('staff_order_thank_you');
 Route::get('/shopping/cart/create', [ShoppingController::class, 'create_cart'])->name('create_cart');
 Route::get('/shopping/order/items/{orderID}', [ShoppingController::class, 'staff_ordered_items'])->name('staff_ordered_items');

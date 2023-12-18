@@ -25,7 +25,19 @@ class ShoppingController extends Controller
         return view('portal.shopping.index')->with('orders', $orders);
     }
 
-    public function create_cart()
+    public function index_admin()
+    {
+        $userID = Auth::id();
+        $orders = DB::table('staff_orders')
+                        ->leftJoin('users', 'users.id', '=', 'staff_orders.userID')
+                        ->select('staff_orders.*', 'users.first_name', 'users.last_name', 'users.email')
+                        ->orderBy('staff_orders.created_at', 'desc')
+                        ->get();
+                        // return $orders;
+        return view('portal.shopping.admin')->with('orders', $orders);
+    }
+
+   public function create_cart()
     {
         $userID = Auth::id();
         $products = DB::table('products')->get();
@@ -122,8 +134,7 @@ class ShoppingController extends Controller
                     ->where('staff_orders.staff_orderID', $staff_orderID)
                     ->get();
 
-        $user = User::find( $order[0]->userID);
-        
+        $user = User::find( $order[0]->userID);        
         $user_info = [
             'names' => $user->first_name.' '.$user->last_name,
             'email' => $user->email,

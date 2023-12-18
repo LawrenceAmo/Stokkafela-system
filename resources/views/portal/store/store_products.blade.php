@@ -70,8 +70,8 @@
   <div class="col-md-6  d-flex justify-content-end">
 
     <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-success" @click="clear_filters()">clear All Filters</a>
-    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv_test()">download doh</a>
-    {{-- <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv()">download stock analysis</a> --}}
+    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-info" @click="get_csv_test()">download new doh</a>
+    <a href="#" class="btn float-end btn-sm rounded font-weight-bold btn-outline-dark" @click="get_csv()">download Old DOH </a>
   </div>
   </div>
   <div class="row border rounded p-3 w-100 pb-5">
