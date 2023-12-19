@@ -27,7 +27,7 @@
         </thead>
         <tbody>
             @foreach ($staffs as $staff)
-             <tr> 
+             <tr>
                 <td scope="row">{{$i}}</td>
                 <td>{{$staff->first_name}} {{$staff->last_name}}</td>
                 {{-- <td title="{{$staff->email}}"> {{$staff->phone}}</td>  --}}

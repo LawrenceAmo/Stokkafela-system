@@ -14,6 +14,24 @@
   
          table  { border-collapse: collapse; width: 100% !important; }
         th, td { padding: 8px 16px; } 
+
+        .loader {
+  width: 60px;
+  aspect-ratio: 4;
+  --_g: no-repeat radial-gradient(circle closest-side,#000 90%,#0000);
+  background: 
+    var(--_g) 0%   50%,
+    var(--_g) 50%  50%,
+    var(--_g) 100% 50%;
+  background-size: calc(100%/3) 100%;
+  animation: l7 1s infinite linear;
+}
+@keyframes l7 {
+    33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
+    50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
+    66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+}
+
    
     </style>
 
@@ -21,8 +39,8 @@
         <div class="card   rounded p-3">
             
             <div class="d-flex justify-content-between">
-                <div class="border">
-
+                <div class=" ">
+                    
                 </div>
                 <div class=" ">
                     {{-- <a href="" class="btn btn-sm rounded btn-dark">create order</a> --}}
@@ -106,53 +124,79 @@
     <!-- Modal -->
     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                @csrf
-                <div class="modal-header "  v-if="total_cart">
-                    <h5 class="modal-title">Are you sure you want to create this order?</h5>
-                        <button type="button" class="close border-0 bg-white rounded text-danger " data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-header "  v-else>
-                    <h5 class="modal-title text-danger">Add items to your order...</h5>                        
-                </div>  
-                <div class="modal-body" v-if="total_cart">
-                    <div class="d-flex justify-content-between">
-                        <span>
-                            <span>Total Price:</span> &nbsp; <b>@{{ total_cart }}</b>
-                        </span>
-                        <span><a @click="save_added_items()" class="btn btn-sm btn-success rounded">confirm order</a></span>
+            <div class="modal-content" >
+               <div class="" v-if="!sending_order">
+                    @csrf
+                    <div class="modal-header "  v-if="total_cart">
+                        <h5 class="modal-title">Are you sure you want to create this order?</h5>
+                            <button type="button" class="close border-0 bg-white rounded text-danger " data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                     </div>
-                     <div class="">
-                        <div class="tableFixHead" style="height: 500px;">
-                            <table class="table table-striped table-inverse  " >
-                                <thead class="thead-inverse  ">
-                                    <tr class="bg-dark text-light">
-                                        <th>#</th>
-                                        <th>Barcode</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item,i in cart" >
-                                        <td scope="row">@{{i+1}}</td>
-                                        <td>@{{item.sku}}</td>
-                                        <td>@{{item.name}}</td>
-                                        <td>@{{item.price}}</td>
-                                        <td class="text-center">@{{item.qty}}</td>
-                                        <td>@{{item.qty*item.price}}</td>
-                                     </tr>                                
-                                </tbody>
-                            </table>
+                    <div class="modal-header "  v-else>
+                        <h5 class="modal-title text-danger">Add items to your order...</h5>                        
+                    </div>  
+                    <div class="modal-body" v-if="total_cart">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <span>Total Price:</span> &nbsp; <b>@{{ total_cart }}</b>
+                            </span>
+                            <span><a @click="save_added_items()" class="btn btn-sm btn-success rounded">confirm order</a></span>
+                        </div>
+                        <div class="">
+                            <div class="tableFixHead" style="height: 500px;">
+                                <table class="table table-striped table-inverse  " >
+                                    <thead class="thead-inverse  ">
+                                        <tr class="bg-dark text-light">
+                                            <th>#</th>
+                                            <th>Barcode</th>
+                                            <th>Description</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item,i in cart" >
+                                            <td scope="row">@{{i+1}}</td>
+                                            <td>@{{item.sku}}</td>
+                                            <td>@{{item.name}}</td>
+                                            <td>@{{item.price}}</td>
+                                            <td class="text-center">@{{item.qty}}</td>
+                                            <td>@{{item.qty*item.price}}</td>
+                                        </tr>                                
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+                <div class="" v-else>
+                    <div class="modal-header d-flex flex-column"  v-if="msg">
+                        <h5 class="modal-title text-danger">@{{ msg }}</h5> 
+                        <div class="text-center   d-flex justify-content-center w-100">
+                            <a href="" class="btn btn-sm rounded btn-outline-warning"><b>refresh page</b></a>
+                        </div>                            
+                    </div>
+                    <div class="modal-body py-5" v-else>
+                        <div class=" d-flex  ">
+                            <div class="px-3 h3">
+                                <div class="loader"></div>
+                            </div>
+                            <div class="">
+                                <p class="h5">Creating Your Order. Please Wait...</p>
+                            </div>
+                        </div>
+                        <div class="text-center pt-3">
+                            <p>
+                                If this take longer please refresh and try again
+                            </p>
                         </div>
                     </div>
-                </div>
-                            
+                </div>                          
             </div>
+           
+
         </div>        
     </div>
      </main>
@@ -166,6 +210,7 @@
             productDB: [],
             promotion_items: [],           
             searchProductsText: '',
+            sending_order: false,
             msg: '',
             total_cart: 0,
             id: 0,
@@ -173,7 +218,6 @@
         },
         async created(){
             let productsDB = @json($products);
-            // let id = @json($id);
 
             // Parse the JSON string back into an array
             this.cart = JSON.parse(localStorage.getItem("cart"));
@@ -239,14 +283,16 @@
             },
             save_added_items: async function(){
                  let data = { id: @json($id) };
+                 this.sending_order = true
                 let res = await axios.post(" {{ route('staff_save_order') }}", {items: this.cart, data: data} );  
                     // res = await res.status
                     if (res.status === 200) {
                         // this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
-                        // $('#modelID').modal('show');
-                        // setTimeout(() => {
+                         setTimeout(() => {
                             location.href = "{{ route('staff_order_thank_you') }}";
-                        // }, 5000);
+                        }, 5000);
+                    }else{
+                        this.msg = 'Something went wrong, Please refresh and try again...'
                     }
                     console.log(this.cart) 
                     console.log(await res ) 

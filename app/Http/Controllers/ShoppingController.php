@@ -58,12 +58,25 @@ class ShoppingController extends Controller
                     ->where('staff_orders.staff_orderID', $orderID)
                     ->where('staff_orders.userID',Auth::id())
                     ->get();
-
-                    // return $order;
         return view('portal.shopping.ordered_items')->with('order', $order);
     }
 
+    public function staff_ordered_items_admin($orderID)
+    {
+         $order = DB::table('staff_orders')
+                    ->leftJoin('staff_order_products', 'staff_order_products.staff_orderID', '=', 'staff_orders.staff_orderID')
+                    ->leftJoin('products', 'products.productID', '=', 'staff_order_products.productID')
+                    ->leftJoin('users', 'users.id', '=', 'staff_orders.userID')
+                    ->where('staff_orders.staff_orderID', $orderID)
+                    ->where('staff_orders.userID',Auth::id())
+                    ->get();
+                    // return $order;
+        return view('portal.shopping.ordered_items_admin')->with('order', $order);
+    }
+
     public function staff_save_order(Request $request)  {
+        
+        // return true;
 
         $userID = (int)$request->data["id"];
         // get the last order for this user
@@ -71,8 +84,7 @@ class ShoppingController extends Controller
                         ->where('ordered', false)
                         ->where('userID', $userID)
                         ->orderBy('created_at', 'desc')
-                        ->first();  
-            
+                        ->first();              
 
         // if there's no order for this user then create a new order
         if (!$lastOrder) {

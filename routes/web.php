@@ -79,6 +79,7 @@ Route::get('/shopping/admin', [ShoppingController::class, 'index_admin'])->name(
 Route::get('/shopping/staff/thank-you', [ShoppingController::class, 'staff_order_thank_you'])->name('staff_order_thank_you');
 Route::get('/shopping/cart/create', [ShoppingController::class, 'create_cart'])->name('create_cart');
 Route::get('/shopping/order/items/{orderID}', [ShoppingController::class, 'staff_ordered_items'])->name('staff_ordered_items');
+Route::get('/shopping/order/items/admin/{orderID}', [ShoppingController::class, 'staff_ordered_items_admin'])->name('staff_ordered_items_admin');
 // Route::post('/shopping/cart/save', [ShoppingController::class, 'staff_save_order'])->name('staff_save_order');
 // Route::get('/staff/edit/{id}', [StaffController::class, 'edit'])->name('edit_staff');
 // Route::get('/staff/delete/{id}', [StaffController::class, 'delete_staff'])->name('delete_staff');

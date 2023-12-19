@@ -14,7 +14,7 @@
   
          table  { border-collapse: collapse; width: 100% !important; }
         th, td { padding: 8px 16px; } 
-    
+   
     </style>
 
     <main class="shadow rounded p-3" id="app" v-cloak>
@@ -22,15 +22,16 @@
             
             <div class="d-flex justify-content-between">
                 <div class=" ">
-                    Total Orders: @{{order_info.total_orders}}
+                    Order Number: @{{order_info.order_number}}
                 </div>
                 <div class=" ">
-                    Total Spent: R@{{order_info.total_price}}
-                </div>               
+                    Total Price: R@{{order_info.total_price}}
+                </div>
                 <div class=" ">
-                    <a href="{{ route('create_cart') }}" class="btn btn-sm rounded btn-dark">create order</a>
-                
-                    <a href="{{ route('shopping_admin') }}" class="btn btn-sm rounded btn-dark">Admin</a>
+                    Total Qty: @{{order_info.total_qty}}
+                </div>
+                <div class=" ">
+                    <a href="{{ route('shopping_admin') }}" class="btn btn-sm rounded btn-outline-info">Back to orders</a>
                 </div>
             </div>
         </div>         
@@ -43,10 +44,10 @@
      </div>
     <div class="card   rounded p-3 w-100" >
 <div class=" pb-3  row">
-   <span class="  col-md-2 h5 ">All Your Orders</span>
+   <span class="  col-md-2 h5 ">Products Ordered</span>
    <div class="col-md-10">
     <div class="form-group">
-       <input type="text" class="form-control" v-model="searchProductsText" v-on:keyup="SearchProducts($event)" placeholder="Search order by order number">
+       <input type="text" class="form-control" v-model="searchProductsText" v-on:keyup="SearchProducts($event)" placeholder="Search product by name">
      </div>
    </div>
   
@@ -57,44 +58,37 @@
         <thead class="thead-inverse  ">
             <tr class="bg-purple text-light">
                 <th>#</th>
-                <th>Order Number</th>
-                <th>Status</th>
-                <th>Order Sent</th>
-                <th>Total Qty</th>                
+                <th>Barcode</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>                
                 <th>Total Price</th>
-                <th>Ordered At</th>
-                <th>Action</th>
             </tr>
             </thead>
             <tbody>  
-                <tr v-for="order,i in orders" >
+                <tr v-for="item,i in order" >
                      <td  > @{{i+1}} </td>
                      <td>
-                        @{{order.order_number}} 
+                        @{{item.barcode}} 
                      </td>
                    <td>
-                        @{{order.status}}
-                    </td>
-                    <td >
-                        <div class="text-success" v-if="order.ordered">Yes</div>
-                        <div class="text-danger" v-else>No</div>
-                     </td>                   
-                    <td>
-                        @{{order.total_qty}}
+                        @{{item.descript}}
                     </td>
                     <td>
-                        R@{{order.total_price}}
+                        @{{item.price}}
+                    </td>                   
+                    <td>
+                        @{{item.qty}}
                     </td>
                     <td>
-                        @{{order.created_at}}
+                        @{{item.qty * item.price }}
                     </td>
-                    <td class="c-pointer" @click="orderUrl(order.staff_orderID)">
-                        <i class="fa fa-eye text-info" aria-hidden="true"></i> 
-                    </td>
+                     
+                    
                  </tr>  
             </tbody>
     </table>
-    <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="orders.length < 1">No Orders available</div>
+    <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="order.length < 1">No Orders available</div>
 </div>
     </div>
 
@@ -112,7 +106,6 @@
             </div>
         </div> 
     </div>
-    <a href="" data-href="{{route('staff_ordered_items', ['orderID'])}}" id="orderUrl" class="d-none"></a>
 
      </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> 
@@ -121,8 +114,7 @@
       createApp({
         data() {
           return {
-            orders: [],        
-            ordersDB: [],
+            order: [],
             order_info: [],
             promotion_items: [],           
             searchorderText: '',
@@ -131,21 +123,20 @@
            };
         },
         async created(){
-            let orders = @json($orders);
-            console.log(orders)
-            this.orders = orders;
-            this.ordersDB = orders;
+            let order = @json($order);
+            console.log(order)
+            this.order = order;
 
-            let total_price = 0;    let total_orders = 0;
-            for (let i = 0; i < orders.length; i++) {
-                total_price += parseFloat(orders[i].total_price)
-                total_orders += 1                
+            let total_price = 0;    let total_qty = 0;
+            for (let i = 0; i < order.length; i++) {
+                total_price += order[i].price * order[i].qty
+                total_qty += order[i].qty                
             }
 
             let order_info = {
-                        'total_price': total_price.toFixed(2),
-                        'total_orders': total_orders,
-                        // 'order_number': order[0].order_number,
+                        'total_price': total_price,
+                        'total_qty': total_qty,
+                        'order_number': order[0].order_number,
         };
         this.order_info = order_info
             console.log(order_info)
@@ -153,10 +144,10 @@
         
         },
         methods: {
-            orderUrl: function(val){
-                var link = document.getElementById('orderUrl');
+            productUpdateUrl: function(val){
+                var link = document.getElementById('productUpdateUrl');
                 var href = link.getAttribute('data-href');
-                href = href.replace('orderID', val)
+                href = href.replace('productID', val)
                 location.href = href
             },
             updateQty: function(){
@@ -226,21 +217,21 @@
                 this.cart_total()
             },
             SearchProducts: function(event) {
-                let allOrders = this.ordersDB;
+                      let allProducts = this.products;
                       let searchWords = this.searchProductsText.toLowerCase().split(/\s+/); // Split by whitespace
 
-                      this.orders = [];
+                      this.products = [];
                       if (searchWords[0].length < 1) {
-                          this.orders = [ ...allOrders ]
+                          this.products = [ ...allProducts ]
                           return false;
                       } 
                       console.log(searchWords)
 
-                      for (let i = 0; i < allOrders.length; i++) {
-                          let orderName = allOrders[i].order_number.toLowerCase();
+                      for (let i = 0; i < allProducts.length; i++) {
+                          let productName = allProducts[i].name.toLowerCase();
                           // Use every() to check if all search words are present in the product name
-                          if (searchWords.every(word => orderName.includes(word))) {
-                              this.orders.push(allOrders[i]);
+                          if (searchWords.every(word => productName.includes(word))) {
+                              this.products.push(allProducts[i]);
                           }
                       }   
                       return false; 

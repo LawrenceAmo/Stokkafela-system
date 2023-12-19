@@ -94,8 +94,13 @@
                     <td>
                         @{{order.created_at}}
                     </td>
-                    <td class="c-pointer" @click="update_order(order)">
-                        <i class="fa fa-eye text-info" aria-hidden="true"></i> 
+                    <td class="c-pointer">
+                        <a class=""  @click="update_order(order)">
+                           <i class="fas fa-pencil-alt   text-info  "></i> 
+                        </a> &nbsp; | &nbsp;
+                        <a class="" @click="orderUrl(order.staff_orderID)">
+                            <i class="fa fa-eye text-success" aria-hidden="true"></i> 
+                        </a>
                     </td>
                  </tr>  
             </tbody>
@@ -125,7 +130,7 @@
         </div>
     </div>
  
-    <a href="" data-href="{{route('staff_ordered_items', ['orderID'])}}" id="orderUrl" class="d-none"></a>
+    <a href="" data-href="{{route('staff_ordered_items_admin', ['orderID'])}}" id="orderUrl" class="d-none"></a>
 
      </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> 
@@ -167,13 +172,19 @@
             console.log(orders) 
         },
         methods: {
+            orderUrl: function(val){
+                var link = document.getElementById('orderUrl');
+                var href = link.getAttribute('data-href');
+                href = href.replace('orderID', val)
+                location.href = href
+            },
             update_order: function(val){
               console.log(val)
             this.update_order_info = val;
                 $('#update_order').modal('show');
             },
             save_updated_order: function(order_number){
-               let data = await axios.post(' ', {data: items} );  
+            //    let data = await axios.post(' ', {data: items} );  
                     // data = await data.status
                     // if (data.status === 200) {
                     //     this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
