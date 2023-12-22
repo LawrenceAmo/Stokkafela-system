@@ -111,6 +111,7 @@ Route::get('/store/delete/{id}', [StoreController::class, 'destroy'])->name('del
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/product/create', [ProductController::class, 'create'])->name('create_product');
 Route::POST('/product/save', [ProductController::class, 'save'])->name('save_product');
+Route::POST('/product/store/delete', [ProductController::class, 'delete_store_product'])->name('delete_store_product');
 // Route::get('/product', [StoreController::class, 'index'])->name('save_store');
 
 // Stock Analysis / Reports 

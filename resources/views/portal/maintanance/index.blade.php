@@ -72,7 +72,28 @@
                     <button   @click="queue_jobs_start()" class="btn btn-info rounded btn-sm">Start background Tasks</button>
                 </div>
             </div> 
-     </section>
+     </section> <hr>
+     <section class="card rounded p-2">
+    
+       <form action="{{ route('delete_store_product') }}" method="POST" class="row">
+        @csrf
+        <div class="col">
+            <p class="font-weight-bold ">Delete Product Per Store</p>
+            <div class="border rounded text-center">
+                <div class="form-group">
+                    {{-- <label for="">Select Store</label> --}}
+                    <select class="form-control" name="store" required>
+                      <option class="" @disabled(true) selected>Select Store</option>
+                      @foreach ($stores as $store)
+                          <option value="{{$store->storeID}}">{{$store->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                <button type="submit" class="btn btn-danger rounded btn-sm">Delete Product</button>
+            </div>
+        </div> 
+    </form>
+</section>
  
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}

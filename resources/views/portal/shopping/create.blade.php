@@ -92,21 +92,21 @@
             <tbody>
                 <tr v-for="product,i in products" >
                     <label :for="i">
-                    <td @click="addItem(product.productID)"> @{{i+1}} </td>
-                    <td @click="addItem(product.productID)"> 
-                        <input type="checkbox" :id="product.productID" name="" class="form-text form-control-sm text-muted">
+                    <td @click="addItemClick(product.sku)"> @{{i+1}} </td>
+                    <td @click="addItemClick(product.sku)"> 
+                        <input type="checkbox" :id="product.sku" name="" class="form-text form-control-sm text-muted">
                     </td>
-                    <td @click="addItem(product.productID)">
+                    <td @click="addItemClick(product.sku)">
                         @{{product.sku}}
                     </td>
-                    <td @click="addItem(product.productID)">
+                    <td @click="addItemClick(product.sku)">
                         @{{product.name}}
                     </td>                   
-                    <td @click="addItem(product.productID)">
+                    <td @click="addItemClick(product.sku)">
                         @{{product.price}}
                     </td>
                     <td>
-                       <input type="number" v-model="product.qty" class="form-text form-control-sm text-muted"  @keyup="updateQty()" :id="'price'+product.sku">                       
+                       <input type="number" min="0" v-model="product.qty" class="form-text form-control-sm text-muted"  @change="updateQty(product.qty)" :id="'price'+product.sku">                       
                     </td>
                     <td>
                         @{{(product.qty * product.price).toFixed(2)}}
@@ -118,8 +118,6 @@
     <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="products.length < 1">No products available</div>
 </div>
     </div>
-
-  
  
     <!-- Modal -->
     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -138,11 +136,25 @@
                     </div>  
                     <div class="modal-body" v-if="total_cart">
                         <div class="d-flex justify-content-between">
-                            <span>
-                                <span>Total Price:</span> &nbsp; <b>@{{ total_cart }}</b>
-                            </span>
-                            <span><a @click="save_added_items()" class="btn btn-sm btn-success rounded">confirm order</a></span>
-                        </div>
+                            <div>                                
+                                <div class="form-group">
+                                    <label for="deliveryMethod">Select Delivery Method</label>
+                                    <select v-model="delivery_method" class="form-control form-control-sm" id="deliveryMethod" name="deliveryMethod">
+                                        <option selected disabled>Select Delivery Method</option>
+                                        <option value="collect">Collect at Stokkafela DC</option>
+                                        <option value="deliver to branch">Collect from my Branch</option>
+                                        <option value="deliver to home">Deliver to my Address</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                               <div class=""><span>Total Price:</span> &nbsp; <b>@{{ total_cart }}</b></div>
+                                <div class="">
+                                    <a @click="save_added_items()" class="btn btn-sm btn-success rounded">confirm order</a>
+                                </div>
+                            </div>
+                         </div>
+                         
                         <div class="">
                             <div class="tableFixHead" style="height: 500px;">
                                 <table class="table table-striped table-inverse  " >
@@ -208,24 +220,24 @@
             cart: [],
             products: [],
             productDB: [],
-            promotion_items: [],           
+            cart_itemdIDs: [],           
             searchProductsText: '',
             sending_order: false,
             msg: '',
             total_cart: 0,
             id: 0,
+            delivery_method: '',
            };
         },
         async created(){
             let productsDB = @json($products);
 
             // Parse the JSON string back into an array
-            this.cart = JSON.parse(localStorage.getItem("cart"));
+            let cart = JSON.parse(localStorage.getItem("cart"));
 
             this.products = productsDB
             let productIDs = [];
             let products = [];
-            let stock_value = 0;
             for (let i = 0; i < productsDB.length; i++) {
                 let productID = productsDB[i].productID;
                 if (!productIDs.includes(productID)) {
@@ -240,24 +252,17 @@
                 }
             }
             let filteredArray = products.filter(value => value !== "");
-            this.stock_value = stock_value;
             this.products = [ ...filteredArray ];
             this.productDB = [ ...filteredArray ];
             let rearrangedArray = filteredArray.sort();
             this.total_stock_units = rearrangedArray.length ;
-
-            const replaceProducts = (cart, originalProducts) => {
-                return originalProducts.map(originalProduct => {
-                    const cartProduct = cart.find(product => product.productID === originalProduct.productID);
-
-                    return cartProduct ? { ...originalProduct, ...cartProduct } : originalProduct;
-                });
-            };
-
-            replaceProducts(this.cart, this.products )
-            console.log(this.cart)
-            console.log(this.products)
-
+ 
+        setTimeout(() => {
+            for (let x = 0; x < cart.length; x++) {
+                 this.addItemClick(cart[x].sku, cart[x].qty);                
+            }
+        }, 1500);
+ 
         },
         methods: {
             productUpdateUrl: function(val){
@@ -266,69 +271,94 @@
                 href = href.replace('productID', val)
                 location.href = href
             },
-            updateQty: function(){
-                this.cart_total()
+            updateQty: function(qty = 1){
+                if (qty >= 0) {
+                    this.cart_total()   
+                }else{
+                    alert('You can not set negetive qty...')
+                    location.reload()
+                }              
             },
             cart_total: function(){
                 let cart = this.cart;
-                let itemIDs = this.promotion_items;
+                let itemIDs = this.cart_itemdIDs;
                 let items = this.products;
 
-                let filteredProducts = items.filter(product => itemIDs.includes(product.productID));
+                let filteredProducts = items.filter(product => itemIDs.includes(product.sku));
 
                 this.cart = [ ...filteredProducts ]
                 this.total_cart = filteredProducts.reduce((total, product) => total + (product.qty*product.price), 0).toFixed(2);
-                console.log( this.cart)
                 localStorage.setItem("cart", JSON.stringify(this.cart));
             },
             save_added_items: async function(){
-                 let data = { id: @json($id) };
-                 this.sending_order = true
+                 let data = { id: @json($id), delivery_method: this.delivery_method };
+                 if (!this.delivery_method) {
+                    alert('Please select Delivery Method')
+                    return false;
+                 }
+                this.sending_order = true
                 let res = await axios.post(" {{ route('staff_save_order') }}", {items: this.cart, data: data} );  
-                    // res = await res.status
                     if (res.status === 200) {
-                        // this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
+                        this.cart = []
+                        localStorage.setItem("cart", JSON.stringify(this.cart));
+
                          setTimeout(() => {
                             location.href = "{{ route('staff_order_thank_you') }}";
                         }, 5000);
                     }else{
                         this.msg = 'Something went wrong, Please refresh and try again...'
                     }
-                    console.log(this.cart) 
-                    console.log(await res ) 
              },
-            addItem: function(id){
-                let itemID = document.getElementById(id)
-                 if (itemID.checked) { 
-                     itemID.checked = false;
-                     this.addItemDB(id, false)
+            addItemClick: async function (itemID, qty = 1) {
+
+                let selected_item = document.getElementById(itemID)
+                console.log(selected_item)
+                console.log(itemID)
+                if (!selected_item) {
+                    return false;
+                }
+
+                // check/select and uncheck the item (for user)                 
+                 if (selected_item.checked || qty < 1) {
+                     selected_item.checked = false;
+                     this.addItemDB(itemID, false, qty)  // remove item from cart
                  } else {
-                    itemID.checked = true; 
-                    this.addItemDB(id, true)
+                    selected_item.checked = true;
+                    this.addItemDB(itemID, true, qty)     // add item from cart
                 }
             },
             removeItemQtyDB: function(itemID, qty){
                 this.products = this.products.map(product => {
-                if (product.productID === itemID) {
-                    // Update the price for the target product
-                    return { ...product, qty: qty };
-                }
-                return product;
+                    if (product.sku === itemID) {
+                        // Update the qty for the target product
+                        return { ...product, qty: qty };
+                    }
+                    return product;
                 });
             },
-            addItemDB: function(itemID, type){
+            addItemDB: function(itemID, type, qty){
+                // type = 'addItem' flag
                 if (type) {
-                    if (!this.promotion_items.includes(itemID)) {
-                        this.promotion_items.push(itemID)
-                        this.removeItemQtyDB(itemID, 1);
+                    if (!this.cart_itemdIDs.includes(itemID)) {
+                        this.cart_itemdIDs.push(itemID)
+                        this.removeItemQtyDB(itemID, qty);
                     }
                 } else {
-                    if (this.promotion_items.includes(itemID)) {
-                        this.promotion_items = this.promotion_items.filter(item => item !== itemID);
+                    if (this.cart_itemdIDs.includes(itemID)) {
+                        this.cart_itemdIDs = this.cart_itemdIDs.filter(item => item !== itemID);
                         this.removeItemQtyDB(itemID, 0);
                     }
-                } 
+                }
                 this.cart_total()
+            },
+            unselectAllItems: function(){
+                // Select all checkbox input elements in the document
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+                // Loop through the selected checkboxes (NodeList) and do something with each checkbox
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
+                });
             },
             SearchProducts: function(event) {
                       let allProducts = this.productDB;
@@ -338,14 +368,22 @@
                       if (searchWords[0].length < 1) {
                           this.products = [ ...allProducts ]
                           return false;
-                      } 
+                      }
                       for (let i = 0; i < allProducts.length; i++) {
                           let productName = allProducts[i].name.toLowerCase();
                           // Use every() to check if all search words are present in the product name
                           if (searchWords.every(word => productName.includes(word))) {
                               this.products.push(allProducts[i]);
                           }
-                      }   
+                      }
+                      this.unselectAllItems();
+
+                      setTimeout(() => {
+                        let cart = this.cart
+                            for (let x = 0; x < cart.length; x++) {
+                                this.addItemClick(cart[x].sku, cart[x].qty);                
+                            }
+                        }, 2000);
                       return false; 
                   },
             }

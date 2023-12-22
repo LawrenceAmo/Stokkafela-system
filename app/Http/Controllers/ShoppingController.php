@@ -76,7 +76,7 @@ class ShoppingController extends Controller
 
     public function staff_save_order(Request $request)  {
         
-        // return true;
+        return $request;
 
         $userID = (int)$request->data["id"];
         // get the last order for this user

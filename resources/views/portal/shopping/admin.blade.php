@@ -95,9 +95,9 @@
                         @{{order.created_at}}
                     </td>
                     <td class="c-pointer">
-                        <a class=""  @click="update_order(order)">
+                        {{-- <a class="" >
                            <i class="fas fa-pencil-alt   text-info  "></i> 
-                        </a> &nbsp; | &nbsp;
+                        </a> &nbsp; | &nbsp; --}}
                         <a class="" @click="orderUrl(order.staff_orderID)">
                             <i class="fa fa-eye text-success" aria-hidden="true"></i> 
                         </a>
@@ -109,27 +109,6 @@
 </div>
     </div>
   
-    <!-- Modal -->
-    <div class="modal fade" id="update_order" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Orders: @{{update_order_info.order_number}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    Body
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
- 
     <a href="" data-href="{{route('staff_ordered_items_admin', ['orderID'])}}" id="orderUrl" class="d-none"></a>
 
      </main>
@@ -178,11 +157,7 @@
                 href = href.replace('orderID', val)
                 location.href = href
             },
-            update_order: function(val){
-              console.log(val)
-            this.update_order_info = val;
-                $('#update_order').modal('show');
-            },
+            
             save_updated_order: function(order_number){
             //    let data = await axios.post(' ', {data: items} );  
                     // data = await data.status

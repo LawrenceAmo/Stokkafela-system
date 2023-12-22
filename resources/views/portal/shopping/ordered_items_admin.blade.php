@@ -20,22 +20,52 @@
     <main class="shadow rounded p-3" id="app" v-cloak>
         <div class="card   rounded p-3">
             
-            <div class="d-flex justify-content-between">
-                <div class=" ">
-                    Order Number: @{{order_info.order_number}}
+            <div class="row p-0 m-0">
+                <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center ">
+                        <div>Order Number</div> <div>@{{order_info.order_number}}</div>
+                    </div>
                 </div>
-                <div class=" ">
-                    Total Price: R@{{order_info.total_price}}
+                <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center">
+                        <div>Total Price</div> <div>R@{{order_info.total_price}}</div>
+                    </div>
                 </div>
-                <div class=" ">
-                    Total Qty: @{{order_info.total_qty}}
+                <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center ">
+                        <div class="">Total Quantity</div> <div class="">@{{order_info.total_qty}}</div>
+                    </div>
                 </div>
-                <div class=" ">
-                    <a href="{{ route('shopping_admin') }}" class="btn btn-sm rounded btn-outline-info">Back to orders</a>
+                <div class="col-md-3">
+                    <div class=" p-2 rounded    text-center">
+                        <a href="{{ route('shopping_admin') }}" class="btn btn-sm rounded btn-outline-info">Back to orders</a>
+                    </div>
                 </div>
             </div>
-        </div>         
-     
+            <div class="row pt-3 m-0">
+                <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center ">
+                        <div class="">Staff Names</div><div class="">@{{order_info.staff_names}}</div>
+                    </div>
+                </div>
+                    <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center ">
+                       <div class="">Email Address</div><div class=""> @{{order_info.staff_email}}</div>
+                    </div>
+                </div>
+                    <div class="col-md-3">
+                    <div class="p-2 rounded border  text-center ">
+                        @{{order_info.total_qty}}
+                    </div>
+                    </div>
+                    <div class="col-md-3">
+                    <div class="p-2 rounded    text-center ">
+                        <a @click="update_order(order_info.order_number)" class="btn btn-sm rounded btn-outline-success">Update Order</a>
+                    </div>
+                    </div>
+            </div>
+        </div>
+
     <hr>
     <div class="row mx-0 animated fadeInDown">
         <div class="col-12 text-center p-0 m-0">
@@ -43,15 +73,14 @@
         </div>
      </div>
     <div class="card   rounded p-3 w-100" >
-<div class=" pb-3  row">
-   <span class="  col-md-2 h5 ">Products Ordered</span>
+<div class=" p-0 m-0  row">
+   <span class="  col-md-4 h5 ">Products Ordered</span>
    <div class="col-md-10">
     <div class="form-group">
-       <input type="text" class="form-control" v-model="searchProductsText" v-on:keyup="SearchProducts($event)" placeholder="Search product by name">
+       {{-- <input type="text" class="form-control" v-model="searchProductsText" v-on:keyup="SearchProducts($event)" placeholder="Search product by name"> --}}
      </div>
    </div>
-  
-    
+
 </div> <hr>
  <div class="tableFixHead" style="height: 500px;">
     <table class="table table-striped table-inverse  " >
@@ -82,31 +111,45 @@
                     </td>
                     <td>
                         @{{item.qty * item.price }}
-                    </td>
+                    </td>                               
                      
-                    
                  </tr>  
             </tbody>
     </table>
     <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="order.length < 1">No Orders available</div>
 </div>
     </div>
-
-    <!-- Modal --> 
-    <div class="modal fade" id="modelID" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    
+    <!-- Modal -->
+    <div class="modal fade" id="update_order" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                @csrf
-                <div class="modal-header ">
-                    <h5 class="modal-title">@{{msg}}</h5>
-                        <button type="button" class="close border-0 bg-white rounded text-danger " data-dismiss="modal" aria-label="Close">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Order: @{{order_info.order_number}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>  
+                </div>
+                <div class="modal-body">
+                   <div class="">
+                    <div class="form-group">
+                      <label for="">Status</label>
+                      <select class="form-control" name="" id="">
+                        <option selected disabled>Select Order Status</option>
+                        <option value="complete">Complete</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </div>
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    {{-- <button type="button" class="btn btn-sm rounded btn-secondary" data-dismiss="modal">Close</button> --}}
+                    <button type="button" class="btn btn-sm rounded btn-dark">Update</button>
+                </div>
             </div>
-        </div> 
+        </div>
     </div>
-
+ 
      </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> 
     <script>
@@ -137,13 +180,20 @@
                         'total_price': total_price,
                         'total_qty': total_qty,
                         'order_number': order[0].order_number,
-        };
+                        'staff_email': order[0].email,
+                        'staff_names': order[0].first_name+" "+order[0].last_name,
+         };
         this.order_info = order_info
             console.log(order_info)
 
         
         },
         methods: {
+            update_order: function(val){
+              console.log(val)
+                this.update_order_info = val;
+                $('#update_order').modal('show');
+            },
             productUpdateUrl: function(val){
                 var link = document.getElementById('productUpdateUrl');
                 var href = link.getAttribute('data-href');

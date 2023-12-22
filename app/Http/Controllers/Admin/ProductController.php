@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\auth_token;
 use App\Models\Api_auth;
 use App\Imports\CSVImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -95,6 +96,26 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload products file!!!');
         }
         return redirect()->back()->with('success', 'Uploading products on queue...');
+    } 
+
+    public function delete_store_product(Request $request)
+    {
+        $request->validate([
+            'store' => 'required',                  
+        ]);
+ 
+        $userID = Auth::id();
+        $user = User::where('id', '=', $userID )->get();
+
+        if (count($user) <= 0) {
+            if (!str_contains($user[0]->email, 'amo')) {
+              return redirect()->back()->with('error', 'You don\'t have access to this function!!!');
+            }
+          }
+
+          Product::where('storeID', '=', (int)$request->store )->delete();        
+        
+        return redirect()->back()->with('success', 'All products were deleted for this store...');
     } 
     
 }
