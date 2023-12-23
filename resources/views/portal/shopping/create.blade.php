@@ -297,17 +297,19 @@
                     return false;
                  }
                 this.sending_order = true
-                let res = await axios.post(" {{ route('staff_save_order') }}", {items: this.cart, data: data} );  
-                    if (res.status === 200) {
-                        this.cart = []
-                        localStorage.setItem("cart", JSON.stringify(this.cart));
+                let res = await axios.post(" {{ route('staff_save_order') }}", {items: this.cart, data: data} ); 
+                console.log(await res)
+                return false; 
+                if (res.status === 200) {
+                    this.cart = []
+                    localStorage.setItem("cart", JSON.stringify(this.cart));
 
-                         setTimeout(() => {
-                            location.href = "{{ route('staff_order_thank_you') }}";
-                        }, 5000);
-                    }else{
-                        this.msg = 'Something went wrong, Please refresh and try again...'
-                    }
+                        setTimeout(() => {
+                        location.href = "{{ route('staff_order_thank_you') }}";
+                    }, 5000);
+                }else{
+                    this.msg = 'Something went wrong, Please refresh and try again...'
+                }
              },
             addItemClick: async function (itemID, qty = 1) {
 

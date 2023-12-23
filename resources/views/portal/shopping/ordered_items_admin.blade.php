@@ -14,26 +14,28 @@
   
          table  { border-collapse: collapse; width: 100% !important; }
         th, td { padding: 8px 16px; } 
-   
+        .capitalize-first {
+      text-transform: capitalize;
+    }
     </style>
-
+ 
     <main class="shadow rounded p-3" id="app" v-cloak>
         <div class="card   rounded p-3">
             
             <div class="row p-0 m-0">
                 <div class="col-md-3">
                     <div class="p-2 rounded border  text-center ">
-                        <div>Order Number</div> <div>@{{order_info.order_number}}</div>
+                        <div>Order Number</div> <div class="font-weight-bold">@{{order_info.order_number}}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="p-2 rounded border  text-center">
-                        <div>Total Price</div> <div>R@{{order_info.total_price}}</div>
+                        <div>Total Price</div> <div class="font-weight-bold">R@{{order_info.total_price}}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="p-2 rounded border  text-center ">
-                        <div class="">Total Quantity</div> <div class="">@{{order_info.total_qty}}</div>
+                        <div class="">Total Quantity</div> <div class="font-weight-bold">@{{order_info.total_qty}}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -45,42 +47,50 @@
             <div class="row pt-3 m-0">
                 <div class="col-md-3">
                     <div class="p-2 rounded border  text-center ">
-                        <div class="">Staff Names</div><div class="">@{{order_info.staff_names}}</div>
+                        <div class="">Staff Names</div><div class="font-weight-bold">@{{order_info.staff_names}}</div>
                     </div>
                 </div>
                     <div class="col-md-3">
                     <div class="p-2 rounded border  text-center ">
-                       <div class="">Email Address</div><div class=""> @{{order_info.staff_email}}</div>
+                       <div class="">Email Address</div><div class="font-weight-bold text-dark"> <a class="text-dark" :href="'mailto:' + order_info.staff_email">@{{ order_info.staff_email }}</a>
+                       </div>
                     </div>
                 </div>
                     <div class="col-md-3">
                     <div class="p-2 rounded border  text-center ">
-                        @{{order_info.total_qty}}
+                        <div class="">Delivery Method</div><div class="capitalize-first font-weight-bold"> @{{order_info.delivery_method}}</div>
                     </div>
                     </div>
                     <div class="col-md-3">
                     <div class="p-2 rounded    text-center ">
-                        <a @click="update_order(order_info.order_number)" class="btn btn-sm rounded btn-outline-success">Update Order</a>
+                        <div class="" v-if="order_info.current_status === 'pending'">
+                            <a data-toggle="modal" data-target="#update_order" class="btn btn-sm rounded btn-outline-success">Update Order</a>
+                        </div>
+                        <div class="" v-else>
+                            <div class="p-2 rounded border  text-center ">
+                                <div class="">Order Status</div>
+                                <div class="capitalize-first text-success font-weight-bold"v-if="order_info.current_status === 'completed'"> @{{order_info.current_status}}</div>
+                                <div class="capitalize-first text-danger font-weight-bold" v-else> @{{order_info.current_status}}</div>
+                            </div>
+                        </div>
                     </div>
                     </div>
             </div>
         </div>
 
     <hr>
-    <div class="row mx-0 animated fadeInDown">
+    {{-- <div class="row mx-0 animated fadeInDown">
         <div class="col-12 text-center p-0 m-0">
             <p class="animated pulse w-100 pt-2 h5">@{{msg}}</p>
         </div>
-     </div>
+     </div> --}}
     <div class="card   rounded p-3 w-100" >
-<div class=" p-0 m-0  row">
-   <span class="  col-md-4 h5 ">Products Ordered</span>
-   <div class="col-md-10">
-    <div class="form-group">
-       {{-- <input type="text" class="form-control" v-model="searchProductsText" v-on:keyup="SearchProducts($event)" placeholder="Search product by name"> --}}
-     </div>
+<div class=" p-0 m-0  d-flex justify-content-between">
+   <span class="   h5 ">Products Ordered</span>
+    
+   <div class=" pr-5">
+    <div class="">Order: <span class="font-weight-bold capitalize-first">@{{ order_info.current_status}}</span></div>
    </div>
-
 </div> <hr>
  <div class="tableFixHead" style="height: 500px;">
     <table class="table table-striped table-inverse  " >
@@ -130,13 +140,16 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" v-if="msg">
+                    <p class="  text-dark">@{{ msg }}</p>                                                  
+                </div>
+                <div class="modal-body" v-else>
                    <div class="">
                     <div class="form-group">
                       <label for="">Status</label>
-                      <select class="form-control" name="" id="">
-                        <option selected disabled>Select Order Status</option>
-                        <option value="complete">Complete</option>
+                      <select class="form-control" v-model="order_info.status" name="" id="">
+                        <option selected disabled>Select Order Status</option> 
+                        <option value="completed">Complete</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </div>
@@ -144,7 +157,7 @@
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" class="btn btn-sm rounded btn-secondary" data-dismiss="modal">Close</button> --}}
-                    <button type="button" class="btn btn-sm rounded btn-dark">Update</button>
+                    <button type="button" @click="update_order()" class="btn btn-sm rounded btn-dark">Update</button>
                 </div>
             </div>
         </div>
@@ -163,6 +176,7 @@
             searchorderText: '',
             msg: '',
             total_cart: 0,
+            sending_order: false,
            };
         },
         async created(){
@@ -176,7 +190,10 @@
                 total_qty += order[i].qty                
             }
 
-            let order_info = {
+            let order_info = {                
+                        'delivery_method':  order[0].delivery_method,
+                        'status': '',
+                        'current_status': order[0].status,
                         'total_price': total_price,
                         'total_qty': total_qty,
                         'order_number': order[0].order_number,
@@ -184,15 +201,29 @@
                         'staff_names': order[0].first_name+" "+order[0].last_name,
          };
         this.order_info = order_info
-            console.log(order_info)
-
-        
+            // console.log(order_info) 
         },
         methods: {
-            update_order: function(val){
-              console.log(val)
-                this.update_order_info = val;
-                $('#update_order').modal('show');
+            update_order: async function(){
+                let order_info = this.order_info;
+                if (!order_info.status) {
+                    alert('Please select order status')
+                    return false;
+                }
+                this.msg = 'Please wait while we are updating your order';
+
+                let data = await axios.post( "{{ route('staff_order_update_admin') }}", {data: order_info} );  
+
+                if (data.status === 200) {
+                    this.msg = 'Order updated successfully, page will reload in 5 seconds to update changes...'
+                        setTimeout(() => {
+                        location.reload()
+                    }, 5000);
+                }else{
+                    this.msg = 'Something went wrong, Please refresh and try again...'
+                }
+
+                console.log(await data)
             },
             productUpdateUrl: function(val){
                 var link = document.getElementById('productUpdateUrl');
@@ -215,17 +246,7 @@
                 console.log(cart)
             },
             save_added_items: async function(){
-                let itemIDs = this.promotion_items;
-                let items = this.products;
-                // let data = await axios.post(' ', {data: items} );  
-                    // data = await data.status
-                    // if (data.status === 200) {
-                    //     this.msg = 'Your changes were saved successful. This page will refresh in 5 seconds...'
-                    //     $('#modelID').modal('show');
-                    //     setTimeout(() => {
-                    //         location.reload();
-                    //     }, 5000);
-                    // }
+                
                 let filteredProducts = items.filter(product => itemIDs.includes(product.productID));
 
                 this.cart = [ ...filteredProducts ]

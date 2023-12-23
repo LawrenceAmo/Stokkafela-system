@@ -43,7 +43,7 @@ Route::get('/', [PortalController::class, 'get_all_stores_data'])->name('get_all
 
 // Staff Shopping
 Route::post('/shopping/cart/save', [ShoppingController::class, 'staff_save_order'])->name('staff_save_order');
-
+Route::post('/shopping/staff-order/update/admin', [ShoppingController::class, 'staff_order_update_admin'])->name('staff_order_update_admin');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

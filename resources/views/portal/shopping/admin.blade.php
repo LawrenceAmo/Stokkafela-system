@@ -20,20 +20,18 @@
     <main class="shadow rounded p-3" id="app" v-cloak>
         <div class="card   rounded p-3">
             
-            <div class="d-flex justify-content-between">
+            {{-- <div class="d-flex justify-content-between">
                 <div class=" ">
                     Total Orders: @{{order_info.total_orders}}
                 </div>
                 <div class=" ">
                     Total Spent: R@{{order_info.total_price}}
                 </div>
-                {{-- <div class=" ">
-                    Total Qty: @{{order_info.total_qty}}
-                </div> --}}
+               
                 <div class=" ">
                     <a href="{{ route('create_cart') }}" class="btn btn-sm rounded btn-dark">create order</a>
                 </div>
-            </div>
+            </div> --}}
         </div>         
      
     <hr>

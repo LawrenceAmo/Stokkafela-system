@@ -68,17 +68,27 @@ class ShoppingController extends Controller
                     ->leftJoin('products', 'products.productID', '=', 'staff_order_products.productID')
                     ->leftJoin('users', 'users.id', '=', 'staff_orders.userID')
                     ->where('staff_orders.staff_orderID', $orderID)
-                    ->where('staff_orders.userID',Auth::id())
+                    ->select('users.first_name','users.last_name','users.email','products.*','staff_order_products.*','staff_orders.*', )
                     ->get();
-                    // return $order;
+
         return view('portal.shopping.ordered_items_admin')->with('order', $order);
     }
 
+    public function staff_order_update_admin(Request $request)
+    {     
+        DB::table('staff_orders')
+                        ->where('order_number', $request->data['order_number'])
+                        ->update([
+                            'status' => $request->data['status'],                           
+                        ]); 
+                        return true;
+    }
+
     public function staff_save_order(Request $request)  {
-        
-        return $request;
 
         $userID = (int)$request->data["id"];
+        $delivery_method = $request->data["delivery_method"];
+        // return $delivery_method;
         // get the last order for this user
         $lastOrder = DB::table('staff_orders')
                         ->where('ordered', false)
@@ -88,7 +98,6 @@ class ShoppingController extends Controller
 
         // if there's no order for this user then create a new order
         if (!$lastOrder) {
-
             // create a new order number
            $staff_order_number = $this->generate_staff_order_number();
            $lastOrder = new StaffOrders();
@@ -96,7 +105,6 @@ class ShoppingController extends Controller
            $lastOrder->order_number = $staff_order_number;
            $lastOrder->save();
 
-        //    return $lastOrder;
            $staff_orderID = (int)$lastOrder->id;
         }else{
             $staff_orderID = (int)$lastOrder->staff_orderID;
@@ -130,6 +138,7 @@ class ShoppingController extends Controller
         DB::table('staff_orders')
                         ->where('staff_orderID', $staff_orderID )
                         ->update([
+                            'delivery_method' => $delivery_method,
                             'created_at' => now(),
                             'updated_at' => now(),
                             'total_price' => $total_price,
@@ -162,7 +171,7 @@ class ShoppingController extends Controller
         // Admin Email
         Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($user_info, $order));
 
-             return true; 
+        return true; 
     }
 
     private function generate_staff_order_number() {
