@@ -152,8 +152,8 @@
                         <option value="completed">Complete</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
-                    </div>
-                   </div>
+                    </div> 
+                   </div> 
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" class="btn btn-sm rounded btn-secondary" data-dismiss="modal">Close</button> --}}

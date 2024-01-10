@@ -19,7 +19,7 @@
 
     <main class="shadow rounded p-3" id="app" v-cloak>
         <div class="card   rounded p-3">
-            
+             
             {{-- <div class="d-flex justify-content-between">
                 <div class=" ">
                     Total Orders: @{{order_info.total_orders}}

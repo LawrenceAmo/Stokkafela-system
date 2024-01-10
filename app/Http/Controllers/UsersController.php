@@ -25,19 +25,19 @@ class UsersController extends Controller
 
 
      public function update(Request $request){
-        //  $request->validate([
-        //             'first_name' => 'required|string',
-        //             'last_name' => 'required|string',
-        //             'email' => 'required|email',
-        //             'password' => ['required', Rules\Password::defaults()],
-        //             // 'phone' => 'min:10',
-        //             // 'zip_code' => 'min:4',
-        //             // 'street' => 'required|string',
-        //             // 'suburb' => 'required|string',
-        //             // 'city' => 'required|string',
-        //             // 'pronvince' => 'required|string',
-        //             // 'country' => 'required|string',
-        //          ]);
+         $request->validate([
+                    'first_name' => 'required|string',
+                    'last_name' => 'required|string',
+                    'email' => 'required|email',
+                    'password' => ['required', Rules\Password::defaults()],
+                    // 'phone' => 'min:10',
+                    // 'zip_code' => 'min:4',
+                    // 'street' => 'required|string',
+                    // 'suburb' => 'required|string',
+                    // 'city' => 'required|string',
+                    // 'pronvince' => 'required|string',
+                    // 'country' => 'required|string',
+                 ]);
 
         $id = Auth::id();
 

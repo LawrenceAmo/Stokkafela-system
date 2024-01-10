@@ -30,25 +30,18 @@
     33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
     50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
     66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
-}
-
-   
+}   
     </style>
-
     <main class="shadow rounded p-3" id="app" v-cloak>
-        <div class="card   rounded p-3">
-            
+        <div class="card   rounded p-3">            
             <div class="d-flex justify-content-between">
-                <div class=" ">
-                    
+                <div class=" ">                    
                 </div>
                 <div class=" ">
                     {{-- <a href="" class="btn btn-sm rounded btn-dark">create order</a> --}}
                 </div>
             </div>
         </div>
-         
-     
     <hr>
     <div class="row mx-0 animated fadeInDown">
         <div class="col-12 text-center p-0 m-0">
@@ -191,7 +184,7 @@
                         </div>                            
                     </div>
                     <div class="modal-body py-5" v-else>
-                        <div class=" d-flex  ">
+                        <div class=" d-flex">
                             <div class="px-3 h3">
                                 <div class="loader"></div>
                             </div>
@@ -206,9 +199,7 @@
                         </div>
                     </div>
                 </div>                          
-            </div>
-           
-
+            </div>           
         </div>        
     </div>
      </main>
@@ -299,7 +290,6 @@
                 this.sending_order = true
                 let res = await axios.post(" {{ route('staff_save_order') }}", {items: this.cart, data: data} ); 
                 console.log(await res)
-                return false; 
                 if (res.status === 200) {
                     this.cart = []
                     localStorage.setItem("cart", JSON.stringify(this.cart));
