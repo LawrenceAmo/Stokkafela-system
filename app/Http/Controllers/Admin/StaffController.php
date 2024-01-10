@@ -104,9 +104,6 @@ class StaffController extends Controller
     {
         $role_status = (Boolean)$request->role_status;
 
-        if (!$role_status) {
-            return redirect()->back()->with('error', 'Please add a Staff Role...');
-        }
         User::where('id', (int)$request->id)
         ->update([
             'first_name' => $request->first_name,
@@ -127,7 +124,8 @@ class StaffController extends Controller
             'phone' => $request->phone,
          ]);
 
-         DB::table('user_roles')
+         if ($role_status) {
+            DB::table('user_roles')
             ->updateOrInsert(
                 ['userID' => (int)$request->id], // Unique identifier column and value
                 [
@@ -137,6 +135,9 @@ class StaffController extends Controller
                     'updated_at' => now(),
                 ]);
 
+            // return redirect()->back()->with('error', 'Please add a Staff Role...');
+        }
+         
         return redirect()->back()->with('success', 'User data updated successfully');
     }
 
