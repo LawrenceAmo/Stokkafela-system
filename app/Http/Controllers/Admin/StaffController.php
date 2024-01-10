@@ -102,6 +102,11 @@ class StaffController extends Controller
      */
     public function update_staff_profile(Request $request)
     {
+        $role_status = (Boolean)$request->role_status;
+
+        if (!$role_status) {
+            return redirect()->back()->with('error', 'Please add a Staff Role...');
+        }
         User::where('id', (int)$request->id)
         ->update([
             'first_name' => $request->first_name,
@@ -121,8 +126,6 @@ class StaffController extends Controller
             'zip_code' => $request->zip_code,
             'phone' => $request->phone,
          ]);
-
-         $role_status = (Boolean)$request->role_status;
 
          DB::table('user_roles')
             ->updateOrInsert(
