@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contacts;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -17,10 +17,15 @@ class UsersController extends Controller
     
     public function index(){
         // return $request;
-        $user = Auth::user();
-        $contacts =  DB::table('contacts')->where('userID', '=', Auth::id())->limit(1)->get();
-        // return $user;
-        return view('portal.profile')->with("user", $user)->with("contacts", $contacts[0]);
+        // $user = Auth::user();
+        $data =  DB::table('users')        
+                    ->leftJoin('contacts', 'contacts.userID', '=', 'users.id')
+                    ->leftJoin('user_roles', 'user_roles.userID', '=', 'users.id')
+                    ->leftJoin('roles', 'roles.roleID', '=', 'user_roles.roleID')
+                    ->leftJoin('departments', 'departments.departmentID', '=', 'roles.departmentID')
+                    ->where('user_roles.userID', '=', Auth::id())->limit(1)->first();
+        // return $data;
+        return view('portal.profile')->with("data", $data);
     }
 
 

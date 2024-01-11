@@ -99,6 +99,10 @@
             <a href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-bars "></i><span>Departments</span>
+            </a> 
+            <a href="{{ route("departments")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
+              <i class="fa fa-file "></i>  <span>Documents(Files)</span>
             </a>     
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple">
