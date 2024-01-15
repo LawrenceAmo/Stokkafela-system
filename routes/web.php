@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\DestributorsController;
+use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\SalesController; 
 use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
@@ -169,6 +170,11 @@ Route::get('/spaza/shop/{id}', [SpazaShopsController::class, 'spaza_shop_view'])
 Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop_delete'])->name('spaza_shop_delete');
 // Route::get('/spaza/shops', [SpazaShopsController::class, 'index'])->name('spaza_shops');
  
+
+//    Documents
+Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');
+Route::post('/documents/create', [DocumentsController::class, 'create'])->name('document_create');
+
 });
  
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');

@@ -629,10 +629,6 @@ const { createApp } = Vue;
             XLSX.utils.book_append_sheet(workbook, worksheet, ' {{date("j")}} '+getMonth(last_month_num+1)+' DOH');
             XLSX.utils.book_append_sheet(workbook, worksheet2, 'Notes');
           
-          //   console.log(last_month_num);
-          //   console.log(getMonth(last_month_num+1));
-          // return false;
-
             try {
                 XLSX.writeFile(workbook, this.store_name+' {{date("j")}} '+getMonth(last_month_num+1)+' DOH .xlsx');
                 $('#ship_to_modal').modal('show');

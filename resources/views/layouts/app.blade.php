@@ -100,7 +100,7 @@
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-bars "></i><span>Departments</span>
             </a> 
-            <a href="{{ route("departments")}}"
+            <a href="{{ route("documents")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-file "></i>  <span>Documents(Files)</span>
             </a>     
