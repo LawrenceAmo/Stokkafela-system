@@ -34,13 +34,12 @@ class StaffController extends Controller
     public function create()
     {
         $departments = DB::table('departments')
-        ->join('roles','departments.departmentID','=','roles.departmentID')
-        ->get();
+                    ->join('roles','departments.departmentID','=','roles.departmentID')
+                    ->get();
         $stores = DB::table('stores')->get();      
 
        return view('portal.staff.create', ['departments' => $departments, 'stores' => $stores ]);
     }
-
 
     public function save_staff(Request $request)
     {
@@ -123,8 +122,11 @@ class StaffController extends Controller
             'zip_code' => $request->zip_code,
             'phone' => $request->phone,
          ]);
-
+         if (!$request->role) {
+            return redirect()->back()->with('error', 'Unable to activate staff: Please assign a role or job before activation.');
+        }
          if ($role_status) {
+            
             DB::table('user_roles')
             ->updateOrInsert(
                 ['userID' => (int)$request->id], // Unique identifier column and value

@@ -567,6 +567,10 @@ const { createApp } = Vue;
             }
 
           let last_month_num = parseInt(last_month);
+
+          if (last_month_num >= 12) {
+            last_month_num = 0;
+          }
           first_month = getMonth(first_month);
           second_month = getMonth(second_month);
           last_month = getMonth(last_month);
@@ -624,6 +628,10 @@ const { createApp } = Vue;
             let worksheet2 = XLSX.utils.json_to_sheet([]);
             XLSX.utils.book_append_sheet(workbook, worksheet, ' {{date("j")}} '+getMonth(last_month_num+1)+' DOH');
             XLSX.utils.book_append_sheet(workbook, worksheet2, 'Notes');
+          
+          //   console.log(last_month_num);
+          //   console.log(getMonth(last_month_num+1));
+          // return false;
 
             try {
                 XLSX.writeFile(workbook, this.store_name+' {{date("j")}} '+getMonth(last_month_num+1)+' DOH .xlsx');

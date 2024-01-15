@@ -248,6 +248,7 @@
             let rearrangedArray = filteredArray.sort();
             this.total_stock_units = rearrangedArray.length ;
  
+        //after refresh check items in the cart and show them as selected in product list
         setTimeout(() => {
             for (let x = 0; x < cart.length; x++) {
                  this.addItemClick(cart[x].sku, cart[x].qty);                
@@ -371,10 +372,13 @@
                       this.unselectAllItems();
 
                       setTimeout(() => {
-                        let cart = this.cart
+                        let cart = JSON.parse(localStorage.getItem("cart"));
+                        this.cart = cart;
+
                             for (let x = 0; x < cart.length; x++) {
                                 this.addItemClick(cart[x].sku, cart[x].qty);                
                             }
+                            this.cart_total();
                         }, 2000);
                       return false; 
                   },

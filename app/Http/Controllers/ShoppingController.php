@@ -40,7 +40,11 @@ class ShoppingController extends Controller
    public function create_cart()
     {
         $userID = Auth::id();
-        $products = DB::table('products')->get();
+        $products = DB::table('products')
+                    ->leftJoin('stores', 'stores.storeID', '=', 'products.storeID')
+                    ->where('stores.name', 'LIKE', '%embisa%')
+                    ->get();
+        // return $products;
         return view('portal.shopping.create')->with('products', $products)->with('id', $userID);
     }
 
