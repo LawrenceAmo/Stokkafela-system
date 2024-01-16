@@ -33,7 +33,6 @@ class ShoppingController extends Controller
                         ->select('staff_orders.*', 'users.first_name', 'users.last_name', 'users.email')
                         ->orderBy('staff_orders.created_at', 'desc')
                         ->get();
-                        // return $orders;
         return view('portal.shopping.admin')->with('orders', $orders);
     }
 
@@ -45,7 +44,7 @@ class ShoppingController extends Controller
                     ->where('stores.name', 'LIKE', '%embisa%')
                     ->where('stores.name', 'LIKE', '%fela%')
                     ->get();
-        // return $products;
+
         return view('portal.shopping.create')->with('products', $products)->with('id', $userID);
     }
 
@@ -187,16 +186,16 @@ class ShoppingController extends Controller
         Mail::to($user_info['email'])->send(new StaffOrderMail($user_info, $order));
 
         // Admin Email
-        // Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($admin_info, $user_info, $order));
+        Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($admin_info, $user_info, $order));
 
-        // // Admin Email
-        // Mail::to($admin1_info['email'])->send(new StaffOrderAdminMail($admin1_info, $user_info, $order));
+        // Admin Email
+        Mail::to($admin1_info['email'])->send(new StaffOrderAdminMail($admin1_info, $user_info, $order));
 
-        // // Admin Email
-        // Mail::to($admin2_info['email'])->send(new StaffOrderAdminMail($admin2_info, $user_info, $order));
+        // Admin Email
+        Mail::to($admin2_info['email'])->send(new StaffOrderAdminMail($admin2_info, $user_info, $order));
 
          // Admin Email
-         Mail::to($test_info['email'])->send(new StaffOrderAdminMail($test_info, $user_info, $order));
+        //  Mail::to($test_info['email'])->send(new StaffOrderAdminMail($test_info, $user_info, $order));
 
 
         return true; 
