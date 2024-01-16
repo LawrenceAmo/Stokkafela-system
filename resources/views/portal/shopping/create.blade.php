@@ -226,10 +226,16 @@
             // Parse the JSON string back into an array
             let cart = JSON.parse(localStorage.getItem("cart"));
 
-            this.products = productsDB
+            // this.products = productsDB
             let productIDs = [];
             let products = [];
             for (let i = 0; i < productsDB.length; i++) {
+                let price = parseInt(productsDB[i].sellpinc1)
+                if ( price <= 0 ) {
+                    console.log(price)
+                    console.log("price")
+                    continue;
+                }
                 let productID = productsDB[i].productID;
                 if (!productIDs.includes(productID)) {
                     products[ productID ] = [];   // add array of sales for this code
@@ -243,10 +249,12 @@
                 }
             }
             let filteredArray = products.filter(value => value !== "");
+            filteredArray = filteredArray.sort();
+
             this.products = [ ...filteredArray ];
             this.productDB = [ ...filteredArray ];
-            let rearrangedArray = filteredArray.sort();
-            this.total_stock_units = rearrangedArray.length ;
+
+            // this.total_stock_units = rearrangedArray.length ;
  
         //after refresh check items in the cart and show them as selected in product list
         setTimeout(() => {
@@ -254,7 +262,8 @@
                  this.addItemClick(cart[x].sku, cart[x].qty);                
             }
         }, 1500);
- 
+
+// filteredArray.sort()
         },
         methods: {
             productUpdateUrl: function(val){
@@ -272,6 +281,10 @@
                 }              
             },
             cart_total: function(){
+                if (this.total_cart >= 1500) {
+                    alert('You reached your limit')
+                    return false
+                }
                 let cart = this.cart;
                 let itemIDs = this.cart_itemdIDs;
                 let items = this.products;

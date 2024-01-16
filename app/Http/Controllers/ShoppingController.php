@@ -168,12 +168,35 @@ class ShoppingController extends Controller
             'names' => 'Billy Madubye',
             'email' => 'billy.madubye@stokkafela.com',
         ];
+        $admin1_info = [
+            'names' => 'Billy Madubye',
+            'email' => 'audrey.sikhosana@stokkafela.com',
+        ];
+        $admin2_info = [
+            'names' => 'Rorisang Makhubela',
+            'email' => 'rorisang.makhubela@stokkafela.com',
+        ];
+
+        $test_info = [
+            'names' => 'Amo Test',
+            'email' => 'amocodes@gmail.com',
+        ];
 
         // Staff Email
         Mail::to($user_info['email'])->send(new StaffOrderMail($user_info, $order));
 
         // Admin Email
-        Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($user_info, $order));
+        // Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($admin_info, $user_info, $order));
+
+        // // Admin Email
+        // Mail::to($admin1_info['email'])->send(new StaffOrderAdminMail($admin1_info, $user_info, $order));
+
+        // // Admin Email
+        // Mail::to($admin2_info['email'])->send(new StaffOrderAdminMail($admin2_info, $user_info, $order));
+
+         // Admin Email
+         Mail::to($test_info['email'])->send(new StaffOrderAdminMail($test_info, $user_info, $order));
+
 
         return true; 
     }

@@ -16,8 +16,13 @@
               </i>
             </div>
           </div>
-          <div class="d-flex flex-column justify-content-center">
-            <button type="button" data-toggle="modal" data-target="#modelId"  class="btn btn-sm rounded btn-dark"> view job profile</button>
+          <div class="d-flex">
+            <div class="d-flex flex-column justify-content-center  ">
+              <button type="button" data-toggle="modal" data-target="#leave"  class="btn btn-sm rounded btn-dark"> apply for leave</button>
+            </div>
+            <div class="d-flex flex-column justify-content-center  ">
+              <button type="button" data-toggle="modal" data-target="#modelId"  class="btn btn-sm rounded btn-info"> view job profile</button>
+            </div>
           </div>
         </div>
       </div>
@@ -218,6 +223,28 @@
               </div>
               <div class="modal-footer">
                 {{-- <button type="button" class="btn btn-dark btn-sm rounded">send mail</button> --}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{--  --}}
+        <div class="modal fade" id="leave" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Apply for a leave</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                <div class="">
+                  <i class="text-muted">Underdevelopment...</i>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-dark btn-sm rounded">Apply</button>
               </div>
             </div>
           </div>

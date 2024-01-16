@@ -13,47 +13,37 @@ class StaffOrderAdminMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user_info;
+    public $admin_info;
+    public $order;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($admin_info, $user_info, $order)
     {
-        //
+        $this->admin_info = $admin_info;
+        $this->user_info = $user_info;
+        $this->order = $order;
     }
 
-    /**
-     * Get the message envelope.
+    /** 
+     * Build the message.
      *
-     * @return \Illuminate\Mail\Mailables\Envelope
+     * @return $this
      */
-    public function envelope()
+    public function build()
     {
-        return new Envelope(
-            subject: 'Staff Order Admin Mail',
-        );
-    }
+        return $this  //->from('info@effectivewing.com')
+                ->subject('Welcome to Stokkafela')
+                ->view('emails.staff_order_admin')
+                ->with([
+                    'name' => $this->user_info,
+                    'order' => $this->order,
+                    // other variables you want to pass to the email view
+                ]);
 
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
-    public function attachments()
-    {
-        return [];
     }
 }
