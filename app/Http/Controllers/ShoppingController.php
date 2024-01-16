@@ -43,6 +43,7 @@ class ShoppingController extends Controller
         $products = DB::table('products')
                     ->leftJoin('stores', 'stores.storeID', '=', 'products.storeID')
                     ->where('stores.name', 'LIKE', '%embisa%')
+                    ->where('stores.name', 'LIKE', '%fela%')
                     ->get();
         // return $products;
         return view('portal.shopping.create')->with('products', $products)->with('id', $userID);

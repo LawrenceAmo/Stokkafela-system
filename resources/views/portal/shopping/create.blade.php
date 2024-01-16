@@ -96,7 +96,7 @@
                         @{{product.name}}
                     </td>                   
                     <td @click="addItemClick(product.sku)">
-                        @{{product.price}}
+                        @{{product.price }}
                     </td>
                     <td>
                        <input type="number" min="0" v-model="product.qty" class="form-text form-control-sm text-muted"  @change="updateQty(product.qty)" :id="'price'+product.sku">                       
