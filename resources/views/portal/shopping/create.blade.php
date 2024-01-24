@@ -99,19 +99,19 @@
                         @{{product.price }}
                     </td>
                     <td>
-                       <input type="number" min="0" v-model="product.qty" class="form-text form-control-sm text-muted"  @change="updateQty(product.qty)" :id="'price'+product.sku">                       
+                       <input type="number" min="0" v-model="product.qty" class="form-text form-control-sm text-muted  bg-transparent border-0" disabled  @change="updateQty(product.qty)" :id="'price'+product.sku">                       
                     </td>
                     <td>
                         @{{(product.qty * product.price).toFixed(2)}}
-                    </td>                              
+                    </td>
                     </label>
-                </tr>  
+                </tr>
             </tbody>
     </table>
     <div class="rounded border shadow p-2 m-0 text-center h5 text-muted font-weight-bold " v-if="products.length < 1">No products available</div>
 </div>
     </div>
- 
+
     <!-- Modal -->
     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -126,10 +126,10 @@
                     </div>
                     <div class="modal-header "  v-else>
                         <h5 class="modal-title text-danger">Add items to your order...</h5>                        
-                    </div>  
+                    </div>
                     <div class="modal-body" v-if="total_cart">
                         <div class="d-flex justify-content-between">
-                            <div>                                
+                            <div>                           
                                 <div class="form-group">
                                     <label for="deliveryMethod">Select Delivery Method</label>
                                     <select v-model="delivery_method" class="form-control form-control-sm" id="deliveryMethod" name="deliveryMethod">
@@ -167,7 +167,14 @@
                                             <td>@{{item.sku}}</td>
                                             <td>@{{item.name}}</td>
                                             <td>@{{item.price}}</td>
-                                            <td class="text-center">@{{item.qty}}</td>
+                                            <td class="text-center d-flex justify-content-center">
+                                                <div class="h5 pt-2">@{{item.qty}}</div>  &nbsp;
+                                                <div class="">
+                                                    {{-- true is add | false is minus --}}
+                                                   <a @click="itemUpdateQty(item, true)" class="m-0 p-0 font-weight-bold text-info"><i class="fa fa-caret-up" aria-hidden="true"></i></a> <hr class="p-0 m-0"> 
+                                                   <a @click="itemUpdateQty(item, false)" class="m-0 p-0 font-weight-bold text-danger"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                                </div>  
+                                            </td>
                                             <td>@{{item.qty*item.price}}</td>
                                         </tr>                                
                                     </tbody>
@@ -231,11 +238,7 @@
             let products = [];
             for (let i = 0; i < productsDB.length; i++) {
                 let price = parseInt(productsDB[i].sellpinc1)
-                if ( price <= 0 ) {
-                    console.log(price)
-                    console.log("price")
-                    continue;
-                }
+                if ( price <= 0 ) {    continue;    }
                 let productID = productsDB[i].productID;
                 if (!productIDs.includes(productID)) {
                     products[ productID ] = [];   // add array of sales for this code
@@ -243,8 +246,8 @@
                     products[ productID ]['productID'] = productID;   // add array of sales for this code
                     products[ productID ]['sku'] = productsDB[i].barcode;    
                     products[ productID ]['cost_price'] = productsDB[i].avrgcost;    
-                    products[ productID ]['price'] = productsDB[i].sellpinc1;    
-                    products[ productID ]['qty'] = 0;     
+                    products[ productID ]['price'] = productsDB[i].sellpinc1;
+                    products[ productID ]['qty'] = 0;
                     products[ productID ]['name'] = productsDB[i].descript;    
                 }
             }
@@ -254,14 +257,13 @@
             this.products = [ ...filteredArray ];
             this.productDB = [ ...filteredArray ];
 
-            // this.total_stock_units = rearrangedArray.length ;
- 
         //after refresh check items in the cart and show them as selected in product list
         setTimeout(() => {
             for (let x = 0; x < cart.length; x++) {
                  this.addItemClick(cart[x].sku, cart[x].qty);                
             }
         }, 1500);
+        console.log(this.cart_itemdIDs)
 
 // filteredArray.sort()
         },
@@ -271,6 +273,21 @@
                 var href = link.getAttribute('data-href');
                 href = href.replace('productID', val)
                 location.href = href
+            },
+            itemUpdateQty: function(item, type){                
+                let cart = this.cart;
+                for (let i = 0; i < cart.length; i++) {                    
+                    if ((cart[i].productID === item.productID) && type) {
+                        if (cart[i].qty <= 0) {   continue;   }
+                        cart[i].qty += 1;
+                    }
+                    if ((cart[i].productID === item.productID) && !type) {
+                        if (cart[i].qty <= 0) {   continue;   }
+                        cart[i].qty -= 1;
+                    }                   
+                }
+                this.cart = cart;
+                this.cart_total();
             },
             updateQty: function(qty = 1){
                 if (qty >= 0) {
@@ -318,8 +335,7 @@
             addItemClick: async function (itemID, qty = 1) {
 
                 let selected_item = document.getElementById(itemID)
-                console.log(selected_item)
-                console.log(itemID)
+
                 if (!selected_item) {
                     return false;
                 }
@@ -343,7 +359,7 @@
                 });
             },
             addItemDB: function(itemID, type, qty){
-                // type = 'addItem' flag
+                // type = 'addItem' flag ( remove or add)
                 if (type) {
                     if (!this.cart_itemdIDs.includes(itemID)) {
                         this.cart_itemdIDs.push(itemID)
@@ -382,17 +398,17 @@
                               this.products.push(allProducts[i]);
                           }
                       }
-                      this.unselectAllItems();
-
-                      setTimeout(() => {
-                        let cart = JSON.parse(localStorage.getItem("cart"));
-                        this.cart = cart;
-
-                            for (let x = 0; x < cart.length; x++) {
-                                this.addItemClick(cart[x].sku, cart[x].qty);                
-                            }
-                            this.cart_total();
-                        }, 2000);
+                    //   this.unselectAllItems();
+                    //   let cart = JSON.parse(localStorage.getItem("cart"));
+                    //     this.cart = cart;
+                    //     console.log(this.cart)
+                    //     console.log('befo ')
+                    //   setTimeout(() => {
+                    //         for (let x = 0; x < cart.length; x++) {
+                    //             this.addItemClick(cart[x].sku, cart[x].qty);                
+                    //         }
+                    //         this.cart_total();
+                    //     }, 2000);
                       return false; 
                   },
             }

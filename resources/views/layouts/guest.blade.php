@@ -62,17 +62,22 @@
         <!-- Collapse -->
         <div class="    d-flex justify-content-end" id="navbarCollapse">
           <ul class="navbar-nav   mt-lg-0 ml-auto ">
-              
-             @if (Route::has('login'))
-                     @auth
-                        <li class="nav-item"><a href="{{ url('/portal') }}" class=" text-dark nav-link">My Portal</a> </li>  
-                    @else
-                      <li class="nav-item    ">
-                        <a href="{{ route('login') }}" class=" text-dark font-weight-bold nav-link">Log in</a>
-                      </li>  
- 
-                     @endauth
-             @endif           
+            {{-- <li class="nav-item">
+              <a href="{{ route('login') }}" class=" text-dark font-weight-bold nav-link">About</a>
+            </li> 
+            <li class="nav-item">
+              <a href="{{ route('login') }}" class=" text-dark font-weight-bold nav-link">Contact us</a>
+            </li>  --}}
+            
+            @if (Route::has('login'))
+              @auth
+                <li class="nav-item"><a href="{{ url('/portal') }}" class=" text-dark nav-link">My Portal</a> </li>  
+            @else
+                <li class="nav-item">
+                  <a href="{{ route('login') }}" class=" text-dark font-weight-bold nav-link">Log in</a>
+                </li> 
+              @endauth
+             @endif
           </ul>          
         </div>
       </div>
@@ -80,7 +85,7 @@
         <div class="  text-gray font-weight-normal antialiased">
             {{ $slot }}
         </div>
-          <footer class="border w-100" style="position: absolute; bottom:0px !important;" id="footer-main pt-0">
+          <footer class="border w-100" style="position: reletive; bottom:0% !important;" id="footer-main pt-0">
       <div class="footer pt-lg-7 footer-dark bg-dark">
         <!-- SVG shape -->
   
@@ -96,22 +101,20 @@
                   href="https://stokkafela.com"
                   class="font-weight-bold text-light"
                   target="_blank"
-                  >Stokkafela Cash & Carry</a
-                >. All rights reserved
+                  >Stokkafela Cash & Carry</a>. All rights reserved
               </div>
             </div>
-             
+
           </div>
         </div>
       </div>
     </footer>
-    <script src="{{ asset('js/main.js') }}"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
-            <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
+        <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
         <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
-        <script src="{{ asset('mdb/js/axios.js') }}"></script>
-    
+        <script src="{{ asset('mdb/js/axios.js') }}"></script>    
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
     </body>
 </html>

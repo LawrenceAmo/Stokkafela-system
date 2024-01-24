@@ -27,7 +27,7 @@ class ShoppingController extends Controller
 
     public function index_admin()
     {
-        $userID = Auth::id();
+        // $userID = Auth::id();
         $orders = DB::table('staff_orders')
                         ->leftJoin('users', 'users.id', '=', 'staff_orders.userID')
                         ->select('staff_orders.*', 'users.first_name', 'users.last_name', 'users.email')
@@ -67,7 +67,7 @@ class ShoppingController extends Controller
 
     public function staff_ordered_items_admin($orderID)
     {
-         $order = DB::table('staff_orders')
+        $order = DB::table('staff_orders')
                     ->leftJoin('staff_order_products', 'staff_order_products.staff_orderID', '=', 'staff_orders.staff_orderID')
                     ->leftJoin('products', 'products.productID', '=', 'staff_order_products.productID')
                     ->leftJoin('users', 'users.id', '=', 'staff_orders.userID')
@@ -92,7 +92,6 @@ class ShoppingController extends Controller
 
         $userID = (int)$request->data["id"];
         $delivery_method = $request->data["delivery_method"];
-        // return $delivery_method;
         // get the last order for this user
         $lastOrder = DB::table('staff_orders')
                         ->where('ordered', false)
@@ -186,21 +185,21 @@ class ShoppingController extends Controller
         Mail::to($user_info['email'])->send(new StaffOrderMail($user_info, $order));
 
         // Admin Email
-        Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($admin_info, $user_info, $order));
+        // Mail::to($admin_info['email'])->send(new StaffOrderAdminMail($admin_info, $user_info, $order));
 
-        // Admin Email
-        Mail::to($admin1_info['email'])->send(new StaffOrderAdminMail($admin1_info, $user_info, $order));
+        // // Admin Email
+        // Mail::to($admin1_info['email'])->send(new StaffOrderAdminMail($admin1_info, $user_info, $order));
 
-        // Admin Email
-        Mail::to($admin2_info['email'])->send(new StaffOrderAdminMail($admin2_info, $user_info, $order));
+        // // Admin Email
+        // Mail::to($admin2_info['email'])->send(new StaffOrderAdminMail($admin2_info, $user_info, $order));
 
          // Admin Email
         //  Mail::to($test_info['email'])->send(new StaffOrderAdminMail($test_info, $user_info, $order));
-
-
-        return true; 
+ 
+        return true;
     }
 
+    // create a uniq order number
     private function generate_staff_order_number() {
 
         $order = DB::table('staff_orders')

@@ -43,7 +43,8 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () {
     
     // return view('dashboard', ['num'=>128]);
-    return redirect()->to('portal/');
+    return view('welcome');
+    // return redirect()->to('portal/');
 });
 
 Route::prefix('portal/' )->middleware(['auth'])->group(function ()

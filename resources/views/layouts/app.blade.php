@@ -6,22 +6,21 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Stokkafela Systems') }}</title>
- 
-<link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
-<link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-<link rel="stylesheet" href="{{ asset('mdb/css/admin.layout.css') }}">
-<link rel="stylesheet" href="{{ asset('mdb/css/style.css') }}">
-<script src="{{ asset('mdb/js/vue.js') }}"></script>
-<script src="{{ asset('mdb/js/axios.js') }}"></script>
- {{-- <script src="https://unpkg.com/vue@3"></script> --}}
- 
+        
+        <link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('mdb/css/admin.layout.css') }}">
+        <link rel="stylesheet" href="{{ asset('mdb/css/style.css') }}">
+        <script src="{{ asset('mdb/js/vue.js') }}"></script>
+        <script src="{{ asset('mdb/js/axios.js') }}"></script>
+        {{-- <script src="https://unpkg.com/vue@3"></script> --}} 
         <!-- Fonts -->
         {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
-  
+
     </head>
     <body class="font-sans antialiased">
-            <!-- Page Heading -->           
+      <!-- Page Heading -->           
             <header>
       <!-- Sidebar -->
       <nav
@@ -49,6 +48,9 @@
                 <a href="{{ route("staff")}}"
                   class="list-group-item list-group-item-action py-2 ripple border-right-0 border-left-0 border-top-0"
                   ><span>Staff</span></a>
+                  <a href="{{ route("debtors")}}"
+              class="list-group-item list-group-item-action py-2 ripple"
+              > <span>Reps</span></a> 
               </div>
             </div>
 
@@ -73,10 +75,10 @@
             </div>
             
             <a href="{{route('stock_analysis', [0])}}"
-            class="list-group-item list-group-item-action py-2 ripple "
-            aria-current="true">
-            <i class="fa fa-chart-pie fa-fw "></i><span>DOH Reports</span>
-          </a>         
+              class="list-group-item list-group-item-action py-2 ripple "
+              aria-current="true">
+              <i class="fa fa-chart-pie fa-fw "></i><span>DOH Reports</span>
+            </a>         
             <a href="{{ route("sales")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-chart-bar"></i>
@@ -87,23 +89,20 @@
               <i class="fa fa-shopping-cart"></i>
               <span>Shopping</span>
             </a>
-            <a href="{{ route("maintanance")}}"
-              class="list-group-item list-group-item-action py-2 ripple">
-              <i class="fa fa-bars"></i>
-              <span>Maintanance</span>
-            </a>
-             
-            <a href="{{ route("debtors")}}"
-              class="list-group-item list-group-item-action py-2 ripple"
-              ><i class="fa fa-users fa-x2 "></i><span>Debtors</span></a>            
+                       
             <a href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple">
-              <i class="fa fa-bars "></i><span>Departments</span>
+              <i class="fa fa-graduation-cap "></i><span>Jobs</span>
             </a> 
             <a href="{{ route("documents")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-file "></i>  <span>Documents(Files)</span>
             </a>     
+            <a href="{{ route("maintanance")}}"
+              class="list-group-item list-group-item-action py-2 ripple">
+              <i class="fa fa-cogs"></i>
+              <span>Utilities</span>
+            </a>
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple">
               @csrf
@@ -111,17 +110,13 @@
                 <i class="fas fa-door-open "></i><span>Log out</span>
               </label>
               <input type="submit" name="" id="logout" class="d-none" >
-              </form
-            >
+              </form>
           </div>
         </div>
       </nav>
       <!-- Sidebar -->
       <!-- Navbar -->
-      <nav
-        id="main-navbar"
-        class="navbar navbar-expand-lg navbar-light p-0 bg-white fixed-top"
-      >
+      <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light p-0 bg-white fixed-top">
         <!-- Container wrapper -->
         <div class="container-fluid">
           <!-- Toggle button -->
@@ -132,8 +127,7 @@
             data-mdb-target="#sidebarMenu"
             aria-controls="sidebarMenu"
             aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
+            aria-label="Toggle navigation">
             <i class="fas fa-bars"></i>
           </button>
 
@@ -143,26 +137,21 @@
               src="{{ asset('fadaeco.png') }}"
               height="40"
               alt="Fadaeco"
-              loading="lazy"
-            /> 
+              loading="lazy"/> 
           </a>
-      
+
           <!-- Right links -->
           <ul class="navbar-nav ms-auto d-flex flex-row ">
             <!-- Icon -->
-            
 
             <!-- Icon -->
             <li class="nav-item me-3 me-lg-0">
               <form action="{{ route('logout') }}" method="POST"
-               class="nav-link hoverable rounded"
-              >
-              @csrf
-              <label for="logout" class="c-pointer"><i class="fas fa-door-open"></i> Log out</label>
-              <input type="submit" name="" id="logout" class="d-none" >
-              </form
-            >
-               
+                class="nav-link hoverable rounded">
+                @csrf
+                <label for="logout" class="c-pointer"><i class="fas fa-door-open"></i> Log out</label>
+                <input type="submit" name="" id="logout" class="d-none" >
+              </form>
             </li>
           </ul>
         </div>
@@ -170,34 +159,29 @@
       </nav>
       <!-- Navbar -->
     </header>
-
             <!-- Page Content -->
-            <main class="    mt-5 pt-3   ">
+            <main class="mt-5 pt-3">
                 {{ $slot }}
             </main>
         {{-- </div> --}}
         {{-- All the js files --}}
 <script>
 </script>
-         
-        
+
     {{-- <script src="{{ asset('js/main.js') }}"></script> --}}
     <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
-        <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
+    <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
     <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
     <script src="{{ asset('mdb/js/axios.js') }}"></script>
 
     {{-- <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script> --}}
+    {{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> --}}
+    {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script> --}}
+    {{-- <script src="{{ asset('mdb/js/mdb.min.js') }}"></script> --}}
 
-
-        {{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> --}}
-        {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script> --}}
-
-        {{-- <script src="{{ asset('mdb/js/mdb.min.js') }}"></script> --}}
-        
     </body>
 </html>
  
