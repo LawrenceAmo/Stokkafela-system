@@ -91,7 +91,6 @@ class ProductController extends Controller
         $import_product = $product->import_products_csv($data, ['storeID' => $request->store, 'userID' => $userID]);
 
         // return $import_product;
-
         if (!$import_product) {
             return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload products file!!!');
         }

@@ -16,17 +16,29 @@ class Product extends Model
 
     public function import_products_csv($data, $ids)
     {
+        
         $data = $data[0];
         $products = [];
         $header = ['CODE', 'DESCRIPT', 'SELLPINC1', 'AVRGCOST', 'ONHAND'];
         array_push($products, $header); // push only the headers first
-
+    
         // get index of wanted data/field
         $BARCODE = array_search('CODE', $data[0]);
         $DESCRIPT = array_search('DESCRIPT', $data[0]);
         $AVRGCOST = array_search('AVRGCOST', $data[0]);
         $SELLPINC1 = array_search('SELLPINC1', $data[0]);
-        $ONHAND = array_search('ONHAND', $data[0]);
+
+        $store = DB::table('stores')
+                    ->where( [['storeID', '=', intval($ids['storeID'])]] )
+                    ->first();
+        $store_name = strtolower($store->name);
+
+        // check if store is Stokka Tembisa if yes take on hand from WHouse 001
+        if ((strpos($store_name, 'stokkafela tembisa') !== false)) {
+            $ONHAND = array_search('001', $data[0]);
+        } else {
+            $ONHAND = array_search('ONHAND', $data[0]);
+        }
 
         $index = [
                     'barcode' => $BARCODE,
