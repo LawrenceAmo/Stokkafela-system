@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\DestributorsController;
 use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\SalesController; 
 use App\Http\Controllers\RepsController; 
 use App\Http\Controllers\MaintananceController;
@@ -23,7 +25,7 @@ use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\StoreLocationsController;
 use Illuminate\Support\Facades\DB; 
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,10 +59,11 @@ Route::prefix('portal/' )->middleware(['auth'])->group(function ()
 
     Route::get('/', [PortalController::class, 'index'])->name('portal');
 
-// Maintance
+// Maintance 
 Route::get('/maintanance', [MaintananceController::class, 'index'])->name('maintanance');
 Route::post('/maintanance/stock-analysis/save', [MaintananceController::class, 'stock_analysis'])->name('save_stock_analysis');
 Route::post('/maintanance/delete_rep_sale_by_date', [MaintananceController::class, 'delete_rep_sale_by_date'])->name('delete_rep_sale_by_date');
+Route::post('/maintanance/product/manufacturers', [MaintananceController::class, 'save_product_manufacturers'])->name('save_product_manufacturers');
 
 //  profile
 Route::get('/profile', [UsersController::class, 'index'])->name('profile');
@@ -176,8 +179,17 @@ Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop
 Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');
 Route::post('/documents/create', [DocumentsController::class, 'create'])->name('document_create');
 
+
+//    Staff Leaves
+Route::get('/leave', [LeaveRequestController::class, 'index'])->name('leave');
+Route::get('/leave/admin', [LeaveRequestController::class, 'leave_admin'])->name('leave_admin');
+Route::post('/leave/request', [LeaveRequestController::class, 'leave_request'])->name('leave_request');
+Route::post('/leave/type/create', [LeaveTypeController::class, 'create_leave_type'])->name('create_leave_type');
+
 });
  
+Route::get('doh/{id}',[ReportsController::class, 'get_stock_analysis']); ////
+
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');
 
 require __DIR__.'/auth.php';    // Routes for Auth
