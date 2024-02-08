@@ -178,7 +178,12 @@ class Maintanance extends Model
                $manufacturers = array_column($manufacturers, null, "barcode");
             //   return $manufacturers;
                if (in_array($code, $manufacturer_product_codes)) {
-                 $products[$i]->manufacture = $manufacturers[$code]->manufacture;
+                try {
+                    $products[$i]->manufacture = $manufacturers[$code]->manufacture;
+                } catch (\Throwable $th) {
+                    $products[$i]->manufacture = '';
+                }
+                 
                }else{
                 // return 'no manufacturer for '. $code ;
                 $products[$i]->manufacture = '';
