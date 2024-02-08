@@ -85,7 +85,7 @@ class Maintanance extends Model
                         // ->join('manufacturers', 'products.barcode', '=', 'stock_analyses.code')
                         ->where( [['storeID', '=', $storeID]])
                         // ->where( [['barcode', '=', 'amo']])
-                        ->orderBy('onhand', 'DESC')
+                        ->orderBy('descript', 'asc')
                         ->get();
 
             // remove comma from value and convert it to float

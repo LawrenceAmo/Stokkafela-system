@@ -350,20 +350,7 @@ let products, is_data_available;
             this.load_data_proccess("Preparing Your DOH Report... Please Wait",  is_data_available)
            
             this.raw_products_data = await products
-  
-            function compare( a, b ) { 
-
-                      if ( a.descript.toLowerCase() < b.descript.toLowerCase() ){
-                        return -1;
-                      }
-                      if ( a.descript.toLowerCase() > b.descript.toLowerCase() ){
-                        return 1;
-                      }
-                      return 0;
-                    }
-
-            products = await products.sort(compare); 
-
+   
             let categories = await this.create_categories(products)
 
             this.products = [ ...Object.values(categories) ]  
