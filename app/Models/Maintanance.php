@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\CreateProductManufacturers;
 use App\Jobs\import_stock_analysisCSV;
 use App\Jobs\update_stock_analysis_reports;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -239,26 +240,10 @@ class Maintanance extends Model
         array_shift($data);  // remove the old headers 
 
   
-        try {
-            for ($i=0; $i < count($data) ; $i++) { 
-
-                DB::table('manufacturers')->updateOrInsert(
-                    ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
-                    [
-                        "barcode" => $data[$i][$index['barcode']],
-                        "description" => $data[$i][$index['description']],
-                        "manufacture" => $data[$i][$index['manufacture']]
-                    ]                
-                );
-            }
-        } catch (\Throwable $th) {
-            //throw $th;
-            return 'something went wrong, please try again';
-        }
-
+       
+        CreateProductManufacturers::dispatch($data, $index);
         // import_productsCSV::dispatch( $data, $ids, $index);    
-        
- 
+         
         // return only wanted fields from data in the excel file.
         return 'success';
     }
