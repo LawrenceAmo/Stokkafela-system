@@ -124,19 +124,19 @@ class MaintananceController extends Controller
      */
     public function save_product_manufacturers(Request $request)
     {
-        // $request->validate([
-        //     'file' => 'required',                  
-        //  ]); 
+        $request->validate([
+            'file' => 'required',                  
+         ]); 
         $data = Excel::toArray(new CSVImport, request()->file('file'));       
 
         $maintanance = new Maintanance();
         $manufactorers = $maintanance->import_manufacturers($data);
  
-        // if (!$stock_analysis) {
-        //     return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload sales file!!!');
-        // }
+        if ($manufactorers !== 'success') {
+            return redirect()->back()->with('error', $manufactorers);
+        }
 
-        return $manufactorers;
+        return redirect()->back()->with('success', 'Task placed in queue, You can continue with your tasks while we work on this task!!!'); 
     }
 
     /**
