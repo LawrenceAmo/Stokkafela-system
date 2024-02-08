@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 set_time_limit(300);
 class Maintanance extends Model
 {
-    use HasFactory;
+    use HasFactory; 
  
     public function import_stock_analysis_csv($data, $request)
     {
@@ -75,10 +75,13 @@ class Maintanance extends Model
                                 ['date', '>=', $from], ['date', '<=', $to],
                                 ['storeID', '=', $storeID]])
                              ->orderBy('date', 'asc')
-                            ->get(); 
+                            ->get();
+        $manufacturers = DB::table('manufacturers')                            
+                            ->get()->toArray(); 
 
         // return $stock_analysis;
         $products = DB::table('products')
+                        // ->join('manufacturers', 'products.barcode', '=', 'stock_analyses.code')
                         ->where( [['storeID', '=', $storeID]])
                         ->orderBy('onhand', 'DESC')
                         ->get();
@@ -142,12 +145,12 @@ class Maintanance extends Model
             }
             return $reports ;
         }
-
-        function combine_stockAndSales($products, $stock_analysis)
+ 
+        function combine_stockAndSales($products, $stock_analysis, $manufacturers)
         {
             $get_nettsales =  get_nettsales($stock_analysis);
-            // return   $stock_analysis;
-            // return   $get_nettsales;
+            $manufacturer_product_codes = array_column($manufacturers, 'barcode');
+
             // loop, and get total nettsales for each product
             for ($i=0; $i < count( $products) ; $i++) { 
                 $code = $products[$i]->barcode;
@@ -170,6 +173,14 @@ class Maintanance extends Model
                     $products[$i]->second_month = 0;                     
                     $products[$i]->last_month = 0;                     
                }
+               $manufacturers = array_column($manufacturers, null, "barcode");
+            //   return $manufacturers;
+               if (in_array($code, $manufacturer_product_codes)) {
+                 $products[$i]->manufacture = $manufacturers[$code]->manufacture;
+               }else{
+                // return 'no manufacturer for '. $code ;
+                $products[$i]->manufacture = '';
+               }
 
                $products[$i]->avr_rr = $products[$i]->nett_sales / 3;
                $products[$i]->avrgcost = toFloat($products[$i]->avrgcost );
@@ -190,10 +201,65 @@ class Maintanance extends Model
             return $products ;
         }
         
-        return combine_stockAndSales($products, $stock_analysis);
+        return combine_stockAndSales($products, $stock_analysis, $manufacturers);
+    }
 
 
 
-         return $stock_analysis;
+    // ////////////////////////////
+    public function import_manufacturers($data) {
+
+        $data = $data[0];
+        $manufacturers = [];
+        $header = ['BARCODE', 'DESCRIPTION', 'MANUFACTURERS'];
+        array_push($manufacturers, $header); // push only the headers first
+
+        // // get index of wanted data/field
+        $BARCODE = array_search('BARCODE', $data[0]);
+        $DESCRIPTION = array_search('DESCRIPTION', $data[0]);
+        $MANUFACTURERS = array_search('MANUFACTURERS', $data[0]);
+ 
+        $index = [
+                    'barcode' => $BARCODE,
+                    'description' => $DESCRIPTION,
+                    'manufacture' => $MANUFACTURERS,
+                ];
+
+                if(
+                    !$index['barcode']  &&
+                    !$index['description'] &&
+                    !$index['manufacture']
+                  )
+                {
+                    return 'File have incorrect Columns, Please make sure you include these columns as they are [BARCODE,DESCRIPTION,MANUFACTURERS]';
+                }
+                //  return $index;
+        // return $manufacturers;
+
+        array_shift($data);  // remove the old headers 
+
+  
+        try {
+            for ($i=0; $i < count($data) ; $i++) { 
+
+                DB::table('manufacturers')->updateOrInsert(
+                    ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
+                    [
+                        "barcode" => $data[$i][$index['barcode']],
+                        "description" => $data[$i][$index['description']],
+                        "manufacture" => $data[$i][$index['manufacture']]
+                    ]                
+                );
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return 'something went wrong, please try again';
+        }
+
+        // import_productsCSV::dispatch( $data, $ids, $index);    
+        
+ 
+        // return only wanted fields from data in the excel file.
+        return 'success';
     }
 }

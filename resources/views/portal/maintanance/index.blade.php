@@ -27,6 +27,12 @@
                     <a href="" class="btn btn-sm btn-success rounded font-weight-bold" data-toggle="modal" data-target="#import_stock_analysis">Upload Stock Analysis</a>
                 </div>
             </div>
+            <div class="col">
+                <p class="font-weight-bold">Upload manufacturers by product  </p>
+                <div class="border rounded text-center">
+                    <a href="" class="btn btn-sm btn-success rounded font-weight-bold" data-toggle="modal" data-target="#import_manufactures">Upload manufacturers</a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -197,7 +203,7 @@
                     </button>
             </div>
             <div class="modal-body">
-                <div class="">
+                <div class=""> 
                     <div class="form-group">
                       <label for="">Select CSV, xlsx File</label>
                       <input type="file" value="" accept=".csv, .xlsx, .xls" class="form-control-file" name="products_file" id="products_file" >
@@ -225,6 +231,47 @@
     </div>
 </div>
 
+{{-- Manufactures --}}
+{{-- /// start modal --}}
+<div class="modal fade" id="import_manufactures" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('save_product_manufacturers') }}" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Import Product Manufacturers</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class=""> 
+                    <div class="form-group">
+                      <label for="">Select Manufacturers CSV, xlsx File</label>
+                      <input type="file" value="" accept=".csv, .xlsx, .xls" class="form-control-file" name="file" id="products_file" >
+                      <small class="form-text text-muted">
+                        <span class="font-weight-bold">Note</span>
+                        Only CSV or xlsx files are allowed... <br>
+                        <span>The Excel file should contain ([code,description,manufacturers]) Columns <i>(description, is for Product Descriptio)</i></span>
+                    </small>
+                    </div> 
+                    {{-- <div class="form-group">
+                      <label for="">Select Store</label>
+                      <select class="form-control" name="store" required>
+                        <option class="" @disabled(true) selected>Select Store</option>
+                        @foreach ($stores as $store)
+                            <option value="{{$store->storeID}}">{{$store->name}}</option>
+                        @endforeach
+                      </select>
+                    </div> --}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 {{-- /////////////////////////////// All Sales --}}
 <div class="modal fade" id="import_sales" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">

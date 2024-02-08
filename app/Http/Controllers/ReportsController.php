@@ -29,15 +29,17 @@ class ReportsController extends Controller
         $id == true ? $storeID = $id : $storeID = 0;
 
         $stores = DB::table('stores')->get(); // remove limit to show all stores
+        $manufacturers = DB::table('manufacturers')->get();  
         $selected_store = $this->get_store($stores, $storeID); 
         $storeID = $selected_store->storeID;
   
         // Test
-        $analysis = new Maintanance();
+        // $analysis = new Maintanance();
         // return $analysis->stock_analysis($storeID);
+        // return $manufacturers;
 
         return view('portal.store.store_products')
-                // ->with('products', $products)
+                ->with('manufacturers', $manufacturers)
                 ->with('storeID', $storeID)
                 ->with('stores', $stores)
                 ->with('selected_store', $selected_store)

@@ -122,9 +122,21 @@ class MaintananceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function save_product_manufacturers(Request $request)
     {
-        //
+        // $request->validate([
+        //     'file' => 'required',                  
+        //  ]); 
+        $data = Excel::toArray(new CSVImport, request()->file('file'));       
+
+        $maintanance = new Maintanance();
+        $manufactorers = $maintanance->import_manufacturers($data);
+ 
+        // if (!$stock_analysis) {
+        //     return redirect()->back()->with('error', 'The uploaded file have incorrect inputs... Please try to upload sales file!!!');
+        // }
+
+        return $manufactorers;
     }
 
     /**

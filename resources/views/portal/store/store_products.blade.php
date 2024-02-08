@@ -84,6 +84,7 @@
   <thead class="thead-inverse">
       <tr class="bg-dark text-light rounded font-weight-bold">
           <th>#</th>
+          <th>Manufacturers</th>
           <th>Barcode</th>
           <th>Description</th>
           <th>AVR Cost</th>
@@ -113,7 +114,7 @@
         <tr v-if="products.length < 1">
             <td colspan="10">
               <div class="">
-                <p class="h5 i text-muted text-center">Loading Data Please Wait!!!...</p>
+                <p class="h5 i text-muted text-center" id="report_loader">Loading Data Please Wait!!!...</p>
               </div>
             </td>
         </tr>
@@ -122,6 +123,7 @@
               <tr class="text-uppercase categories accordion-toggle"
                  :data-target="'#ID'+i">
                   <td class="category-row"> @{{i+1}}.</td>
+                  <td></td>
                   <td></td>
                   <td scope="row" class="bg-black   category-row" ><b class="">@{{product.category}}</b></td>
                   <td></td>
@@ -150,6 +152,7 @@
               <tr v-for="item,x in product.items"  >                  
  
                 <td>@{{x+1}}</td>
+                <th>@{{item.manufacture}}</th>
                 <td>@{{item.barcode}}</td>
                 <td>@{{item.descript}}</td>
                 <td>R@{{toDecimal(item.avrgcost).toFixed(2)}}</td>
@@ -324,19 +327,19 @@ const { createApp } = Vue;
       },
      async created() { 
 
-        let selected_store = document.getElementById("selected_store").value ;
-        let stock = await  await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
+      let selected_store = document.getElementById("selected_store").value ;
+      let manufacturers = @json($manufacturers);
+        let stock = await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
             products = await stock.data;
 
         let first_month = document.getElementById("first_month").value
         let second_month = document.getElementById("second_month").value
         let last_month = document.getElementById("last_month").value
 
-         this.last_months = [ ...[first_month, second_month, last_month]]
-        //  console.log(products)
-        //  console.log(this.last_months)
+        this.last_months = [ ...[first_month, second_month, last_month]]
       
         this.raw_products_data = await products
+        console.log(products)
 
            function compare( a, b ) { 
 
@@ -355,7 +358,8 @@ const { createApp } = Vue;
 
           this.products = [ ...Object.values(categories) ]  
           this.productsDB = [ ...Object.values(categories) ]  
-          // console.log(this.productsDB);
+          console.log(this.productsDB);
+          console.log(manufacturers)
 
           this.store_name = '{{$selected_store->name}}';
 
@@ -403,6 +407,7 @@ const { createApp } = Vue;
                   categories[ catID ]['avr_rr'] = 0;  
                   categories[ catID ]['suggested_order'] = 0;  
                   categories[ catID ]['DOH'] = 0;  
+                  categories[ catID ]['manufacture'] = products[y].manufacture;  
                 }
 
                 total_nettsales +=  this.toDecimal(products[y].nett_sales);
@@ -580,26 +585,27 @@ const { createApp } = Vue;
               let item = dataDB[x].items;
               for (let i = 0; i < item.length; i++) {
                   let product  = {}
-                  product['Barcode'] = item[i].barcode
+                  product['Barcode'] = item[i].barcode /// 
                   product['Description'] = item[i].descript
+                  product['Manufacture'] = item[i].manufacture
                   product['Cost Price'] = { f: 'ROUND('+item[i].avrgcost+',2)' , t: 'n' } 
                   product['Selling Price'] =  { f: 'ROUND('+item[i].sellpinc1+',2)' , t: 'n' }  
                   product['OnHand'] =  item[i].onhand
                   product['Physical Count'] =  0
-                  product['Variance'] =  { f: 'F2-E2', t: 'n' } 
-                  product['Physical Count Value'] =  { f: 'F2*C2', t: 'n' }
-                  product['Stock Value Variance'] =  { f: 'G2*C2', t: 'n' }             //parseFloat((0 - item[i].stock_value)).toFixed(2)    
-                  product['Stock Value'] = { f: 'E2*C2', t: 'n' }                       //parseFloat(item[i].stock_value).toFixed(2)
+                  product['Variance'] =  { f: 'G2-F2', t: 'n' } 
+                  product['Physical Count Value'] =  { f: 'G2*D2', t: 'n' }
+                  product['Stock Value Variance'] =  { f: 'G2*D2', t: 'n' }             //parseFloat((0 - item[i].stock_value)).toFixed(2)    
+                  product['Stock Value'] = { f: 'F2*D2', t: 'n' }                       //parseFloat(item[i].stock_value).toFixed(2)
                   product[first_month] =  { f: 'ROUND('+item[i].first_month+',2)' , t: 'n' }  
                   product[second_month] =  { f: 'ROUND('+item[i].second_month+',2)' , t: 'n' }  
                   product[last_month] =  { f: 'ROUND('+item[i].last_month+',2)' , t: 'n' } 
-                  product['Total 3 Month Sales'] = { f: '(K2+L2+M2)', t: 'n' } 
-                  product['Average Run Rate'] = { f: 'IFERROR(ROUND((N2/3),2),0)', t: 'n' }                     //parseFloat(item[i].avr_rr).toFixed(2)
-                  product['Days onHand'] =   { f: 'IFERROR(ROUND(((J2/O2)*30.5),0),0)', t: 'n' }                  //item[i].days_onhand 
-                  product['Suggested Order Value'] = { f: 'IFERROR(ROUND((21-P2)*(O2/21),2),0)', t: 'n' }          //parseFloat(item[i].suggested_order).toFixed(2)
-                  product['Suggested Order Qty'] = { f: 'IFERROR(ROUND((Q2/C2),0),0)', t: 'n' }         //!isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
-                  product['Sku Rank %'] = { f: 'IFERROR(ROUND((N3/N$2),2),0)', t: 'e' }  
-                  product['Cumulative Contribution'] = { f: 'S3+T2', t: 'e' }  
+                  product['Total 3 Month Sales'] = { f: '(L2+M2+N2)', t: 'n' } 
+                  product['Average Run Rate'] = { f: 'IFERROR(ROUND((O2/3),2),0)', t: 'n' }                     //parseFloat(item[i].avr_rr).toFixed(2)
+                  product['Days onHand'] =   { f: 'IFERROR(ROUND(((K2/P2)*30.5),0),0)', t: 'n' }                  //item[i].days_onhand 
+                  product['Suggested Order Value'] = { f: 'IFERROR(ROUND((21-Q2)*(P2/21),2),0)', t: 'n' }          //parseFloat(item[i].suggested_order).toFixed(2)
+                  product['Suggested Order Qty'] = { f: 'IFERROR(ROUND((R2/D2),0),0)', t: 'n' }         //!isNaN( parseFloat(item[i].suggested_order / item[i].avrgcost)) ? parseFloat(dataDB[i].suggested_order /  dataDB[i].avrgcost).toFixed(0) : 0 
+                  product['Sku Rank %'] = { f: 'IFERROR(ROUND((O3/O$2),2),0)', t: 'e' }  
+                  product['Cumulative Contribution'] = 0// { f: 'S3+T2', t: 'e' }  
 
                  data.push(product)               
                 } 
