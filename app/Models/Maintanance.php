@@ -84,6 +84,7 @@ class Maintanance extends Model
         $products = DB::table('products')
                         // ->join('manufacturers', 'products.barcode', '=', 'stock_analyses.code')
                         ->where( [['storeID', '=', $storeID]])
+                        // ->where( [['barcode', '=', 'amo']])
                         ->orderBy('onhand', 'DESC')
                         ->get();
 

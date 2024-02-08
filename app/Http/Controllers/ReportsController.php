@@ -32,11 +32,6 @@ class ReportsController extends Controller
         $manufacturers = DB::table('manufacturers')->get();  
         $selected_store = $this->get_store($stores, $storeID); 
         $storeID = $selected_store->storeID;
-  
-        // Test
-        // $analysis = new Maintanance();
-        // return $analysis->stock_analysis($storeID);
-        // return $manufacturers;
 
         return view('portal.store.store_products')
                 ->with('manufacturers', $manufacturers)

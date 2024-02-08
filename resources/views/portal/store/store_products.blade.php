@@ -114,7 +114,7 @@
         <tr v-if="products.length < 1">
             <td colspan="10">
               <div class="">
-                <p class="h5 i text-muted text-center" id="report_loader">Loading Data Please Wait!!!...</p>
+                <p class="h5 i text-muted text-center" id="report_loader">@{{report_loader}}</p>
               </div>
             </td>
         </tr>
@@ -323,49 +323,68 @@ const { createApp } = Vue;
           last_months: [],
           total_nettsales: 0,
           store_name: '',
+          report_loader: '',
         }          
       },
      async created() { 
 
+      this.load_data_proccess("Featching data from Database... Please Wait")
       let selected_store = document.getElementById("selected_store").value ;
-      let manufacturers = @json($manufacturers);
-        let stock = await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
-            products = await stock.data;
-
-        let first_month = document.getElementById("first_month").value
-        let second_month = document.getElementById("second_month").value
-        let last_month = document.getElementById("last_month").value
+      let first_month = document.getElementById("first_month").value
+      let second_month = document.getElementById("second_month").value
+      let last_month = document.getElementById("last_month").value
 
         this.last_months = [ ...[first_month, second_month, last_month]]
       
-        this.raw_products_data = await products
-        console.log(products)
+      let manufacturers = @json($manufacturers);
+let products, is_data_available;
+      async function fetchData() {
+        try {
+        let stock = await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
+            products = await stock.data;      
+            is_data_available = await products && products.length > 0;
+        } catch (error) {    }
+        }
+     
+          fetchData().then(() => {
+            this.load_data_proccess("Preparing Your DOH Report... Please Wait",  is_data_available)
+           
+            this.raw_products_data =   products
+  
+            function compare( a, b ) { 
 
-           function compare( a, b ) { 
-
-                    if ( a.descript.toLowerCase() < b.descript.toLowerCase() ){
-                      return -1;
+                      if ( a.descript.toLowerCase() < b.descript.toLowerCase() ){
+                        return -1;
+                      }
+                      if ( a.descript.toLowerCase() > b.descript.toLowerCase() ){
+                        return 1;
+                      }
+                      return 0;
                     }
-                    if ( a.descript.toLowerCase() > b.descript.toLowerCase() ){
-                      return 1;
-                    }
-                    return 0;
-                  }
 
-          products = await products.sort(compare); 
+            products =   products.sort(compare); 
 
-          let categories = this.create_categories(products)
+            let categories = this.create_categories(products)
 
-          this.products = [ ...Object.values(categories) ]  
-          this.productsDB = [ ...Object.values(categories) ]  
-          console.log(this.productsDB);
-          console.log(manufacturers)
-
+            this.products = [ ...Object.values(categories) ]  
+            this.productsDB = [ ...Object.values(categories) ]  
+        
+            this.load_data_proccess("Almost there... Please Wait", is_data_available)
+        });
           this.store_name = '{{$selected_store->name}}';
 
       },
       methods:
       {
+        load_data_proccess: async function(msg, is_data_available = true){  
+          console.log('is_data_available:', is_data_available);
+            if (!is_data_available) {
+               this.report_loader = "Seems like there's no data available";       // error: Data proccess
+             } else {
+              this.report_loader = msg;        
+
+            }          
+        },
           toDecimal: function(num)
           {
             let number = num.toString()
