@@ -338,15 +338,15 @@ const { createApp } = Vue;
       
       let manufacturers = @json($manufacturers);
 let products, is_data_available;
-      async function fetchData() {
+      // async function fetchData() {
         try {
         let stock = await axios.get("{{route('get_stock_analysis', $selected_store->storeID)}}");
             products = await stock.data;      
             is_data_available = await products && products.length > 0;
         } catch (error) {    }
-        }
-     
-          fetchData().then(() => {
+
+        // } fetchData().then(() => {
+
             this.load_data_proccess("Preparing Your DOH Report... Please Wait",  is_data_available)
            
             this.raw_products_data =   products
@@ -362,7 +362,7 @@ let products, is_data_available;
                       return 0;
                     }
 
-            products =   products.sort(compare); 
+            products = products.sort(compare); 
 
             let categories = this.create_categories(products)
 
@@ -370,7 +370,8 @@ let products, is_data_available;
             this.productsDB = [ ...Object.values(categories) ]  
         
             this.load_data_proccess("Almost there... Please Wait", is_data_available)
-        });
+        // }
+        // fetchData()
           this.store_name = '{{$selected_store->name}}';
 
       },
