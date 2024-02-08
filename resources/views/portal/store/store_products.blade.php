@@ -349,7 +349,7 @@ let products, is_data_available;
 
             this.load_data_proccess("Preparing Your DOH Report... Please Wait",  is_data_available)
            
-            this.raw_products_data =   products
+            this.raw_products_data = await products
   
             function compare( a, b ) { 
 
@@ -362,9 +362,9 @@ let products, is_data_available;
                       return 0;
                     }
 
-            products = products.sort(compare); 
+            products = await products.sort(compare); 
 
-            let categories = this.create_categories(products)
+            let categories = await this.create_categories(products)
 
             this.products = [ ...Object.values(categories) ]  
             this.productsDB = [ ...Object.values(categories) ]  
