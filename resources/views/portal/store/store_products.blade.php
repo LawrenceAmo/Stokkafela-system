@@ -593,8 +593,8 @@ let products, is_data_available;
               for (let i = 0; i < item.length; i++) {
                   let product  = {}
                   product['Barcode'] = item[i].barcode /// 
-                  product['Description'] = item[i].descript
                   product['Manufacture'] = item[i].manufacture
+                  product['Description'] = item[i].descript
                   product['Cost Price'] = { f: 'ROUND('+item[i].avrgcost+',2)' , t: 'n' } 
                   product['Selling Price'] =  { f: 'ROUND('+item[i].sellpinc1+',2)' , t: 'n' }  
                   product['OnHand'] =  item[i].onhand
@@ -622,18 +622,22 @@ let products, is_data_available;
             let worksheet = XLSX.utils.json_to_sheet(data);  
 
             // Set the column width for columns A and B
-            const columnWidths = { A: 15, B: 40 }; // Adjust widths as needed
+            const columnWidths = { A: 15, B: 25, C: 40  }; // Adjust widths as needed
             worksheet['!cols'] = [];
             Object.keys(columnWidths).forEach(col => {
               worksheet['!cols'].push({ wch: columnWidths[col] });
             });
 
             // Apply bold and text wrapping for the entire row (columns A to T)
-             for (let col = 0; col < 21; col++) {
-              const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });  // Cell reference for the cell in the row
-              worksheet[cellRef] = worksheet[cellRef] || { s: {} };
-              worksheet[cellRef].s =  { font: { bold: true }, alignment: { wrapText: true } };
-            }
+            const row1Style = { font: { bold: true } };
+
+            // Set row 1 range (adjust if your row headers start later)
+            const row1Range = XLSX.utils.decode_range('A1:U1'); // Adapt the range for your column count
+
+            // Apply the bold style to all cells in row 1
+            worksheet['!style'] = worksheet['!style'] || {};
+            worksheet['!style'][row1Range] = row1Style;
+
 
             // /////////////////////////////////
             let notes = ''
