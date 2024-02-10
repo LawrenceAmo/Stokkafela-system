@@ -36,21 +36,38 @@ class CreateProductManufacturers implements ShouldQueue
     {
         $data = $this->data;
         $index = $this->index;
+        
         try {
             for ($i=0; $i < count($data) ; $i++) { 
 
 
                 try {
+
+                    if ($data[$i][$index['manufacture']]) {
                         DB::table('manufacturers')->updateOrInsert(
-                        ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
-                        [
-                            "barcode" => $data[$i][$index['barcode']],
-                            "description" => $data[$i][$index['description']],
-                            "manufacture" => $data[$i][$index['manufacture']],
-                            "created_at"  => now(),
-                            "updated_at"  => now(),
-                        ]                
-                      );
+                            ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
+                            [
+                                "barcode" => $data[$i][$index['barcode']],
+                                "description" => $data[$i][$index['description']],
+                                "manufacture" => $data[$i][$index['manufacture']],
+                                "created_at"  => now(),
+                                "updated_at"  => now(),
+                            ]                
+                          );
+                    } else {
+                        DB::table('manufacturers')->updateOrInsert(
+                            ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
+                            [
+                                "barcode" => $data[$i][$index['barcode']],
+                                "description" => $data[$i][$index['description']],
+                                // "manufacture" => $data[$i][$index['manufacture']],
+                                "created_at"  => now(),
+                                "updated_at"  => now(),
+                            ]                
+                          );
+                    }
+                    
+                        
                 } catch (\Throwable $th) {
                     
                     DB::table('manufacturers')->where('barcode', $data[$i][$index['barcode']])->delete();
@@ -63,8 +80,6 @@ class CreateProductManufacturers implements ShouldQueue
                         "updated_at" => now()
                     ]);
                 }
-
-
 
             }
         } catch (\Throwable $th) {
