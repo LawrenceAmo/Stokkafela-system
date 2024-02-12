@@ -132,6 +132,8 @@ class MaintananceController extends Controller
         $maintanance = new Maintanance();
         $manufactorers = $maintanance->import_manufacturers($data);
  
+        // return $manufactorers;
+
         if ($manufactorers !== 'success') {
             return redirect()->back()->with('error', $manufactorers);
         }
@@ -139,14 +141,5 @@ class MaintananceController extends Controller
         return redirect()->back()->with('success', 'Task placed in queue, You can continue with your tasks while we work on this task!!!'); 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+        
 }

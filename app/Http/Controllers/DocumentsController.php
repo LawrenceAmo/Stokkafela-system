@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\DB;
 use App\Models\Documents;
-
+use Illuminate\Support\Facades\Storage;
 class DocumentsController extends Controller
 {
     /**
@@ -20,8 +20,6 @@ class DocumentsController extends Controller
         $documents =  DB::table('documents')        
                     ->leftJoin('users', 'users.id', '=', 'documents.userID')
                     ->get();
-
-                    // $documents = [];
 
         return view('portal.documents.index')->with("documents", $documents); 
     }
@@ -73,6 +71,17 @@ class DocumentsController extends Controller
         //
     }
 
+    public function delete_doc($id)
+    {
+        $documents = DB::table('documents')->where('documentID', (int)$id)->first();
+        
+        DB::table('documents')->where('documentID', (int)$id)->delete();
+        if ($this->delete_document($documents->url)) {
+            return redirect()->back()->with('success', 'Document ['.$documents->name.'] was deleted successfully!!!');
+        } 
+            return redirect()->back()->with('error', 'There was a pronlem deleting this document, please try again or contact support team...');     
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -120,5 +129,18 @@ class DocumentsController extends Controller
             $image->storeAs('documents/',"$filename",'public');        // store file
 
         return $filename;
+    }
+
+    // delete  file
+    public function delete_document($filename)
+    {
+        // Check if the file exists
+        if (Storage::disk('public')->exists('documents/' . $filename)) {
+            // Delete the file
+            Storage::disk('public')->delete('documents/' . $filename);
+            return true; // File deleted successfully
+        } else {
+            return false; // File does not exist
+        }
     }
 }

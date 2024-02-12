@@ -243,10 +243,11 @@ class Maintanance extends Model
                 //  return $index;
         // return $manufacturers;
 
+        // return 
         array_shift($data);  // remove the old headers 
 
-  
-       
+        // return $data[127];//[1];
+
         CreateProductManufacturers::dispatch($data, $index);
         // import_productsCSV::dispatch( $data, $ids, $index);    
          

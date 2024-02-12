@@ -177,12 +177,14 @@ Route::get('/spaza/shops/delete/{id}', [SpazaShopsController::class, 'spaza_shop
 
 //    Documents
 Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');
+Route::get('/documents/delete/{id}', [DocumentsController::class, 'delete_doc'])->name('delete_doc');
 Route::post('/documents/create', [DocumentsController::class, 'create'])->name('document_create');
 
 
 //    Staff Leaves
 Route::get('/leave', [LeaveRequestController::class, 'index'])->name('leave');
 Route::get('/leave/admin', [LeaveRequestController::class, 'leave_admin'])->name('leave_admin');
+Route::get('/leave/admin/balances', [LeaveTypeController::class, 'leave_balances'])->name('leave_balances');
 Route::post('/leave/request', [LeaveRequestController::class, 'leave_request'])->name('leave_request');
 Route::post('/leave/type/create', [LeaveTypeController::class, 'create_leave_type'])->name('create_leave_type');
 

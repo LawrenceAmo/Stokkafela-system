@@ -130,7 +130,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="delete_doca" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal fade" id="delete_doc" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
              <div class="modal-header">
@@ -147,12 +147,14 @@
                         <b>@{{ delete_doc.name }}</b>
                     </div>
                     <div class="">
-                        <a download="true" target="_blank" :href="document_storage(delete_doc.url)" class="btn btn-sm btn-danger rounded">yes delete document</a>
+                        <a @click="delete_file(delete_doc.documentID)" class="btn btn-sm btn-danger rounded">yes delete document</a>
                     </div>
                 </div> <hr>
                 <div class="">
-                    <p class="h5">Document Info:</p> <br>
-                    <p class="p-3">@{{delete_doc.description}}</p>
+                    <p class="h5 text-danger"><b class="">Please Note:</b></p>  
+                    <p class="">
+                        This action is irreversible. Once the document is deleted, you won't be able to recover it. It will be permanently removed from our database. We advise you to make a backup by downloading it first.
+                    </p>
                 </div>   
             </div>
             
@@ -186,7 +188,7 @@
                 },
                 update_doc_fun: async function(doc){
                     console.log(doc)
-                    this.update_doc = doc;
+                    // this.update_doc = doc;
                 },
                 download_doc_fun: async function(doc){
                     console.log(doc)
@@ -195,6 +197,10 @@
                 delete_doc_fun: async function(doc){
                     console.log(doc)
                     this.delete_doc = doc;
+                },
+                delete_file: async function(doc){
+                    console.log(doc)
+                    location.href = '{{ route("delete_doc", '') }}/' + doc;
                 },
                }
            }).mount("#app");
