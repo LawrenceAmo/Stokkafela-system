@@ -43,7 +43,7 @@ class CreateProductManufacturers implements ShouldQueue
 
                 try {
 
-                    if (!empty($data[$i][$index['manufacture']])) {
+                    if (!empty($data[$i][$index['manufacture']]) || $data[$i][$index['manufacture']] !== '' || $data[$i][$index['manufacture']] !== null) {
                         DB::table('manufacturers')->updateOrInsert(
                             ["barcode" => $data[$i][$index['barcode']]], // Unique column and value to identify the record
                             [
