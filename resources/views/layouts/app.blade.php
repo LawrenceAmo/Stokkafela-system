@@ -17,7 +17,13 @@
         {{-- <script src="https://unpkg.com/vue@3"></script> --}} 
         <!-- Fonts -->
         {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
-
+      <style>
+        table thead tr{
+                  background-color: rgb(36, 34, 28);
+                  color: white;
+                  font-weight: bold;            
+              }
+      </style>
     </head>
     <body class="font-sans antialiased">
       <!-- Page Heading -->           
@@ -93,6 +99,10 @@
             <a href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-graduation-cap "></i><span>Jobs</span>
+            </a>
+            <a href="{{ route("leave")}}"
+            class="list-group-item list-group-item-action py-2 ripple">
+             <i class="fas fa-calendar-alt    "></i> <span>Staff Leave</span>
             </a> 
             <a href="{{ route("documents")}}"
               class="list-group-item list-group-item-action py-2 ripple">

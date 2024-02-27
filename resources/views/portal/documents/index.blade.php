@@ -49,7 +49,7 @@
                 <td v-else> < 0.01MB</td>
                 <td>@{{doc.created_at}}</td>
                 <td> 
-                    <a class="text-primary"> <i class="fa fa-pencil-alt" aria-hidden="true"></i> </a> &nbsp; | &nbsp; 
+                    {{-- <a class="text-primary"> <i class="fa fa-pencil-alt" aria-hidden="true"></i> </a> &nbsp; | &nbsp;  --}}
                     <a class="text-info" @click="download_doc_fun(doc);" data-toggle="modal" data-target="#download_doc"> <i class="fa fa-download" aria-hidden="true"></i> </a> &nbsp; | &nbsp;
                     <a class="text-danger" @click="delete_doc_fun(doc);" data-toggle="modal" data-target="#delete_doc"> <i class="fas fa-trash    "></i> </a>
                 </td>

@@ -1,42 +1,29 @@
  
-        <x-guest-layout>
-   
+        <x-guest-layout>   
     <!-- Main content -->
    <main   class="m-0 p-0 pt-3">
  <section class="slice pb-7" >
    <div class=" hero-container-background"></div>
    <div class=" hero-container-background-bottom"></div>
-    
+
       <div class="container ">
         <div class="row row-grid align-items-center mt-md-5 pt-md-5" >
           <div class="col-12 col-md-5 col-lg-6 order-md-2 text-center">
             <!-- Image -->
             <figure class="w-100   p-3">
               <img
-              
                 alt="Image placeholder"
                 src="{{ asset('images/background/goals.svg')}}"
                 class="img-fluid hero-img mw-md-110"
               />
-              <!-- <video
-                autoplay
-                loop
-                muted
-                class="hero-vid-explain  w-100 rounded"
-                src="assets/videos/Pexels Videos 1851190.mp4"
-              ></video> -->
-              <!-- style="background-color: #e9f5ff;" -->
-              <!--  hover-shadow-2xl hero-text-container shadow rounded -->
             </figure>
           </div>
-          <div 
-            class="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5  py-4 pl-3"
-          >
+          <div class="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5  py-4 pl-3">
             <!-- Heading -->
             <h1 class="display-4   text-center text-md-left mb-3 px-0 mx-0 font-weight-bold">              
-              Hungry for More? <br />  
+              Hungry for More? <br />
             </h1>
-            <h2 class="display-4 font-weight-bold"> 
+            <h2 class="display-4 font-weight-bold">
               Discover amazing wholesale deals!
              </h2>
             <!-- Text -->
@@ -46,12 +33,6 @@
              </p>
             <!-- Buttons -->
             <div class="text-center text-md-left mt-3 ">
-              {{-- <a href="login.html" class="btn btn-fe rounded btn-icon">
-                <span class="btn-inner--text">Get started now</span>
-                <span class="btn-inner--icon"
-                  ><i data-feather="chevron-right"></i
-                ></span>
-              </a> --}}
               <a
                 href="tel:0645466435"
                 class="btn  btn-outline-info fond-weight-bold w-100 rounded"
@@ -105,7 +86,7 @@
                   our team will help you to set up everything for free plus you will get 24/7 free support.
                   What are you waiting for? Let us help you
                 </p>      
-<div class="text-center border-top">                  <a href="#ecommerce" class="btn btn-sm rounded btn-outline-dark-green">create store now</a>
+<div class="text-center border-top"><a href="#ecommerce" class="btn btn-sm rounded btn-outline-dark-green">create store now</a>
 </div>
               </div>
             </div>
@@ -186,25 +167,20 @@
                 loading="lazy"
                   src="https://www.tigerbrands.com/-/media/Project/TigerBrands/DotCom/News/ArticleImg-WhiteTiger.jpg?"
                   class="w-100 "
-                  alt="Tiger Brands"
-                />
+                  alt="Tiger Brands"/>
                 <div class="">
                   <p class="h5">
                     Tiger Brands <br /><small
                       class="font-italic text-black-50"
-                      >South African packaged goods company</small
-                    >
+                      >South African packaged goods company</small>
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          @endfor
-            
+          @endfor            
         </div>
       </div>
     </section>
-
-
    </main>
   </x-guest-layout>  

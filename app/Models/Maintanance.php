@@ -101,7 +101,7 @@ class Maintanance extends Model
 
             $first_month = date("m", strtotime("first day of -3 months"));
             $second_month = date("m", strtotime("last day of -2 months"));
-            $last_month = date("m", strtotime("last day of -1 months"));
+            $last_month = date("m", strtotime("last day of -1 months")); 
 
             // loop, and get total nettsales for each product
             for ($i=0; $i < count( $stock_analysis) ; $i++) { 

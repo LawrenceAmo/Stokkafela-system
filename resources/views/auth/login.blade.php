@@ -21,7 +21,6 @@
             <!-- Email Address -->
             <div class=" ">
                 <x-label for="email" :value="__('Email Address')" />
-
                 <x-input id="email" class="block mt-1 w-full form-control" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 

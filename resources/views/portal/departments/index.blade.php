@@ -1,30 +1,16 @@
 <x-app-layout>
     <main class="m-0  px-4   w-100">
         
-        {{-- <div class="  row bg-white shadow border rounded p-3 w-100">
+        <div class="  d-flex justify-content-between bg-white shadow border rounded p-3 w-100">
          
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">Total Sites <span>{{$miniStats['stores']}}</span></p>
-                    
-                 </div>
+            <div class="">
+                 
             </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center"> Departments  <span>{{$miniStats['products']}}</span></p>
-                 </div>
-            </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">  Total Stuff <span>{{$miniStats['staff']}}</span></p>
-                 </div>
-            </div>
-            <div class="col-md-3">
-                 <div class="card p-3 border border-info">
-                    <p class="font-weight-bold h5 text-center">Available Jobs <span>{{$miniStats['jobs']}}</span></p>
-                 </div>
-            </div>           
-        </div> --}}
+             
+            <div class="">
+                     <a href="" class="btn btn-dark rounded btn-sm">go to staff Leave</a>
+             </div>           
+        </div>
     <hr>
    
     <div class="card   rounded p-3 w-100">
@@ -36,8 +22,7 @@
 <p class="font-weight-bold h4 d-flex justify-content-between">
    <span> All Departments  </span> <a type="button" class="btn btn-info rounded btn-sm" data-toggle="modal" data-target="#modelId">add new Department</a>
 </p>
-{{-- href="{{ route('create_department')}}" --}}
-<?php $i = 1 ?>
+ <?php $i = 1 ?>
 <table class="table table-striped table-inverse w-auto ">
     <thead class="thead-inverse rounded ">
         <tr class="border font-weight-bold shadow bg-dark text-light rounded">

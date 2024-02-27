@@ -186,7 +186,10 @@ Route::get('/leave', [LeaveRequestController::class, 'index'])->name('leave');
 Route::get('/leave/admin', [LeaveRequestController::class, 'leave_admin'])->name('leave_admin');
 Route::get('/leave/admin/balances', [LeaveTypeController::class, 'leave_balances'])->name('leave_balances');
 Route::post('/leave/request', [LeaveRequestController::class, 'leave_request'])->name('leave_request');
+Route::post('/leave/request/update', [LeaveRequestController::class, 'update_leave_request'])->name('update_leave_request');
 Route::post('/leave/type/create', [LeaveTypeController::class, 'create_leave_type'])->name('create_leave_type');
+Route::post('/leave/type/staff/balance', [LeaveTypeController::class, 'create_staff_leave_balance'])->name('create_staff_leave_balance');
+Route::post('/leave/type/staff/balance/update', [LeaveTypeController::class, 'update_staff_leave_balance'])->name('update_staff_leave_balance');
 
 });
  

@@ -102,25 +102,25 @@ class TargetsController extends Controller
                   
         return redirect()->back()->with('success', 'Target for this month was Updated successfully');
     }
-
-    
-    
+ 
 
     public function create_rep_target_bydes(Request $request)
     { 
         $request->validate([
             'des' => 'required',
             'target_amount' => 'required',
-            // 'date' => 'required',             
-        ]); 
+         ]); 
 
         $date = date("Y-m-d", strtotime("first day of 0 months"));
+        // $date = now()->firstOfMonth();
         
         $reps = DB::table('reps')
                 ->where([['destributorID', (int)$request->des]]) 
                 ->get('repID');
   
          for ($i=0; $i < count($reps) ; $i++) { 
+            // rmm 
+            // remote management 
 
             $rep = DB::table('rep_targets')
                 ->where( 'repID', '=', (int)$reps[$i]->repID )

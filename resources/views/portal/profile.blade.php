@@ -1,5 +1,5 @@
  <x-app-layout>
-    <main class="m-0  px-4 pt-5   w-100">
+    <main class="m-0  px-4 pt-5   w-100" id="app">
  
       <div class="card mx-1 p-3">
         <div class="d-flex justify-content-between ">
@@ -228,26 +228,42 @@
           </div>
         </div>
 
-        {{--  --}}
-        <div class="modal fade" id="leave" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Apply for a leave</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <div class="">
-                  <i class="text-muted">Underdevelopment...</i>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-dark btn-sm rounded">Apply</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        
      </main>
+
+     <script>
+ 
+      const { createApp } = Vue;
+           createApp({
+              data() {
+                return { 
+                  dailyTotals: [],
+                  number_of_days: 0,                 
+                  dateFrom: '',                 
+                  dateTo: '',                 
+                  msg: '',                 
+                }          
+              },
+             async created() { 
+                   
+              },
+             methods:{ 
+              res_display: function( msg ){
+                this.msg = msg;                  
+                // Clear the existing setTimeout if it's set
+                if (this.msgtimeoutId) {
+                  clearTimeout(this.msgtimeoutId);
+                }
+
+              // Set a new setTimeout to clear the messages after 10 seconds (10000 milliseconds)
+              this.msgtimeoutId =  setTimeout(() => {
+                  this.msg = '';    // set everything to empty string ''
+                }, 10000);
+                return true;
+            },
+                  
+             }
+         }).mount("#app");
+    
+      </script>
 </x-app-layout>

@@ -183,7 +183,7 @@
                 <option value="1" selected>Active</option>
                 <option value="">Inactive</option>
             @else
-                <option value="" >Inactive</option>
+                <option value="" selected>Inactive</option>
                 <option value="1">Active</option>
             @endif 
         </select>
@@ -191,17 +191,53 @@
       </div>  
     </div>
     </div>
-
+      <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="user_managers">Select Manager(s) for this User:</label>
+          <select multiple class="form-control" name="user_managers[]" id="user_managers">
+            <option selected disabled>Select Manager for this user</option>
+            @foreach ($user_roles as $user_role)
+            <option value="{{ $user_role->id }}">{{ $user_role->first_name }} {{ $user_role->last_name }} - <i class="">{{ $user_role->role_title }}</i></option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label>Current managers for this user</label>
+        <div class="">
+              <div class="">
+                <table class="table">
+                  <thead>
+                    <tr class="p-0">
+                      <th>#</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($user_managers as $managers)
+                    <tr>
+                      <td scope="row"></td>
+                      <td>{{$managers->first_name}}</td>
+                      <td>{{$managers->last_name}}</td>
+                    </tr> 
+                    @endforeach                
+                  </tbody>
+                </table>
+              </div>
+         
+        </div>
+      </div>
+      </div>
       <div class="form-outline mb-4">
       <label class="form-label" for="form6Example7">Additional information</label>
       <textarea class="form-control" id="form6Example7" name="comments" rows="4"></textarea>
     </div>
           </div>
-          <div class="row m-0 w-100    justify-content-center">
+          <div class="row m-0 w-100 justify-content-center">
             <div class="w-100">
-              <button
-                type="submit"
-                class="btn btn-dark w-100 rounded">
+              <button type="submit" class="btn btn-dark w-100 rounded">
                 Update Your info
               </button>
             </div>

@@ -638,7 +638,6 @@ let products, is_data_available;
             worksheet['!style'] = worksheet['!style'] || {};
             worksheet['!style'][row1Range] = row1Style;
 
-
             // /////////////////////////////////
             let notes = ''
 

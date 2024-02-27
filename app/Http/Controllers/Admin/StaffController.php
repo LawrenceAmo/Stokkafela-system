@@ -79,22 +79,31 @@ class StaffController extends Controller
  
     public function edit($id)
     {
-
         $user = User::where('id',(int)$id)
                     ->leftjoin('contacts', 'contacts.userID', '=', 'users.id')
                     ->leftjoin('user_roles', 'user_roles.userID', '=', 'users.id')
                     ->leftjoin('roles', 'roles.roleID', '=', 'user_roles.roleID')
                     ->leftjoin('departments', 'departments.departmentID', '=', 'roles.departmentID')
                     ->first();
-                    
-        $roles = DB::table('roles')->get();
 
-        return view('portal.staff.update')->with('user', $user)->with('roles', $roles);
+        $user_roles = DB::table('users')
+                    ->rightjoin('user_roles', 'user_roles.userID', '=', 'users.id')
+                    ->leftjoin('roles', 'roles.roleID', '=', 'user_roles.roleID')
+                    ->where('users.id', '!=', (int)$id)
+                    ->get();
+
+        $user_managers = DB::table('users')
+                            ->rightjoin('user_managers', 'user_managers.managerID', '=', 'users.id')
+                            ->where('user_managers.userID', (int)$id)
+                            ->get();
+
+        $roles = DB::table('roles')->get();
+// return $users;
+        return view('portal.staff.update')->with('user', $user)->with('user_roles', $user_roles)->with('roles', $roles)->with('user_managers', $user_managers);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * Update the specified resource in storage. 
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -102,14 +111,17 @@ class StaffController extends Controller
     public function update_staff_profile(Request $request)
     {
         $role_status = (Boolean)$request->role_status;
+        // return $request;
+        // return isset($request->user_managers);
 
         User::where('id', (int)$request->id)
-        ->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name, 
-            'email' => $request->email,
-            'phone' => $request->phone,
-         ]);
+                ->update([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name, 
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                ]);
+        // return $request;
 
          DB::table('contacts')
          ->where('userID', (int)$request->id)
@@ -125,8 +137,7 @@ class StaffController extends Controller
          if (!$request->role) {
             return redirect()->back()->with('error', 'Unable to activate staff: Please assign a role or job before activation.');
         }
-         if ($role_status) {
-            
+         if ($role_status) {            
             DB::table('user_roles')
             ->updateOrInsert(
                 ['userID' => (int)$request->id], // Unique identifier column and value
@@ -136,10 +147,26 @@ class StaffController extends Controller
                     'role_status' =>  $role_status,
                     'updated_at' => now(),
                 ]);
-
-            // return redirect()->back()->with('error', 'Please add a Staff Role...');
         }
-         
+
+        if (isset($request->user_managers)) {
+            $user_managers = $request->user_managers;
+           for ($i=0; $i < count($user_managers); $i++) { 
+            
+            DB::table('user_managers')
+            ->updateOrInsert(
+                [
+                    'userID' => (int)$request->id,
+                    'managerID' => (int)$user_managers[$i],
+                ], // Unique identifier column and value
+                [
+                    'userID' => (int)$request->id,
+                    'managerID' => (int)$user_managers[$i],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+           }
+        }         
         return redirect()->back()->with('success', 'User data updated successfully');
     }
 

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Stokkafela Systems') }}</title>
+        <title>@yield('title', config('app.name', 'Stokkafela')) | @yield('page-title', 'wholesale and Destruction')</title>
         <link rel="stylesheet" href="{{ asset('mdb/css/mdb.min.css') }}">
         <link rel="stylesheet" href="{{ asset('mdb/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
@@ -96,12 +96,12 @@
               <div
                 class="copyright text-sm font-weight-bold  py-auto text-center  "
               >
-                &copy; 2023
+                &copy; <span class="" id="footerCurrentYear"></span>
                 <a
                   href="https://stokkafela.com"
                   class="font-weight-bold text-light"
                   target="_blank"
-                  >Stokkafela Cash & Carry</a>. All rights reserved
+                  >Stokkafela Cash & Carry (Pty) Ltd</a>. All rights reserved
               </div>
             </div>
 
@@ -109,6 +109,10 @@
         </div>
       </div>
     </footer>
+    <script>
+      let date = new Date();
+       document.getElementById('footerCurrentYear').innerHTML = date.getFullYear();
+    </script>
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="{{ asset('mdb/js/jquery.min.js') }}"></script>
         <script src="{{ asset('mdb/js/popper.min.js') }}"></script>
@@ -116,5 +120,6 @@
         <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
         <script src="{{ asset('mdb/js/axios.js') }}"></script>    
         <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script>
+        
     </body>
 </html>
