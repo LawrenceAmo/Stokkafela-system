@@ -9,7 +9,8 @@ class TestController extends Controller
 {
     public function mailtest() {
          
-        Mail::to('amocodes@gmail.com')->send(new MyMail()); //customer_order_shipping
-        return 1;
+         return view('emails.leave.staff_leave_request');
+        
+        // Mail::to('amocodes@gmail.com')->send(new MyMail()); //customer_order_shipping
     }
 }

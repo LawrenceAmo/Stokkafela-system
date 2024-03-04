@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StaffLeaveRequest;
+use App\Mail\StaffLeaveRequestAdmin;
+use App\Mail\StaffLeaveRequestStatus;
+use App\Mail\StaffLeaveRequestStatusAdmin;
 
 class LeaveRequestController extends Controller
 {
@@ -34,7 +40,8 @@ class LeaveRequestController extends Controller
                                 ->get();
 
         $leave_types =  DB::table('leave_types')->get();
-        // return $leave_balances;
+
+        // return  User::find(1)->hasPermission('admin');
 
         return view('portal.leave.index')->with("leave_balances", $leave_balances)->with("leave_requests", $leave_requests)->with("leave_types", $leave_types); 
     }
@@ -105,12 +112,32 @@ class LeaveRequestController extends Controller
             $leave_request->userID = $userID;
             $leave_request->leave_typeID = (int)$request->selected_leave_type;
             $leave_request->description = $request->comments;
-            // $leave_request->logs = $logs;
             $leave_request->save();
+
+            $leave_type =  DB::table('leave_types')
+                            ->where('leave_typeID',  (int)$request->selected_leave_type)
+                            ->first();
+            $user = User::find($userID);
+            $user_manager =  DB::table('user_managers')
+                                ->leftJoin('users', 'users.id', '=', 'user_managers.managerID')
+                                ->where('user_managers.userID',  (int)$userID)
+                                ->first();
+
+            $leave_request->leave_type_name = $leave_type->name;
+            $leave_request->admin_first_name = $user_manager->first_name;
+            $leave_request->first_name = $user->first_name;
+            $leave_request->admin_last_name = $user_manager->last_name;
+            $leave_request->last_name = $user->last_name;
+            $leave_request->admin_email = $user_manager->email;
+            $leave_request->email = $user->email;
+            $leave_request->date = now();
+        
+            Mail::to($leave_request->email)->send(new StaffLeaveRequest($leave_request));
+            Mail::to($leave_request->admin_email)->send(new StaffLeaveRequestAdmin($leave_request));
+
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Something went wrong when creating this Leave application. Our support team has been notified. Please try again or contact us...'.$th);
         }
-
         return redirect()->back()->with('success', 'Your leave application was successful...');
     }
 
@@ -144,7 +171,7 @@ class LeaveRequestController extends Controller
                         'updated_at' => now(),                        
                     ]);
              
-                    if ($request->status === 'cancelled' || $request->status === 'declined') {
+                    if ($request->status !== 'pending') {
                     
                         $oldBalance =  DB::table('leave_balances')
                                             ->where('userID', (int)$leave_request->userID )
@@ -158,6 +185,23 @@ class LeaveRequestController extends Controller
                                     'balance' => (float)$oldBalance->balance + (float)$leave_request->actual_number_of_days_requested,
                             ]);
                     }
+
+            $leave_request =  DB::table('leave_requests')
+                                ->leftJoin('leave_types', 'leave_types.leave_typeID', '=', 'leave_requests.leave_typeID')
+                                ->leftJoin('users', 'users.id', '=', 'leave_requests.userID')
+                                ->leftJoin('users as manager', 'users.id', '=', 'leave_requests.updated_byID')
+                                ->where('leave_requests.leave_requestID', (int)$request->selected_leave_request )
+                                ->select(
+                                    'leave_requests.*', 'leave_requests.updated_at as leave_updated_at', 'leave_types.*', 'users.first_name', 'users.last_name', 'users.email',
+                                    'manager.first_name as admin_first_name',  'manager.last_name as admin_last_name',
+                                      'manager.email as admin_email',  )
+                                ->first();
+
+            // // return $leave_request;
+            // return view('emails.leave.staff_leave_request_status_admin')->with('data',$leave_request);
+
+            Mail::to($leave_request->email)->send(new StaffLeaveRequestStatus($leave_request));
+            Mail::to($leave_request->admin_email)->send(new StaffLeaveRequestStatusAdmin($leave_request));
 
          } catch (\Throwable $th) {
             throw $th;

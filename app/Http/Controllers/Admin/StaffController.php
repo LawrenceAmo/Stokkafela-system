@@ -15,6 +15,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
+use Illuminate\Support\Facades\Gate;
 
 class StaffController extends Controller
 {
@@ -79,6 +80,8 @@ class StaffController extends Controller
  
     public function edit($id)
     {
+        // $this->user_permission('isSuperAdmin');
+
         $user = User::where('id',(int)$id)
                     ->leftjoin('contacts', 'contacts.userID', '=', 'users.id')
                     ->leftjoin('user_roles', 'user_roles.userID', '=', 'users.id')
@@ -97,9 +100,12 @@ class StaffController extends Controller
                             ->where('user_managers.userID', (int)$id)
                             ->get();
 
+        $permissions = DB::table('permissions')->get();
         $roles = DB::table('roles')->get();
-// return $users;
-        return view('portal.staff.update')->with('user', $user)->with('user_roles', $user_roles)->with('roles', $roles)->with('user_managers', $user_managers);
+         $user_permission = auth()->user()->permissions[0];
+
+        //  return $user_permission;
+        return view('portal.staff.update')->with('user_permission', $user_permission)->with('permissions', $permissions)->with('user', $user)->with('user_roles', $user_roles)->with('roles', $roles)->with('user_managers', $user_managers);
     }
 
     /**
@@ -110,9 +116,8 @@ class StaffController extends Controller
      */
     public function update_staff_profile(Request $request)
     {
-        $role_status = (Boolean)$request->role_status;
         // return $request;
-        // return isset($request->user_managers);
+        $role_status = (Boolean)$request->role_status;
 
         User::where('id', (int)$request->id)
                 ->update([
@@ -121,7 +126,6 @@ class StaffController extends Controller
                     'email' => $request->email,
                     'phone' => $request->phone,
                 ]);
-        // return $request;
 
          DB::table('contacts')
          ->where('userID', (int)$request->id)
@@ -166,7 +170,28 @@ class StaffController extends Controller
                     'updated_at' => now(),
                 ]);
            }
-        }         
+        }
+        if (isset($request->permission)) {
+            $permissions = DB::table('permissions')->where('permission_code', 'super_admin')->first();
+             
+            // if ((int)$request->permission === (int)$permissions->permissionID) {
+            //     if (!Gate::allows('isSuperAdmin')) {            
+            //         return redirect()->back()->with('error', "You are not authorized to give this user a 'Super Administrator Access'.");
+            //     }
+            // }
+            
+            DB::table('user_permissions')
+            ->updateOrInsert(
+                [
+                    'userID' => (int)$request->id,
+                ], // Unique identifier column and value
+                [
+                    'userID' => (int)$request->id,
+                    'permissionID' => (int)$request->permission,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+        }
         return redirect()->back()->with('success', 'User data updated successfully');
     }
 
@@ -175,8 +200,6 @@ class StaffController extends Controller
 
         $userID = Auth::id();
         $user = User::where('id', '=', $userID )->get();
-
-        // return DB::table('stores')->where('userID', $id)->get();
 
         if ((int)$userID == (int)$id) {
             return redirect()->back()->with('error', 'You don\'t have access, please contact your Admin');

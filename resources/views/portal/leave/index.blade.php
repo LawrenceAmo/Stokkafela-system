@@ -7,9 +7,9 @@
                 <div class=""></div>
                 <div class="">
                     <a data-toggle="modal" data-target="#leave"  class="btn btn-sm rounded btn-info"> apply for leave</a>
-                    {{-- @role($roleIdOrSlug) --}}
+                    @can('isManager')
                             <a  href="{{ route('leave_admin')}}" class="btn btn-sm btn-dark rounded">manage staff Leaves</a>
-                    {{-- @endrole --}}
+                    @endcan
                 </div>
             </div>
         </div>

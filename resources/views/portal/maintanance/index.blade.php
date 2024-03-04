@@ -57,10 +57,13 @@
 
     <hr>
     
+    @can('isSuperAdmin')
     <section class="card rounded p-2">
-        <form action="{{ route('delete_rep_sale_by_date') }}" method="POST" class="row">
+        <div class="row">
+                
+        <form action="{{ route('delete_rep_sale_by_date') }}" method="POST" class="col-md-6">
             @csrf
-            <div class="col">
+            <div class=" ">
                 <p class="font-weight-bold ">delete sales where date =? </p>
                 <div class="border rounded text-center">
                     <input type="date" class="form-control" name="date" id="" placeholder="Please enter the date">
@@ -68,7 +71,28 @@
                 </div>
             </div> 
         </form>
+        <form action="{{ route('delete_store_product') }}" method="POST" class="col-md-6">
+            @csrf
+            <div class=" ">
+                <p class="font-weight-bold ">Delete Product Per Store</p>
+                <div class="border rounded text-center p-0 ">
+                    <div class="form-group p-0 m-0  ">
+                        {{-- <label for="">Select Store</label> --}}
+                        <select class="form-control" name="store" required>
+                          <option class="" @disabled(true) selected>Select Store</option>
+                          @foreach ($stores as $store)
+                              <option value="{{$store->storeID}}">{{$store->name}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    <button type="submit" class="btn btn-danger rounded m-1 btn-sm">Delete Product</button>
+                </div>
+            </div> 
+        </form> 
+    
+        </div>
     </section>
+    @endcan
     <hr>
     <section class="card rounded p-2">
              <div class="col">
@@ -79,28 +103,18 @@
                 </div>
             </div> 
      </section> <hr>
-     <section class="card rounded p-2">
-    
-       <form action="{{ route('delete_store_product') }}" method="POST" class="row">
-        @csrf
-        <div class="col">
-            <p class="font-weight-bold ">Delete Product Per Store</p>
-            <div class="border rounded text-center">
-                <div class="form-group">
-                    {{-- <label for="">Select Store</label> --}}
-                    <select class="form-control" name="store" required>
-                      <option class="" @disabled(true) selected>Select Store</option>
-                      @foreach ($stores as $store)
-                          <option value="{{$store->storeID}}">{{$store->name}}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                <button type="submit" class="btn btn-danger rounded btn-sm">Delete Product</button>
+     @can('isSuperAdmin')
+        <section class="card rounded p-2">    
+        <div class="row">
+            <div class="col">
+                <p class="font-weight-bold ">Create Permission </p>
+                <div class="border rounded text-center">
+                    <a href="" class="btn btn-sm btn-info rounded font-weight-bold" data-toggle="modal" data-target="#create_permission">Create Permission</a>
+                </div>
             </div>
-        </div> 
-    </form>
-</section>
- 
+        </div>
+        </section>
+    @endcan 
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
 
@@ -231,6 +245,44 @@
     </div>
 </div>
 
+{{-- /// start modal --}}
+<div class="modal fade" id="create_permission" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('create_user_permission') }}" enctype="multipart/form-data" method="post" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Create Permission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class=""> 
+                    <div class="form-group">
+                      <label for="">Permission Name</label>
+                      <input type="text" class="form-control" name="name" placeholder="Permission Name" required>
+                      <small>Super Adminidtrator, Manager, Customer</small>
+                    </div>  
+                    <div class="form-group">
+                        <label for="">Permision Code</label>
+                        <input type="text" class="form-control" name="code" placeholder="Permision Code" required>
+                        <small>super_admin, customer</small>
+                      </div>  
+                      <div class="form-group">
+                        <label for="">Permission Priority</label>
+                        <input type="text" class="form-control" name="priority" placeholder="Permission Priority" required>
+                        <small>e.g 1 for Super Admin and 9 for Customers (don't use 0)</small>
+                      </div>                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- Manufactures --}}
 {{-- /// start modal --}}
 <div class="modal fade" id="import_manufactures" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -253,16 +305,7 @@
                         Only CSV or xlsx files are allowed... <br>
                         <span>The Excel file should contain ([code,description,manufacturers]) Columns <i>(description, is for Product Descriptio)</i></span>
                     </small>
-                    </div> 
-                    {{-- <div class="form-group">
-                      <label for="">Select Store</label>
-                      <select class="form-control" name="store" required>
-                        <option class="" @disabled(true) selected>Select Store</option>
-                        @foreach ($stores as $store)
-                            <option value="{{$store->storeID}}">{{$store->name}}</option>
-                        @endforeach
-                      </select>
-                    </div> --}}
+                    </div>                    
                 </div>
             </div>
             <div class="modal-footer">

@@ -95,11 +95,12 @@
               <i class="fa fa-shopping-cart"></i>
               <span>Shopping</span>
             </a>
-                       
+            @can('isAdmin')  
             <a href="{{ route("departments")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-graduation-cap "></i><span>Jobs</span>
             </a>
+            @endcan
             <a href="{{ route("leave")}}"
             class="list-group-item list-group-item-action py-2 ripple">
              <i class="fas fa-calendar-alt    "></i> <span>Staff Leave</span>
@@ -107,12 +108,14 @@
             <a href="{{ route("documents")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-file "></i>  <span>Documents(Files)</span>
-            </a>     
+            </a>   
+            @can('isManager')  
             <a href="{{ route("maintanance")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-cogs"></i>
               <span>Utilities</span>
             </a>
+            @endcan
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple">
               @csrf

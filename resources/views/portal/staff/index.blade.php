@@ -42,9 +42,11 @@
                 <td>{{$staff->created_at}}</td>
                  <td class=" px-0">
                     {{-- <a href="" class="px-1 text-info"><i class="fas fa-eye    "></i></a> | --}}
+                    @can('isAdmin')
                     <a href="{{ route('edit_staff', [$staff->id])}}" class="px-1 text-primary"><i class="fa fa-fas fa-pencil-alt    "></i></a>
+                    @endcan
                     {{-- <a href="{{ route('delete_staff', [$staff->id])}}" id="{{$staff->id}}" class="px-1 text-danger"><i class="fas fa-trash-alt    "></i></a> --}}
-                 </td>
+                 </td> 
             </tr>
              <?php $i++ ?>
             @endforeach 

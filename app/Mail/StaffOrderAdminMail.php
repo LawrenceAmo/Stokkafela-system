@@ -20,7 +20,7 @@ class StaffOrderAdminMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @return void 
      */
     public function __construct($admin_info, $user_info, $order)
     {
@@ -44,6 +44,5 @@ class StaffOrderAdminMail extends Mailable
                     'order' => $this->order,
                     // other variables you want to pass to the email view
                 ]);
-
     }
 }

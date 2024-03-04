@@ -56,4 +56,24 @@ class User extends Authenticatable
                             ->exists();
     }
 
+        // /////////////////////////////////////////////////////////
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'user_permissions', 'userID', 'permissionID');
+    }
+ 
+    // check if the user have permission 
+    public function hasAnyPermission($permissionNames)
+        {
+            return collect($permissionNames)->contains(fn($name) => $this->permissions->contains('permission_code', $name));
+        }
+
+
 }
+
+
+// par 9
+// raf 11
+// zinc 12
+//  nails 5 5

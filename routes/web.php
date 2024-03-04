@@ -24,6 +24,8 @@ use App\Http\Controllers\SpazaShopsController;
 use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\StoreLocationsController;
+use App\Http\Controllers\UserPermissionsController;
+use App\Models\UserPermission;
 use Illuminate\Support\Facades\DB; 
  
 /*
@@ -180,6 +182,9 @@ Route::get('/documents', [DocumentsController::class, 'index'])->name('documents
 Route::get('/documents/delete/{id}', [DocumentsController::class, 'delete_doc'])->name('delete_doc');
 Route::post('/documents/create', [DocumentsController::class, 'create'])->name('document_create');
 
+
+// User Permissions
+Route::post('/user/permission/create', [UserPermissionsController::class, 'create'])->name('create_user_permission');
 
 //    Staff Leaves
 Route::get('/leave', [LeaveRequestController::class, 'index'])->name('leave');

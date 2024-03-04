@@ -7,7 +7,9 @@
                 <div class=""></div>
                 <div class="">
                   {{-- <a data-toggle="modal" data-target="#leave"  class="btn btn-sm rounded btn-info"> Staff leave balances</a> --}}
+                  @can('isAdmin')
                   <a href="{{ route('leave_balances') }}" class="btn btn-sm rounded btn-info"> Staff leave balances</a>
+                  @endcan
                 </div>
             </div>
         </div>

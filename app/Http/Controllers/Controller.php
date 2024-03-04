@@ -7,12 +7,19 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Models\MiniStatistics;
 use App\Models\Stats;
+use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function user_permission($permission){
+        if (!Gate::allows($permission)) {            
+            return redirect()->back()->with('error', 'You are not authorized to access this function.');
+        }
+    }
 
     protected function get_mini_stats()
     {

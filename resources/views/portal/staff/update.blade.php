@@ -229,6 +229,36 @@
          
         </div>
       </div>
+      </div> <hr>
+      <div class="">
+        <p class="h5">Security</p> <br>
+       {{-- **** {{$user_permission}} **** --}}
+        <div class="">
+          <div class="row">     
+            <div class="col-md-6"     > <div class="form-outline mb-4">
+                <div class="form-group">
+                  <label for="">Select User Permision</label>
+                  
+                  <select class="form-control" name="permission" id="">
+                    <option disabled selected >Select Job Title</option>          
+                    @foreach ($permissions as $permission)
+                        @if ((int)$permission->permissionID === (int)$user_permission->permissionID)
+                            <option class="bg-success" value="{{ $permission->permissionID }}" selected >{{ $permission->permission_name }}</option>
+                        @else
+                            <option value="{{ $permission->permissionID }}">{{ $permission->permission_name }}</option>
+                        @endif
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6   d-flex flex-column justify-content-center" >   
+            <div class="text-center  ">
+               <a href="" class="btn btn-sm rounded btn-info">send Reset password link</a>
+            </div>  
+          </div>
+          </div>
+        </div>
       </div>
       <div class="form-outline mb-4">
       <label class="form-label" for="form6Example7">Additional information</label>
