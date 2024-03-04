@@ -242,8 +242,8 @@
                   <select class="form-control" name="permission" id="">
                     <option disabled selected >Select  User Permision</option>          
                     @foreach ($permissions as $permission)
-                        @if ($user_permission)
-                            @if ((int)$permission->permissionID === (int)$user_permission->permissionID)
+                        @if (count($user_permission) > 0)
+                            @if ((int)$permission->permissionID === (int)$user_permission[0]->permissionID)
                                 <option class="bg-success" value="{{ $permission->permissionID }}" selected >{{ $permission->permission_name }}</option>
                             @else
                                 <option value="{{ $permission->permissionID }}">{{ $permission->permission_name }}</option>
