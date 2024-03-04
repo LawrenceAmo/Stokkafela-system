@@ -240,13 +240,13 @@
                   <label for="">Select User Permision</label>
                   
                   <select class="form-control" name="permission" id="">
-                    <option disabled selected >Select Job Title</option>          
+                    <option disabled selected >Select  User Permision</option>          
                     @foreach ($permissions as $permission)
-                        {{-- @if ((int)$permission->permissionID === (int)$user_permission->permissionID) --}}
-                            {{-- <option class="bg-success" value="{{ $permission->permissionID }}" selected >{{ $permission->permission_name }}</option> --}}
-                        {{-- @else --}}
+                        @if ((int)$permission->permissionID === (int)$user_permission->permissionID)
+                            <option class="bg-success" value="{{ $permission->permissionID }}" selected >{{ $permission->permission_name }}</option>
+                        @else
                             <option value="{{ $permission->permissionID }}">{{ $permission->permission_name }}</option>
-                        {{-- @endif --}}
+                        @endif
                     @endforeach
                   </select>
                 </div>
