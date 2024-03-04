@@ -102,7 +102,7 @@ class StaffController extends Controller
 
         $permissions = DB::table('permissions')->get();
         $roles = DB::table('roles')->get();
-         $user_permission = auth()->user()->permissions[0];
+         $user_permission = auth()->user()->permissions;
 
         //  return $user_permission;
         return view('portal.staff.update')->with('user_permission', $user_permission)->with('permissions', $permissions)->with('user', $user)->with('user_roles', $user_roles)->with('roles', $roles)->with('user_managers', $user_managers);
