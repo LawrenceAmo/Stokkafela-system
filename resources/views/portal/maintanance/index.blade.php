@@ -103,7 +103,7 @@
                 </div>
             </div> 
      </section> <hr>
-     @can('isSuperAdmin')
+     {{-- @can('isSuperAdmin') --}}
         <section class="card rounded p-2">    
         <div class="row">
             <div class="col">
@@ -114,7 +114,7 @@
             </div>
         </div>
         </section>
-    @endcan 
+    {{-- @endcan  --}}
 </main>
 {{-- ///////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
 

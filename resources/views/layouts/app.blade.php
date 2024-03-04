@@ -109,13 +109,13 @@
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-file "></i>  <span>Documents(Files)</span>
             </a>   
-            @can('isManager')  
+            {{-- @can('isManager')   --}}
             <a href="{{ route("maintanance")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-cogs"></i>
               <span>Utilities</span>
             </a>
-            @endcan
+            {{-- @endcan --}}
             <form action="{{ route('logout') }}" method="POST"
                class="list-group-item  btn-outline-danger rounded font-weight-bold list-group-item-action py-2 ripple">
               @csrf
