@@ -257,9 +257,9 @@
               </div>
             </div>
             <div class="col-md-6   d-flex flex-column justify-content-center" >   
-            <div class="text-center  ">
+            <div class="text-center">
                <a href="" class="btn btn-sm rounded btn-info">send Reset password link</a>
-            </div>  
+            </div>
           </div>
           </div>
         </div>

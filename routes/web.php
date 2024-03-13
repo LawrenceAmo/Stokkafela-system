@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DestributorsController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\LeaveRequestController;
@@ -25,6 +26,8 @@ use App\Http\Controllers\TargetsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\StoreLocationsController;
 use App\Http\Controllers\UserPermissionsController;
+use App\Http\Controllers\CRM\AccountsController;
+use App\Http\Controllers\CRM\ContactsController;
 use App\Models\UserPermission;
 use Illuminate\Support\Facades\DB; 
  
@@ -195,6 +198,21 @@ Route::post('/leave/request/update', [LeaveRequestController::class, 'update_lea
 Route::post('/leave/type/create', [LeaveTypeController::class, 'create_leave_type'])->name('create_leave_type');
 Route::post('/leave/type/staff/balance', [LeaveTypeController::class, 'create_staff_leave_balance'])->name('create_staff_leave_balance');
 Route::post('/leave/type/staff/balance/update', [LeaveTypeController::class, 'update_staff_leave_balance'])->name('update_staff_leave_balance');
+
+//    CRM
+// Accounts
+Route::get('/crm/accounts', [AccountsController::class, 'index'])->name('crm_accounts');
+Route::get('/crm/accounts/create', [AccountsController::class, 'create'])->name('crm_accounts_create');
+Route::post('/crm/accounts/create/store', [AccountsController::class, 'create_store'])->name('crm_accounts_store');
+Route::get('/crm/accounts/update/{id}', [AccountsController::class, 'update'])->name('crm_accounts_update');
+Route::post('/crm/accounts/create/save', [AccountsController::class, 'update_save'])->name('crm_accounts_save');
+
+// Contacts
+Route::get('/crm/contacts', [ContactsController::class, 'index'])->name('crm_contacts');
+Route::get('/crm/contacts/create', [ContactsController::class, 'create'])->name('crm_contacts_create');
+Route::post('/crm/contacts/create/store', [ContactsController::class, 'create_store'])->name('crm_contacts_store');
+Route::get('/crm/contacts/update/{id}', [ContactsController::class, 'update'])->name('crm_contacts_update');
+Route::post('/crm/contacts/create/save', [ContactsController::class, 'update_save'])->name('crm_contacts_save');
 
 });
  

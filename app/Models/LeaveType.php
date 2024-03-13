@@ -11,6 +11,7 @@ class LeaveType extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'leave_typeID';
 
    public function staff_leave_balances() {
         

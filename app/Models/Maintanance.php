@@ -80,19 +80,16 @@ class Maintanance extends Model
         $manufacturers = DB::table('manufacturers')                            
                             ->get()->toArray(); 
 
-        // return $stock_analysis;
         $products = DB::table('products')
-                        // ->join('manufacturers', 'products.barcode', '=', 'stock_analyses.code')
                         ->where( [['storeID', '=', $storeID]])
-                        // ->where( [['barcode', '=', 'amo']])
                         ->orderBy('descript', 'asc')
                         ->get();
 
             // remove comma from value and convert it to float
             function toFloat($str)
-                {
-                    return floatval(str_replace(',', '', $str));
-                }
+            {
+                return floatval(str_replace(',', '', $str));
+            }
 
         // add all netsales for last 3 month
         function get_nettsales($stock_analysis)
@@ -185,7 +182,6 @@ class Maintanance extends Model
                 }
                  
                }else{
-                // return 'no manufacturer for '. $code ;
                 $products[$i]->manufacture = '';
                }
 
@@ -194,9 +190,10 @@ class Maintanance extends Model
                $products[$i]->onhand = toFloat($products[$i]->onhand );
                $products[$i]->stock_value = $products[$i]->avrgcost * $products[$i]->onhand;
 
+               $days = 21;
                if ($products[$i]->avr_rr != 0) {
-                    $products[$i]->days_onhand = ( $products[$i]->stock_value / $products[$i]->avr_rr) * 21;
-                    $products[$i]->suggested_order = toFloat(( 21 - $products[$i]->days_onhand ) * ( toFloat($products[$i]->avr_rr) / 21 ));
+                    $products[$i]->days_onhand = ( $products[$i]->stock_value / $products[$i]->avr_rr) * $days;
+                    $products[$i]->suggested_order = toFloat(( $days - $products[$i]->days_onhand ) * ( toFloat($products[$i]->avr_rr) / $days ));
                     $products[$i]->soq = 0;// toFloat( $products[$i]->suggested_order / $products[$i]->avrgcost ) || 0;
                } else {
                     $products[$i]->days_onhand = 0;
@@ -239,17 +236,11 @@ class Maintanance extends Model
                   )
                 {
                     return 'File have incorrect Columns, Please make sure you include these columns as they are [BARCODE,DESCRIPTION,MANUFACTURERS]';
-                }
-                //  return $index;
-        // return $manufacturers;
+                } 
 
-        // return 
         array_shift($data);  // remove the old headers 
 
-        // return $data[127];//[1];
-
         CreateProductManufacturers::dispatch($data, $index);
-        // import_productsCSV::dispatch( $data, $ids, $index);    
          
         // return only wanted fields from data in the excel file.
         return 'success';

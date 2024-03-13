@@ -80,7 +80,7 @@
                 <td scope="row">@{{i}}</td>
                 <td>@{{balance.first_name}} </td>
                 <td> @{{balance.last_name}}</td>
-                <td>
+                <td> 
                     <div class="border-bottom" v-for=" bal,x in balance.leave_balances">
                         <div class="d-flex justify-content-between">@{{ bal.name }}</div>
                     </div>

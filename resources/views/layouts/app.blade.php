@@ -105,6 +105,10 @@
             class="list-group-item list-group-item-action py-2 ripple">
              <i class="fas fa-calendar-alt    "></i> <span>Staff Leave</span>
             </a> 
+            <a href="{{ route("crm_accounts")}}"
+            class="list-group-item list-group-item-action py-2 ripple">
+             <i class="fas fa-users    "></i> <span>CRM</span>
+            </a> 
             <a href="{{ route("documents")}}"
               class="list-group-item list-group-item-action py-2 ripple">
               <i class="fa fa-file "></i>  <span>Documents(Files)</span>

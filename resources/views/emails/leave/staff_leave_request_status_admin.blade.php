@@ -28,7 +28,7 @@
 <body>
     <div class="mail-conatiner">
         <p class="">Dear <b class="font-weight-bold"> 
-            {{$data->admin_first_name}} {{$data->admin_last_name}} 
+            {{$manager->first_name}} {{$manager->last_name}} 
         </b>,</p>
         <p>This is to notify you that the status of a leave request has been updated in our leave tracker system.</p>
         <b>Here are the details:</b>

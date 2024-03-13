@@ -28,7 +28,7 @@
 <body>
     <div class="mail-conatiner">
         <p class="">Dear <b class="font-weight-bold"> 
-            {{$data->admin_first_name}} {{$data->admin_last_name}} 
+            {{$manager->first_name}} {{$manager->last_name}} 
         </b>,</p>
         <p>A new leave request has been submitted through the leave tracker system.</p>
         <b>Here are the details:</b>
@@ -37,11 +37,11 @@
             <tbody>  
                 <tr>
                     <td>Employee</td>
-                    <td><b>{{$data->first_name}} {{$data->last_name}}</b></td>
+                    <td><b>{{$user->first_name}} {{$user->last_name}}</b></td>
                 </tr> 
                 <tr>
                     <td>Leave Type</td>
-                    <td><b>{{$data->leave_type_name}}</b></td>
+                    <td><b>{{$leave_type['leave_type_name']}}</b></td>
                 </tr>  
                 <tr>
                     <td>Start Date</td>
@@ -57,7 +57,7 @@
                 </tr>  
                 <tr> 
                     <td>Request Date</td>
-                    <td><b>{{$data->date}}</b></td>
+                    <td><b>{{$leave_type['date']}}</b></td>
                 </tr> 
                 <tr> 
                     <td>Reason for Leave</td>

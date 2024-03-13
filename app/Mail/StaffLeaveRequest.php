@@ -14,15 +14,19 @@ class StaffLeaveRequest extends Mailable
     use Queueable, SerializesModels;
 
     public $leave_request;
+    public $user;
+    public $leave_type;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($leave_request)
+    public function __construct($leave_request, $user, $leave_type)
     {
         $this->leave_request = $leave_request;
+        $this->user = $user;
+        $this->leave_type = $leave_type;
     }
 
      /** 
@@ -37,6 +41,8 @@ class StaffLeaveRequest extends Mailable
                 ->view('emails.leave.staff_leave_request')
                 ->with([
                     'data' => $this->leave_request,
+                    'user' => $this->user,
+                    'leave_type' => $this->leave_type,
                 ]);
     }
 }
