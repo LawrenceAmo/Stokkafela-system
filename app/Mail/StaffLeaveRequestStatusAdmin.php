@@ -14,13 +14,14 @@ class StaffLeaveRequestStatusAdmin extends Mailable
     use Queueable, SerializesModels;
  
     public $leave_request;
+    public $updated_by;
  
-    public function __construct($leave_request)
+    public function __construct($leave_request, $updated_by)
     {
-        $this->leave_request = $leave_request;
+        $this->leave_request = $leave_request; 
+        $this->updated_by = $updated_by;
     }
-    
-  
+
     public function build()
     {
         return $this
@@ -28,6 +29,7 @@ class StaffLeaveRequestStatusAdmin extends Mailable
                 ->view('emails.leave.staff_leave_request_status_admin')
                 ->with([
                     'data' => $this->leave_request,
+                    'updated_by' => $this->updated_by,
                 ]);
     }
 }

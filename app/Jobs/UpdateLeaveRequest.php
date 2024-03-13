@@ -19,12 +19,14 @@ class UpdateLeaveRequest implements ShouldQueue
 
     protected $leave_request;
     protected $managers;
+    protected $updated_by;
    
-    public function __construct($leave_request, $managers)
+    public function __construct($leave_request, $managers, $updated_by)
     {
         $this->leave_request = $leave_request;
-         $this->managers = $managers;
-     }
+        $this->managers = $managers;
+        $this->updated_by = $updated_by;
+    }
 
     /**
      * Execute the job.
@@ -36,15 +38,15 @@ class UpdateLeaveRequest implements ShouldQueue
         
          // send mail to the user requesting leave
          try {
-            Mail::to($this->leave_request->email)->send(new StaffLeaveRequestStatus($this->leave_request));
+            Mail::to($this->leave_request->email)->send(new StaffLeaveRequestStatus($this->leave_request, $this->updated_by));
         } catch (\Throwable $e) {
             DB::table('logs')->insert([ 'log' => $e, 'created_at' => now(), ]);
         }
        
-        // / send mail to their all user_managers
+        // send mail to their all user_managers
         foreach ($this->managers as $manager) {
             try {
-                Mail::to($manager->email)->send(new StaffLeaveRequestStatusAdmin($this->leave_request, $manager));
+                Mail::to($manager->email)->send(new StaffLeaveRequestStatusAdmin($this->leave_request, $manager, $this->updated_by));
             } catch (\Throwable $e) {
                 DB::table('logs')->insert([ 'log' => $e, 'created_at' => now(), ]);
             }

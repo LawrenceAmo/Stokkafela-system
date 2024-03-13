@@ -61,17 +61,17 @@
                         @endif
                     </td>
                 </tr>  
-                <tr> 
+                <tr>
                     <td>Updated Date</td>
-                    <td><b>{{$data->leave_updated_at}}</b></td>
-                </tr> 
+                    <td><b>{{$data->leave_updated_at}}</b></td> 
+                </tr>
                 <tr> 
                     <td>New Status</td>
                     <td><b>{{$data->status}}</b></td>
                 </tr> 
                 <tr> 
                     <td>Updated By</td>
-                    <td><b>{{$data->admin_first_name}} {{$data->admin_last_name}}</b> &nbsp; &nbsp; <small> ( <a href="mailto:{{$data->admin_email}}">{{$data->admin_email}}</a> )</small></td>
+                    <td><b>{{$updated_by->first_name}} {{$updated_by->last_name}}</b> &nbsp; &nbsp; <small> ( <a href="mailto:{{$updated_by->email}}">{{$updated_by->email}}</a> )</small></td>
                 </tr>
                 <tr> 
                     <td>Reason for update</td>

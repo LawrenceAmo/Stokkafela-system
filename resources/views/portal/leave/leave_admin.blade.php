@@ -65,7 +65,7 @@
                       <td v-else > @{{request.admin_name}}  @{{request.admin_surname}} </td>
                       <td>@{{request.created_at}}</td>
                       <td> 
-                          <a class="text-primary" data-toggle="modal" data-target="#update_leave_request" @click="update_leave(request)"> <i class="fa fa-pencil-alt" aria-hidden="true"></i> </a> 
+                          <a class="text-primary" data-toggle="modal" data-target="#update_leave_request" @click="update_leave(request)"> <i class="fa fa-pencil-alt" aria-hidden="true"></i> Update </a> 
                       </td>
                   </tr>           
               </tbody>

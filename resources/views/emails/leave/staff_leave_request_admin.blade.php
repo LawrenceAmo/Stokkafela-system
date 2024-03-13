@@ -37,7 +37,7 @@
             <tbody>  
                 <tr>
                     <td>Employee</td>
-                    <td><b>{{$user->first_name}} {{$user->last_name}}</b></td>
+                    <td><b>{{$user->first_name}} {{$user->last_name}}</b>  &nbsp; &nbsp; <small> ( <a href="mailto:{{$user->email}}">{{$user->email}}</a> )</small></td>
                 </tr> 
                 <tr>
                     <td>Leave Type</td>
@@ -46,14 +46,18 @@
                 <tr>
                     <td>Start Date</td>
                     <td><b>{{$data->date_from}}</b></td>
-                </tr>  
+                </tr>   
                 <tr>                    
                     <td>End Date</td>
                     <td><b>{{$data->date_to}}</b></td>
                 </tr>  
                 <tr> 
                     <td>Total Number of Days</td>
-                    <td style=""><b>{{$data->actual_number_of_days_requested}}</b></td>
+                    <td style=""><b>{{$data->actual_number_of_days_requested}}</b> 
+                        <small class="" style="color: #4d4633;">
+                            (Excluding {{ $data->number_of_days_requested - $data->actual_number_of_days_requested}} days OFF)
+                        </small>
+                    </td>
                 </tr>  
                 <tr> 
                     <td>Request Date</td>
@@ -67,7 +71,7 @@
         </table>
 
         <p class="">
-            Please review the request at your earliest convenience and take appropriate action. You can access the leave tracker system to approve or reject the request, or if further information is needed, please communicate directly with the employee.        </p>
+            Please review the request at your earliest convenience and take appropriate action. You can access the leave tracker system at <a target="_blank" href="https://stokkafela.com/portal/leave/admin">https://stokkafela.com/portal/leave/admin</a> to approve or reject the request, or if further information is needed, please communicate directly with the employee.        </p>
         <p class="">
             Thank you for your attention to this matter. If you have any questions or require assistance, please do not hesitate to contact me.
         </p>
