@@ -214,11 +214,12 @@ Route::post('/crm/contacts/create/store', [ContactsController::class, 'create_st
 Route::get('/crm/contacts/update/{id}', [ContactsController::class, 'update'])->name('crm_contacts_update');
 Route::post('/crm/contacts/create/save', [ContactsController::class, 'update_save'])->name('crm_contacts_save');
 
-});
+}); 
  
 Route::get('doh/{id}',[ReportsController::class, 'get_stock_analysis']); ////
 
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');
+Route::get('/loaderio-77b695423b1d9335c62b7b75d7b45597', function () { return 'loaderio-77b695423b1d9335c62b7b75d7b45597';  });
 
 require __DIR__.'/auth.php';    // Routes for Auth
 
