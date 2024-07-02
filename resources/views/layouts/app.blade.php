@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ asset('mdb/css/style.css') }}">
         <script src="{{ asset('mdb/js/vue.js') }}"></script>
         <script src="{{ asset('mdb/js/axios.js') }}"></script>
+
         {{-- <script src="https://unpkg.com/vue@3"></script> --}} 
         <!-- Fonts -->
         {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
@@ -191,6 +192,7 @@
     <script src="{{ asset('mdb/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('mdb/js/mdb.min.js') }}"></script>
     <script src="{{ asset('mdb/js/axios.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7uUbl0Ol0kXBam07UPsjThrxL18qoVzA&libraries=places&callback=initMap&solution_channel=GMP_QB_addressselection_v1_cABC" async defer></script>
 
     {{-- <script src="{{ asset('mdb/js/bootstrap.bundle.min.js') }}"></script> --}}
     {{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

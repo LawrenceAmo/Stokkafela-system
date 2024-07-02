@@ -1,17 +1,49 @@
 <x-app-layout>
-  <main class="m-0 mb-5  px-4 py-5   w-100">
-       
-  <div class="card border rounded p-3 w-100 table-responsive">
+  <main class="m-0 mb-5  px-4 py-3   w-100">
+       <div class="">
+        <p class="h4 font-weight-bold">Select Store to view Reps</p>
+       </div>
+    <hr>
+
+      <div class="">
+
+        <div class="row">
+
+          @for ($i = 0; $i < count($stores); $i++)
+
+          <a href="{{ route('reps',[$stores[$i]->storeID]) }}" class="col-3 p-3 text-black " style="color: black; text-decoration: none;">
+            <div class="card border rounded shadow px-3 pb-3  ">
+              <span class=" d-flex justify-content-end font-weight-italic p-0 m-0"><small>{{$stores[$i]->trading_name}}</small></span>
+              <div class="d-flex flex-column justify-content-center p-0 m-0 " style="height: 80px">
+                <h3 class="font-weight-bold ">{{$stores[$i]->name}}</h3>
+              </div>
+
+              <div class="">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci, unde. Praesentium, labore. Vitae earum aperiam, beatae ex ipsa alias, cum quis fugiat eum, optio voluptate amet totam esse dolorem tempora.
+              </div>
+            </div>
+          </a>
+
+          @endfor
+
+        </div>
+
+      </div>
+
+      <hr>
+
+  <div class="card border rounded p-3 w-100 table-responsive  d-none">
       <div class="row mx-0 animated fadeInDown">
           <div class="col-12 text-center p-0 m-0">
               <p class="animated pulse w-100 pt-2">@include('inc.messages')</p>
           </div>
-       </div>
+      </div>
+      
 <p class="font-weight-bold h4 d-flex justify-content-between">
  <span> All Reps  </span>
  <a href="{{ route('create_rep')}}" class="btn btn-info rounded btn-sm font-weight-bold" data-toggle="modal" data-target="#create_new_rep">add new Rep</a>
 </p>
-<?php $i = 1 ?>
+
 <table class="table table-striped w-auto p-0 " >
   <thead class=" m-0 p-0">
       <tr class="border font-weight-bold shadow bg-dark text-light rounded"  >
@@ -22,10 +54,10 @@
           <th>Action</th>         
       </tr>
       </thead>
-      <tbody>  
+      <tbody>
           @foreach ($reps as $rep)
            <tr>
-              <td scope="row">{{$i}}</td>
+              <td scope="row"></td>
               <td>{{$rep->first_name}} {{$rep->last_name}}</td>
                <td >{{$rep->rep_number}}</td>
               <td >{{$rep->name}}</td>  
@@ -85,57 +117,6 @@
  @endif
 
   </div>
-
-  {{-- //////////////////////////   MODALS START  reps //////////////////////////////////////// --}}
-  <div class="modal fade" id="create_new_rep" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form action="{{ route('create_rep') }}" enctype="multipart/form-data" method="post" class="modal-content">
-            @csrf
-            <div class="modal-header">
-                <h5 class="modal-title">Create New Rep</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-                <div class="">
-                    <div class="form-group">
-                      <label >First Name</label>
-                      <input type="text"   class="form-control" name="first_name" placeholder="Enter First Name"   >
-                    </div>
-                    <div class="form-group">
-                      <label >Last Name</label>
-                      <input type="text"   class="form-control" name="last_name" placeholder="Enter Last Name"   >
-                    </div>
-                    <div class="form-group">
-                      <label >Rep Number</label>
-                      <input type="number"   class="form-control" name="rep_number" placeholder="Enter Rep Number"   >
-                    </div>
-                    <div class="form-group">
-                      <label >
-                      <input type="checkbox"   class=" " name="belong_to_stokkafela"    >
-                        Belong to Stokkafela 
-                      </label>
-                    </div>
-                    <div class="form-group">
-                      <label >Select Destributer</label>
-                      <select class="form-control" name="destributor" required>
-                        <option class="" @disabled(true) selected>Select Destributor</option>
-                        @foreach ($destributors as $destributor)
-                            <option value="{{$destributor->destributorID}}" >{{$destributor->name}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success btn-sm">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
- 
 
 {{-- ////////////////////////// DESTRIBUTION CENTERS --}}
 <div class="modal fade" id="create_new_destributor" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">

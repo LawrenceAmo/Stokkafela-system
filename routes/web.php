@@ -147,6 +147,8 @@ Route::get('/debtors/destributor/update/{id}/{delete?}', [DestributorsController
 Route::post('/debtors/destributor/save', [DestributorsController::class, 'save_destributor'])->name('save_destributor');
 
     // ////// Reps
+Route::get('/debtors', [RepsController::class, 'index'])->name('debtors');
+Route::get('/debtors/reps/{id}', [RepsController::class, 'reps'])->name('reps');
 Route::POST('/debtors/rep/create', [RepsController::class, 'create_rep'])->name('create_rep');
 Route::get('/debtors/rep/update/{id}/{delete?}', [RepsController::class, 'update_rep'])->name('update_rep');
 Route::post('/debtors/rep/save', [RepsController::class, 'save_rep'])->name('save_rep');
@@ -202,6 +204,7 @@ Route::post('/leave/type/staff/balance/update', [LeaveTypeController::class, 'up
 //    CRM
 // Accounts
 Route::get('/crm/accounts', [AccountsController::class, 'index'])->name('crm_accounts');
+Route::get('/crm/account/{id}', [AccountsController::class, 'view'])->name('crm_account');
 Route::get('/crm/accounts/create', [AccountsController::class, 'create'])->name('crm_accounts_create');
 Route::post('/crm/accounts/create/store', [AccountsController::class, 'create_store'])->name('crm_accounts_store');
 Route::get('/crm/accounts/update/{id}', [AccountsController::class, 'update'])->name('crm_accounts_update');
@@ -215,13 +218,17 @@ Route::get('/crm/contacts/update/{id}', [ContactsController::class, 'update'])->
 Route::post('/crm/contacts/create/save', [ContactsController::class, 'update_save'])->name('crm_contacts_save');
 
 }); 
- 
-Route::get('doh/{id}',[ReportsController::class, 'get_stock_analysis']); ////
+
+Route::get('doh/{id}',[ReportsController::class, 'get_stock_analysis']); 
 
 Route::get('/mailtest', [TestController::class, 'mailtest'])->name('mailtest');
+
 Route::get('/loaderio-77b695423b1d9335c62b7b75d7b45597', function () { return 'loaderio-77b695423b1d9335c62b7b75d7b45597';  });
 
 require __DIR__.'/auth.php';    // Routes for Auth
+
+
+// step by step, hack wordpress site, I have access to wp-includes and wp-uploads folder, but on the web. how to gain access like downloading user.php file in wp-include folder. this is for educational purposes only
 
 
 

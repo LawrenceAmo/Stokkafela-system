@@ -114,6 +114,7 @@ class LeaveRequestController extends Controller
             $leave_request->userID = $userID;
             $leave_request->leave_typeID = (int)$request->selected_leave_type;
             $leave_request->description = $request->comments;
+            $leave_request->save(); 
 
             $leave_type =  DB::table('leave_types')
                             ->where('leave_typeID',  (int)$request->selected_leave_type)
@@ -124,14 +125,17 @@ class LeaveRequestController extends Controller
                                 ->where('user_managers.userID',  (int)$userID)
                                 ->get();
  
-            $leave_request->save(); 
-
             $leave_type = [
                 'date' => now(),
                 'leave_type_name' => $leave_type->name,
             ];
  
             CreateLeaveRequest::dispatch($leave_request, $user, $user_managers, $leave_type);
+
+            // foreach ($user_managers as $manager) {
+            //     return view('emails.leave.staff_leave_request_admin')
+            //                 ->with(['data' => $leave_request,'user' => $user,'manager' => $manager,'leave_type' => $leave_type,]);
+            // }
 
         } catch (\Throwable $th) {
 
@@ -140,6 +144,7 @@ class LeaveRequestController extends Controller
         }
         return redirect()->back()->with('success', 'Your leave application was successful...');
     }
+    // 
 
     /**
      * Store a newly created resource in storage.
@@ -151,7 +156,7 @@ class LeaveRequestController extends Controller
     {
         $request->validate([
             'status' => 'required',                  
-            // 'reason' => 'required',                   
+            'reason' => 'required',                   
          ]);
 
         $leave_request = DB::table('leave_requests')->where('leave_requestID', (int)$request->selected_leave_request )->first();
@@ -203,11 +208,14 @@ class LeaveRequestController extends Controller
                         ->where('user_managers.userID', (int)$leave_request->userID )
                         ->get();
 
-            UpdateLeaveRequest::dispatch($leave_request, $managers);
+            $updated_by = User::find((int)Auth::id());
 
-            foreach ($managers as $manager) {
-                return view('emails.leave.staff_leave_request_status')->with('manager',$manager)->with('data',$leave_request);
-            }
+
+            UpdateLeaveRequest::dispatch($leave_request, $managers, $updated_by);
+
+            // foreach ($managers as $manager) {
+            //     return view('emails.leave.staff_leave_request_status')->with('manager',$manager)->with('data',$leave_request)->with('updated_by',$updated_by);
+            // }
 
         } catch (\Throwable $th) {
             DB::table('logs')->insert([ 'log' => $th, 'created_at' => now(), ]);
