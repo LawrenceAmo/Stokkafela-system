@@ -42,12 +42,21 @@ class AccountsController extends Controller
                                     // ->first();
                             })
                             ->join('reps', 'reps.repID', '=', 'accounts.repID')
+                            ->join('destributors', 'destributors.destributorID', '=', 'reps.destributorID')
+                            ->join('stores', 'stores.storeID', '=', 'reps.storeID')
                             ->where('accounts.accountID', '=', $id)
-                            ->select('accounts.*','reps.*',
-                                    'account_contacts.first_name as contact_name', 
-                                    'account_contacts.last_name as contact_surname', 
+                            ->select('accounts.*','stores.name as store_name','destributors.name as destributor_name', 'accounts.created_at as account_created_at', 
+                            'reps.first_name as rep_name', 
+                            'reps.last_name as rep_surname', 
+                            'account_contacts.first_name as contact_name', 
+                            'account_contacts.last_name as contact_surname', 
                                     'account_contacts.email as contact_email', 
-                                    'account_contacts.phone as contact_phone')
+                                    'account_contacts.phone as contact_phone',
+                                    'account_contacts.position', 
+                                    'account_contacts.gender', 
+                                    'account_contacts.account_contactID', 
+
+                                    )
                             ->first();
 
             // return $account;
